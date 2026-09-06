@@ -40,3 +40,7 @@ Resultado real: la prueba pasó correctamente (PASS). Se ejecutó 1 suite de pru
 ## 7. Explicación y límites
 
 La prueba pública `week-01.test.ts` confirma que existe evidencia guardada de una falla reproducida y su corrección verificada, según el nombre de la prueba (`baseline preserves the reproduced failure and its verified correction`). Sin embargo, esta prueba no comprueba mi riesgo 1 (reasignación durante trabajo sin conexión): no ejecuta ningún escenario de sincronización, conflicto ni reasignación entre técnicos, porque esas funciones todavía no están implementadas en el proyecto — corresponden a hitos posteriores del curso. Esta prueba solo valida que la estructura básica de evidencia de línea base esté presente, no la lógica de negocio de CampusOps relacionada con mi riesgo.
+
+## Aclaración añadida durante la integración
+
+La revisión de integración de Oscar, asistida por Codex, identificó una referencia imprecisa en la predicción de la sección 2: el criterio de aceptación 9 de `docs/problem-definition.md` describe la prueba smoke de `App` y su estado `Backend: available`. La prueba pública ejecutada aquí es distinta: comprueba que `baseline.json` contenga observaciones `fail` y `pass` y busca referencias básicas a actores y riesgos en los documentos. Por tanto, el criterio 9 no es la fuente de esas comprobaciones documentales. Se conserva la predicción original para no reconstruirla después del resultado; esta nota aclara su fundamento. El log y el resultado de la ejecución de Jarumi permanecen sin cambios de contenido.
