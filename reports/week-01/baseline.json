@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "bccdf8c83e8506895798f16a19284f36b58605a6",
-  "generatedAt": "2026-09-05T18:52:40-06:00",
+  "commitSha": "bb6c47ba1dd299483cf8f55e6dabaced77a68bdd",
+  "generatedAt": "2026-09-06T16:34:56-06:00",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -17,6 +17,13 @@
       "scenarioType": "nominal",
       "command": "npm run test:smoke",
       "evidence": "Se restauro setStatus('available') en la rama de exito y se repitio el mismo comando. Resultado: Test Suites: 1 passed, 1 total; Tests: 1 passed, 1 total; codigo 0. App.tsx quedo restaurado y no se modificaron las pruebas. La comprobacion acredita el titulo y la transicion de estado con el doble exitoso, no conectividad real. Salida: reports/week-01/logs/smoke-corregido.txt. Procedimiento y limites: evidence/week-01/procedimiento-falla.md."
+    },
+    {
+      "id": "cierre-integrado-feedback",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make feedback",
+      "evidence": "En la sesion de cierre asistida de Oscar: codigo 0, typecheck y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, auditoria con umbral critico aprobado y exportacion Android de 581 modulos completada. Salida real: reports/week-01/logs/oscar-feedback-cierre.txt. Los archivos de pruebas y la app siguen iguales al starter original."
     }
   ]
 }

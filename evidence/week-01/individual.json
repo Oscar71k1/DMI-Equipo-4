@@ -1,39 +1,64 @@
 {
-  "_instructions": "Eliminen este campo cuando terminen. Conserven exactamente tres integrantes y usen SHA Git completos de commits creados por cada persona.",
   "schemaVersion": 1,
   "week": 1,
-  "teamId": "REEMPLAZAR_CON_ID_DEL_EQUIPO",
+  "teamId": "4",
   "members": [
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_1",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
-      "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "studentId": "3523110017",
+      "commitShas": [
+        "bb6c47ba1dd299483cf8f55e6dabaced77a68bdd"
+      ],
+      "files": [
+        "docs/reviews/oscar-integracion.md",
+        "docs/reviews/jarumi-criterios.md",
+        "evidence/week-01/entorno-windows/LEEME.md",
+        "evidence/week-01/entorno-windows/npm-launcher.cs"
+      ],
+      "tests": [
+        "make feedback (sesion de Oscar, ejecutado con asistencia de Codex)",
+        "make verify-week-01 (sesion de Oscar, evaluador original con toolchain)",
+        "make public-test-week-01 (sesion de Oscar, evaluador original con toolchain)"
+      ],
+      "reviews": [
+        "Revision asistida del riesgo 2 contra el criterio 7 y el apartado de idempotencia del caso: la clave y el contenido deben conservarse, se rechaza reutilizar la clave con otro contenido y solo se retiran operaciones confirmadas. La comprobacion de negocio sigue siendo futura.",
+        "Revision e integracion de las aportaciones de Jarumi y Fernanda: se verificaron autores, SHA, archivos, logs y limites; se conservaron sus commits, se recodificaron tres logs a UTF-8 y se anadio una aclaracion posterior a la revision de Jarumi."
+      ],
+      "prediction": "Antes de las comprobaciones de cierre se registro en docs/reviews/oscar-integracion.md que make feedback y los evaluadores debian pasar al integrar la evidencia y corregir sus datos y SHA, porque la app y las pruebas originales permanecen iguales. La revision del riesgo 2 debia ser coherente con la clave estable, el contenido y la confirmacion de operaciones, sin afirmar que la idempotencia estuviera implementada.",
+      "command": "make feedback",
+      "observedResult": "Ejecucion asistida con codigo 0: typecheck y lint aprobados; smoke con 1 suite y 1 prueba aprobadas; audit:ci termino correctamente con el umbral critico original e informo una vulnerabilidad moderada; exportacion Android completada, 581 modulos, salida dist/export. Log: reports/week-01/logs/oscar-feedback-cierre.txt. Ademas, make verify-week-01 termino con status pass y 9 checks aprobados; make public-test-week-01 termino con status pass y 13 checks aprobados, incluidos los tres JSON. Ambos con codigo 0; reportes: reports/week-01/verify.json y reports/week-01/public-tests.json.",
+      "explanation": "La revision del riesgo 2 concuerda con el criterio 7 y el caso. La comprobacion de cierre pasa porque la integracion conserva el codigo y las pruebas del starter. En Windows se adapto solamente el entorno de resolucion de npm, mediante un lanzador que transmite argumentos, salidas y codigo real; el evaluador permanece original. El trabajo y los comandos se realizaron con asistencia de Codex en la sesion de Oscar. El resultado no acredita idempotencia, sincronizacion ni un servidor real; esos limites quedan documentados."
     },
     {
       "studentId": "3523110055",
-      "commitShas": ["22dc628e5a423047cfcf76d49777eae31641a209"],
-      "files": ["docs/reviews/jarumi-criterios.md", "reports/week-01/logs/jarumi-prueba-publica.txt"],
-      "tests": ["npm test -- --ci --runInBand course-tests/public/week-01.test.ts"],
-      "reviews": ["Revisión del riesgo 1 (reasignación durante trabajo sin conexión) contra el criterio de aceptación #6 de problem-definition.md: se confirmó que ambos documentos describen el mismo escenario y son coherentes entre sí; no se encontraron ambigüedades ni se requirieron cambios."],
+      "commitShas": [
+        "22dc628e5a423047cfcf76d49777eae31641a209"
+      ],
+      "files": [
+        "docs/reviews/jarumi-criterios.md",
+        "reports/week-01/logs/jarumi-prueba-publica.txt"
+      ],
+      "tests": [
+        "npm test -- --ci --runInBand course-tests/public/week-01.test.ts"
+      ],
+      "reviews": [
+        "Revisión del riesgo 1 (reasignación durante trabajo sin conexión) contra el criterio de aceptación #6 de problem-definition.md: se confirmó que ambos documentos describen el mismo escenario y son coherentes entre sí; no se encontraron ambigüedades ni se requirieron cambios."
+      ],
       "prediction": "Antes de ejecutar la prueba, predije que pasaría (PASS), porque el criterio de aceptación #9 indica que la línea base de semana 1 solo verifica aspectos básicos del reporte y los documentos, sin comprobar sincronización ni reasignación.",
       "command": "npm test -- --ci --runInBand course-tests/public/week-01.test.ts",
       "observedResult": "La prueba pasó correctamente: Test Suites: 1 passed, 1 total; Tests: 1 passed, 1 total; código de salida EXIT_CODE=0.",
       "explanation": "El resultado coincidió con mi predicción. La prueba confirma que existe evidencia de una falla reproducida y su corrección, pero no comprueba mi riesgo 1 (reasignación offline), ya que esa función de sincronización todavía no está implementada en el proyecto — corresponde a un hito posterior del curso."
-},
+    },
     {
       "studentId": "a3523110496",
-      "commitShas": ["780833cc8ee890ea21211cbd1ff64ec951e5a55b"],
+      "commitShas": [
+        "780833cc8ee890ea21211cbd1ff64ec951e5a55b"
+      ],
       "files": [
         "docs/reviews/fernanda-diagnostico.md",
         "reports/week-01/logs/fernanda-smoke-antes.txt",
         "reports/week-01/logs/fernanda-smoke-falla.txt",
-        "reports/week-01/logs/fernanda-smoke-corregido.txt"],
+        "reports/week-01/logs/fernanda-smoke-corregido.txt"
+      ],
       "tests": [
         "npm run test:smoke (estado original, App.tsx sin modificar): PASS, 1/1, exit code 0",
         "npm run test:smoke (con setStatus('offline') forzado en la rama de éxito): FAIL, 1/1, exit code 1, 'Expected substring: \"available\" / Received string: \"Backend: offline\"'",

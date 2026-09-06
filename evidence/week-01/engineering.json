@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "bccdf8c83e8506895798f16a19284f36b58605a6",
-  "decision": "Para el diagnostico de semana 1 se elige conservar la prueba smoke existente con su doble determinista de backend y comprobar la transicion de respuesta exitosa a available. El alcance de esta semana es verificar el starter: una regresion reversible de esa transicion aborda el riesgo 3 del registro y el criterio 9 de la definicion del problema sin implementar los flujos futuros. La preparacion fue asistida; el equipo debe revisar y adoptar o ajustar esta decision antes del cierre.",
+  "commitSha": "bb6c47ba1dd299483cf8f55e6dabaced77a68bdd",
+  "decision": "Para el diagnostico de semana 1 se elige conservar la prueba smoke existente con su doble determinista de backend y comprobar la transicion de respuesta exitosa a available. El alcance de esta semana es verificar el starter: una regresion reversible de esa transicion aborda el riesgo 3 del registro y el criterio 9 de la definicion del problema sin implementar los flujos futuros. La preparacion y la integracion fueron asistidas. La revision y repeticion independiente de Fernanda respaldan esta eleccion y sus limites; su analisis esta en docs/reviews/fernanda-diagnostico.md.",
   "alternatives": [
     "Usar la prueba smoke existente, cuyo doble resuelve getBackendHealth(), alterar temporalmente la rama de exito y comprobar tanto el fallo como la correccion de la transicion a available.",
     "Comprobar la pantalla contra un servidor iniciado y disponible durante cada ejecucion: aportaria evidencia de integracion real, pero introduce preparacion y variaciones de disponibilidad que dificultan aislar esta regresion de interfaz.",
@@ -23,6 +23,11 @@
       "command": "npm run test:smoke",
       "result": "Tras restaurar la transicion de exito: codigo 0, una suite y una prueba aprobadas, sin modificar course-tests/. La prueba vuelve a observar available.",
       "evidence": "reports/week-01/logs/smoke-corregido.txt; criterio 9 en docs/problem-definition.md y riesgo 3 en docs/risk-register.md."
+    },
+    {
+      "command": "npm run test:smoke",
+      "result": "Repeticion independiente registrada por Fernanda: estado original PASS con codigo 0; regresion offline FAIL con codigo 1 y expected available / received Backend: offline; restauracion PASS con codigo 0.",
+      "evidence": "docs/reviews/fernanda-diagnostico.md y reports/week-01/logs/fernanda-smoke-antes.txt, fernanda-smoke-falla.txt y fernanda-smoke-corregido.txt; commit propio 780833cc8ee890ea21211cbd1ff64ec951e5a55b."
     }
   ]
 }
