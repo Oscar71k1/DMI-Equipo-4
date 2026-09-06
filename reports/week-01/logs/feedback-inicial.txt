@@ -1,0 +1,154 @@
+npm run typecheck
+
+> dmi-react-native-starter@1.0.0 typecheck
+> tsc --noEmit
+
+npm run lint
+
+> dmi-react-native-starter@1.0.0 lint
+> eslint .
+
+npm run test:smoke
+
+> dmi-react-native-starter@1.0.0 test:smoke
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/smoke.test.tsx
+
+PASS course-tests/smoke.test.tsx
+  √ renders the reproducible baseline and resolves backend state (211 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        2.643 s, estimated 15 s
+Ran all test suites matching /course-tests\\smoke.test.tsx/i.
+npm run audit:ci
+
+> dmi-react-native-starter@1.0.0 audit:ci
+> npm audit --omit=dev --audit-level=critical
+
+# npm audit report
+
+@xmldom/xmldom  
+Severity: moderate
+xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization - https://github.com/advisories/GHSA-6gmq-8vp8-gcm6
+xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization - https://github.com/advisories/GHSA-6gmq-8vp8-gcm6
+No fix available
+node_modules/@xmldom/xmldom
+node_modules/plist/node_modules/@xmldom/xmldom
+  @expo/plist  
+  Depends on vulnerable versions of @xmldom/xmldom
+  node_modules/@expo/plist
+    @expo/cli  
+    Depends on vulnerable versions of @expo/config
+    Depends on vulnerable versions of @expo/config-plugins
+    Depends on vulnerable versions of @expo/inline-modules
+    Depends on vulnerable versions of @expo/log-box
+    Depends on vulnerable versions of @expo/metro-config
+    Depends on vulnerable versions of @expo/plist
+    Depends on vulnerable versions of @expo/prebuild-config
+    Depends on vulnerable versions of @expo/router-server
+    Depends on vulnerable versions of expo
+    node_modules/expo/node_modules/@expo/cli
+      expo  
+      Depends on vulnerable versions of @expo/cli
+      Depends on vulnerable versions of @expo/config
+      Depends on vulnerable versions of @expo/config-plugins
+      Depends on vulnerable versions of @expo/dom-webview
+      Depends on vulnerable versions of @expo/local-build-cache-provider
+      Depends on vulnerable versions of @expo/log-box
+      Depends on vulnerable versions of @expo/metro-config
+      Depends on vulnerable versions of babel-preset-expo
+      Depends on vulnerable versions of expo-asset
+      Depends on vulnerable versions of expo-constants
+      Depends on vulnerable versions of expo-file-system
+      Depends on vulnerable versions of expo-font
+      Depends on vulnerable versions of expo-keep-awake
+      node_modules/expo
+        @expo/dom-webview  
+        Depends on vulnerable versions of expo
+        node_modules/@expo/dom-webview
+        @expo/log-box  
+        Depends on vulnerable versions of @expo/dom-webview
+        Depends on vulnerable versions of expo
+        node_modules/@expo/log-box
+        @expo/metro-config  
+        Depends on vulnerable versions of @expo/config
+        Depends on vulnerable versions of expo
+        node_modules/@expo/metro-config
+        @expo/router-server  
+        Depends on vulnerable versions of expo
+        Depends on vulnerable versions of expo-constants
+        Depends on vulnerable versions of expo-font
+        node_modules/expo/node_modules/@expo/cli/node_modules/@expo/router-server
+        babel-preset-expo  
+        Depends on vulnerable versions of expo
+        node_modules/babel-preset-expo
+        expo-asset  
+        Depends on vulnerable versions of expo
+        Depends on vulnerable versions of expo-constants
+        node_modules/expo-asset
+        expo-constants  
+        Depends on vulnerable versions of expo
+        node_modules/expo-constants
+        expo-file-system  
+        Depends on vulnerable versions of expo
+        node_modules/expo/node_modules/expo-file-system
+        expo-font  
+        Depends on vulnerable versions of expo
+        node_modules/expo-font
+        expo-keep-awake  
+        Depends on vulnerable versions of expo
+        node_modules/expo/node_modules/expo-keep-awake
+        expo-status-bar  
+        Depends on vulnerable versions of expo
+        node_modules/expo-status-bar
+    @expo/config-plugins  
+    Depends on vulnerable versions of @expo/plist
+    Depends on vulnerable versions of xcode
+    node_modules/@expo/config-plugins
+      @expo/config  
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/config
+        @expo/local-build-cache-provider  
+        Depends on vulnerable versions of @expo/config
+        node_modules/@expo/local-build-cache-provider
+      @expo/inline-modules  
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/inline-modules
+      @expo/prebuild-config  
+      Depends on vulnerable versions of @expo/config
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/prebuild-config
+  plist  
+  Depends on vulnerable versions of @xmldom/xmldom
+  node_modules/plist
+    simple-plist  
+    Depends on vulnerable versions of plist
+    node_modules/simple-plist
+      xcode  
+      Depends on vulnerable versions of simple-plist
+      node_modules/xcode
+
+23 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.
+npm run bundle:release
+
+> dmi-react-native-starter@1.0.0 bundle:release
+> expo export --platform android --output-dir dist/export
+
+Starting Metro Bundler
+
+
+Failed to generate Hermes bytecode for: C:\Users\oscar\Desktop\CampusOps-Semana-01\index.ts
+
+C:\Users\oscar\Desktop\CampusOps-Semana-01\node_modules\hermes-compiler/hermesc/win64-bin/hermesc.exe: permission denied
+
+Android Bundling failed 858ms index.ts (581 modules)
+
+Error: C:\Users\oscar\Desktop\CampusOps-Semana-01\node_modules\hermes-compiler/hermesc/win64-bin/hermesc.exe -emit-binary -out C:\Users\oscar\AppData\Local\Temp\expo-bundler-0.027516899256904592-1788653727905\index.hbc C:\Users\oscar\AppData\Local\Temp\expo-bundler-0.027516899256904592-1788653727905\index.js -O exited with non-zero code: 1
+make: *** [feedback] Error 1

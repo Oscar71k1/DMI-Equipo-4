@@ -1,0 +1,31 @@
+
+> dmi-react-native-starter@1.0.0 test:smoke
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/smoke.test.tsx
+
+FAIL course-tests/smoke.test.tsx (14.171 s)
+  × renders the reproducible baseline and resolves backend state (1328 ms)
+
+  ● renders the reproducible baseline and resolves backend state
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "available"
+    Received string:    "Backend: offline"
+
+      14 |   const view = await render(<App />);
+      15 |   expect(view.getByText('CampusOps')).toBeTruthy();
+    > 16 |   await waitFor(() => expect(view.getByTestId('backend-status').props.children.join('')).toContain('available'));
+         |                ^
+      17 | });
+      18 |
+
+      at Object.<anonymous> (course-tests/smoke.test.tsx:16:16)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        15.081 s
+Ran all test suites matching /course-tests\\smoke.test.tsx/i.
+EXIT_CODE=1
