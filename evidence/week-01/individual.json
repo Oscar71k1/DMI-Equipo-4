@@ -16,16 +16,16 @@
       "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
     },
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_2",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
-      "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
-    },
+      "studentId": "3523110055",
+      "commitShas": ["22dc628e5a423047cfcf76d49777eae31641a209"],
+      "files": ["docs/reviews/jarumi-criterios.md", "reports/week-01/logs/jarumi-prueba-publica.txt"],
+      "tests": ["npm test -- --ci --runInBand course-tests/public/week-01.test.ts"],
+      "reviews": ["Revisión del riesgo 1 (reasignación durante trabajo sin conexión) contra el criterio de aceptación #6 de problem-definition.md: se confirmó que ambos documentos describen el mismo escenario y son coherentes entre sí; no se encontraron ambigüedades ni se requirieron cambios."],
+      "prediction": "Antes de ejecutar la prueba, predije que pasaría (PASS), porque el criterio de aceptación #9 indica que la línea base de semana 1 solo verifica aspectos básicos del reporte y los documentos, sin comprobar sincronización ni reasignación.",
+      "command": "npm test -- --ci --runInBand course-tests/public/week-01.test.ts",
+      "observedResult": "La prueba pasó correctamente: Test Suites: 1 passed, 1 total; Tests: 1 passed, 1 total; código de salida EXIT_CODE=0.",
+      "explanation": "El resultado coincidió con mi predicción. La prueba confirma que existe evidencia de una falla reproducida y su corrección, pero no comprueba mi riesgo 1 (reasignación offline), ya que esa función de sincronización todavía no está implementada en el proyecto — corresponde a un hito posterior del curso."
+},
     {
       "studentId": "REEMPLAZAR_INTEGRANTE_3",
       "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
