@@ -53,3 +53,11 @@ Antes de repetir las comprobaciones de esta revisión, la predicción es que seg
 Se trasladan las revisiones, el procedimiento de falla, el diagnóstico histórico, la nota de Windows y el cierre a la raíz de `docs/`. Las guías personales se incorporan como indicaciones de preparación cuyas aportaciones ya están completadas. El índice conserva la correspondencia con las rutas de los commits originales de Jarumi y Fernanda; sus autorías, predicciones y resultados permanecen identificados.
 
 Antes de validar esta reorganización, la predicción es que los cinco entregables obligatorios seguirán disponibles y las comprobaciones originales pasarán al actualizar las rutas de referencia y el SHA técnico de los reportes. La aplicación y las pruebas se mantienen sin diferencias. Los resultados reales se registrarán en los logs de `reports/week-01/` y en el registro individual de Oscar después de ejecutar los comandos.
+
+## Preparación con los workflows originales
+
+Tras la reorganización, Oscar solicitó conservar el workflow original y resolver la descarga del historial desde el Makefile. La revisión asistida restaura ambos workflows y añade a `make setup` el script `tools/prepare_git_history.py`, antes de `npm ci`. El script recupera el historial real de las copias superficiales, conserva el SHA de trabajo y propaga los errores de Git. El evaluador, las pruebas y sus comandos permanecen originales.
+
+Se comprobó en copias aisladas que la validación original de baseline y engineering falla antes de recuperar el historial y pasa después, sin modificar esos JSON. También se comprobaron un paquete sin Git, un repositorio completo sin remoto, un remoto inaccesible y la repetición de la preparación. Los casos, resultados y límites están en [preparacion-historial-git.md](preparacion-historial-git.md), con la salida en `reports/week-01/logs/oscar-preparacion-git.txt`.
+
+Antes de ejecutar las comprobaciones completas, espero que pasen porque la preparación recupera el padre del commit que exige el evaluador, mientras que el código de aplicación y sus pruebas no cambian. El resultado real se añadirá al registro individual y los logs de cierre después de cada ejecución.

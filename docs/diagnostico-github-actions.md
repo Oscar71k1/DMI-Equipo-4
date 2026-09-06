@@ -2,6 +2,8 @@
 
 Este documento conserva los errores y decisiones de los avances `86e44dd...`, `7853102...` y `bccdf8c...`. Las referencias a integrantes pendientes y verificaciones fallidas describen esas versiones anteriores. Los tres registros ya fueron integrados y las comprobaciones posteriores aprobaron; los resultados y rutas vigentes se encuentran en [cierre-integracion.md](cierre-integracion.md), [individual.json](../evidence/week-01/individual.json), [verify.json](../reports/week-01/verify.json) y [public-tests.json](../reports/week-01/public-tests.json). El historial se conserva para explicar las causas, sin presentarlo como el estado actual de la entrega.
 
+La configuración actual recupera el historial desde `make setup` y conserva los workflows originales. El ajuste posterior y sus comprobaciones están en [preparacion-historial-git.md](preparacion-historial-git.md). Las referencias a `fetch-depth: 0` que siguen describen la solución utilizada en los avances anteriores.
+
 ## Ejecución afectada y síntoma
 
 - Versión publicada: `86e44dd125677ac07d3a275f5eb356acac4792cd`.

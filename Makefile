@@ -4,6 +4,7 @@ NPM ?= npm
 .PHONY: setup verify feedback run run-backend package
 
 setup:
+	$(PYTHON) tools/prepare_git_history.py
 	$(NPM) ci
 
 verify:

@@ -36,7 +36,7 @@ En esa revisión, sobre `6d7d06c036c9f6cf254dd3912badb83e550383af`, el reporte d
 
 ## Integridad y ajustes documentados
 
-Se comprobó con `git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 -- course-tests tools/course_public_evaluator.py App.tsx package.json package-lock.json Makefile` que esos archivos coinciden con el inicio. El resultado fue código 0, sin diferencias. El checkout del workflow conserva el ajuste anterior `fetch-depth: 0`, necesario para consultar el padre del commit de evidencias; las pruebas y sus umbrales siguen iguales.
+Se comprobó con `git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 -- .github/workflows course-tests tools/course_public_evaluator.py App.tsx package.json package-lock.json` que esos archivos coinciden con el inicio. El resultado fue código 0, sin diferencias. Los workflows se restauraron al original. El Makefile ahora prepara el historial mediante `tools/prepare_git_history.py` antes de `npm ci`; los comandos de comprobación y sus umbrales siguen iguales. La razón y los casos comprobados se explican en [preparacion-historial-git.md](preparacion-historial-git.md).
 
 Tres logs se convirtieron de UTF-16 a UTF-8, normalizando finales de línea y líneas vacías, sin cambiar mensajes, tiempos ni códigos de salida. Los bytes anteriores siguen accesibles en los commits originales. La aclaración de la revisión de Jarumi se añadió después de su texto, conservando su predicción y su resultado.
 
@@ -63,3 +63,9 @@ Los logs con sufijo `-cierre.txt` conservan la integración inicial y los termin
 Se trasladaron los siete documentos de revisión, diagnóstico y cierre a la raíz de `docs/`, se incorporaron las dos guías personales como referencias de preparación completada y se actualizaron enlaces y referencias de los JSON. El [índice del equipo](GUIA_EQUIPO_SEMANA_01.md) contiene la correspondencia entre rutas anteriores y actuales. Los logs de las ejecuciones históricas conservan sus contenidos originales; la reorganización no cambia las aportaciones ni los SHA de las compañeras.
 
 Esta modificación documental requiere fijar otro SHA técnico y repetir `make feedback`, `make verify-week-01` y `make public-test-week-01` antes del commit exclusivo de evidencias. Los resultados de esa repetición se registran en los JSON y logs de `reports/week-01/`; después se comprueba la etiqueta con `make evidence-week-01`. Los documentos no incorporan un SHA final literal que quede obsoleto al crear el commit de evidencias.
+
+## Preparación del historial desde Makefile
+
+La actualización posterior traslada la recuperación del historial al paso `make setup` que ya ejecuta el workflow original. Se comprobaron el error de SHA en una copia superficial y su resolución tras descargar el historial; el SHA, la rama y el estado de los archivos se conservaron. Un remoto inexistente produjo código 128, mientras que las copias completas y el paquete sin Git terminaron con código 0 sin descargar. El log es `reports/week-01/logs/oscar-preparacion-git.txt`; esta comprobación de preparación no sustituye la falla controlada de interfaz.
+
+Las salidas completas del nuevo cierre se registran en `reports/week-01/logs/` con el sufijo `-historial.txt`, junto con `verify.json` y `public-tests.json`. Sus campos de SHA, fecha y resultado identifican la versión comprobada. Los registros históricos con otros sufijos se conservan como antecedentes.

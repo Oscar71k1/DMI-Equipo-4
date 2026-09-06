@@ -40,6 +40,8 @@ make setup
 make feedback
 ```
 
+`make setup` comprueba el historial Git antes de ejecutar `npm ci`. Si la copia es superficial, descarga el historial real necesario para validar el padre del commit de evidencias; si el historial está completo o el paquete aún no tiene repositorio, continúa sin descargar. El ajuste y su comprobación están en [preparación del historial Git](docs/preparacion-historial-git.md). Ambos workflows se conservan como en el paquete original.
+
 Para desarrollo local:
 
 ```bash

@@ -20,9 +20,10 @@ $env:Path = "$campusLauncherDir;$env:Path"
 $env:PYTHON = 'python'
 $env:PYTHONUTF8 = '1'
 python -c "import subprocess; subprocess.run(['npm', '--version'], check=True)"
+make setup
 make feedback
 make verify-week-01
 make public-test-week-01
 ```
 
-Cada comando se interpreta por su salida real y su código de retorno. Las variables son locales a esa sesión de PowerShell. `PYTHON` selecciona la instalación de Python disponible mediante la opción prevista por el Makefile, y `PYTHONUTF8` permite leer las salidas Unicode de las herramientas. No se cambia `Makefile`, `package.json`, `course-tests/` ni `tools/course_public_evaluator.py`.
+Cada comando se interpreta por su salida real y su código de retorno. Las variables son locales a esa sesión de PowerShell. `PYTHON` selecciona la instalación de Python disponible mediante la opción prevista por el Makefile, y `PYTHONUTF8` permite leer las salidas Unicode de las herramientas. Este adaptador de npm no necesita cambios en `package.json`, `course-tests/` ni `tools/course_public_evaluator.py`. El cambio posterior del Makefile para preparar el historial Git se documenta por separado en [preparacion-historial-git.md](preparacion-historial-git.md).
