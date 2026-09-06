@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "bb6c47ba1dd299483cf8f55e6dabaced77a68bdd",
+  "commitSha": "6d7d06c036c9f6cf254dd3912badb83e550383af",
   "decision": "Para el diagnostico de semana 1 se elige conservar la prueba smoke existente con su doble determinista de backend y comprobar la transicion de respuesta exitosa a available. El alcance de esta semana es verificar el starter: una regresion reversible de esa transicion aborda el riesgo 3 del registro y el criterio 9 de la definicion del problema sin implementar los flujos futuros. La preparacion y la integracion fueron asistidas. La revision y repeticion independiente de Fernanda respaldan esta eleccion y sus limites; su analisis esta en docs/reviews/fernanda-diagnostico.md.",
   "alternatives": [
     "Usar la prueba smoke existente, cuyo doble resuelve getBackendHealth(), alterar temporalmente la rama de exito y comprobar tanto el fallo como la correccion de la transicion a available.",
@@ -27,7 +27,7 @@
     {
       "command": "npm run test:smoke",
       "result": "Repeticion independiente registrada por Fernanda: estado original PASS con codigo 0; regresion offline FAIL con codigo 1 y expected available / received Backend: offline; restauracion PASS con codigo 0.",
-      "evidence": "docs/reviews/fernanda-diagnostico.md y reports/week-01/logs/fernanda-smoke-antes.txt, fernanda-smoke-falla.txt y fernanda-smoke-corregido.txt; commit propio 780833cc8ee890ea21211cbd1ff64ec951e5a55b."
+      "evidence": "docs/reviews/fernanda-diagnostico.md; reports/week-01/logs/fernanda-smoke-antes.txt; reports/week-01/logs/fernanda-smoke-falla.txt; reports/week-01/logs/fernanda-smoke-corregido.txt; commit propio 780833cc8ee890ea21211cbd1ff64ec951e5a55b."
     }
   ]
 }

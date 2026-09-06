@@ -1,4 +1,6 @@
-# Diagnóstico del fallo de GitHub Actions — semana 1
+# Diagnóstico histórico del fallo de GitHub Actions — semana 1
+
+Este documento conserva los errores y decisiones de los avances `86e44dd...`, `7853102...` y `bccdf8c...`. Las referencias a integrantes pendientes y verificaciones fallidas describen esas versiones anteriores. Los tres registros ya fueron integrados y las comprobaciones posteriores aprobaron; los resultados y rutas vigentes se encuentran en [cierre-integracion.md](cierre-integracion.md), [individual.json](individual.json), [verify.json](../../reports/week-01/verify.json) y [public-tests.json](../../reports/week-01/public-tests.json). El historial se conserva para explicar las causas, sin presentarlo como el estado actual de la entrega.
 
 ## Ejecución afectada y síntoma
 
@@ -117,7 +119,7 @@ Esta comprobación local no sustituye `make public-test-week-01`. Después de su
 
 El fallo de Windows al lanzar npm desde Python es un problema de entorno local separado. La ejecución de GitHub sobre Ubuntu ya demostró que los comandos originales del toolchain pueden pasar sin alterar el evaluador.
 
-## Relación con la rúbrica
+## Relación con la rúbrica en aquel avance
 
 | Criterio | Evidencia disponible | Pendiente para cerrar |
 |---|---|---|
@@ -129,7 +131,7 @@ El fallo de Windows al lanzar npm desde Python es un problema de entorno local s
 
 La falla controlada evaluable sigue siendo la transición incorrecta de `App.tsx` y su corrección. La omisión al publicar JSON se documenta como una incidencia adicional; no sustituye el experimento ni se presenta como una ejecución personal de los compañeros.
 
-## Secuencia de cierre
+## Secuencia prevista en aquel avance
 
 Cuando estén las tres aportaciones, seguir `LEEME_PRIMERO.md` desde el paso 9: fijar el SHA definitivo del trabajo técnico, completar los tres JSON con datos reales, ejecutar todas las comprobaciones y crear el commit exclusivo de evidencias sólo cuando todo pase. Después crear `week-01-final`, ejecutar `make evidence-week-01`, comprobar `failure.json`, subir rama y etiqueta y entregar en Classroom únicamente URL, etiqueta y SHA completo.
 
