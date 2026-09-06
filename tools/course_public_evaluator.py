@@ -289,7 +289,8 @@ def main() -> int:
     report_dir.mkdir(parents=True, exist_ok=True)
     filename = {"verify": "verify.json", "public": "public-tests.json", "evidence": "failure.json"}[args.mode]
     (report_dir / filename).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    # Keep stdout compatible with Windows consoles; the saved report remains UTF-8.
+    print(json.dumps(result, ensure_ascii=True, indent=2))
     return 0 if passed else 1
 
 
