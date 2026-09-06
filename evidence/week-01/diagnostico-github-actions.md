@@ -26,7 +26,7 @@ En ambos, `commitSha` seguía siendo un texto de plantilla. El contenido local c
 
 La causa del tercer check es distinta: los otros dos integrantes todavía no han realizado sus aportaciones. El usuario lo confirmó durante esta corrección. No existen todavía los datos y commits personales necesarios para cerrar `individual.json`.
 
-## Corrección aplicada
+## Primera corrección: publicar los JSON
 
 1. Publicar las versiones completadas de `reports/week-01/baseline.json` y `evidence/week-01/engineering.json`.
 2. Conservar en ambos el SHA completo `86e44dd125677ac07d3a275f5eb356acac4792cd`, que identifica el trabajo técnico publicado.
@@ -34,7 +34,7 @@ La causa del tercer check es distinta: los otros dos integrantes todavía no han
 4. Conservar los campos, nombres y rutas de las plantillas originales. `baseline.json` mantiene una observación fallida y otra aprobada de la falla controlada de la app, respaldadas por sus salidas reales.
 5. Mantener pendiente `individual.json` hasta reunir tres aportaciones reales. Este commit es un avance de corrección; todavía no es el cierre del paso 14 ni la entrega final.
 
-Las pruebas, workflows, evaluador, scripts npm y Makefile se conservan como en el commit inicial. Se comprobó con:
+En esa primera corrección, las pruebas, workflows, evaluador, scripts npm y Makefile se conservaban como en el commit inicial. Se comprobó antes de publicar con:
 
 ```bash
 git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 HEAD -- course-tests .github tools/course_public_evaluator.py package.json Makefile
@@ -42,11 +42,58 @@ git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 HEAD -- course-tes
 
 Resultado observado antes de publicar: código 0 y ninguna diferencia.
 
+## Segundo diagnóstico: el runner no descargaba el commit padre
+
+La [ejecución posterior sobre 7853102](https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/34002038927) cambió el mensaje de los dos reportes a `commitSha must be HEAD or its direct evidence-only parent`. Los SHA ya eran cadenas válidas; faltaba el historial que permite comprobarlos.
+
+**Síntoma:** los dos reportes pasaban la validación local y fallaban en Actions al comprobar su relación con el padre inmediato.
+
+**Causa:** el paso `actions/checkout@v4` no especificaba profundidad. El checkout de un solo commit no tenía disponible `HEAD^`, que el evaluador original consulta con Git. El código 0 obtenido en una copia local con historial completo no demostraba que esa consulta funcionara en el runner.
+
+Se reprodujo con el proyecto situado en `785310257040a3322dcc8d253da623c10010ea7b`. Comandos ejecutados en PowerShell:
+
+```powershell
+$historyCheckDir = Join-Path $env:TEMP ('campusops-shallow-' + [Guid]::NewGuid().ToString('N'))
+git clone --depth 1 --no-local --branch main 'C:\Users\oscar\Desktop\CampusOps-Semana-01' $historyCheckDir
+$env:CAMPUSOPS_HISTORY_CHECK = $historyCheckDir
+python -B -c "import os, runpy; from pathlib import Path; r=Path(os.environ['CAMPUSOPS_HISTORY_CHECK']); e=runpy.run_path(str(r/'tools/course_public_evaluator.py')); print('Shallow result:', e['evidence_sha_matches'](r,'86e44dd125677ac07d3a275f5eb356acac4792cd',e['git_sha'](r)))"
+git -C $historyCheckDir rev-parse --is-shallow-repository
+git -C $historyCheckDir fetch --unshallow
+python -B -c "import os, runpy; from pathlib import Path; r=Path(os.environ['CAMPUSOPS_HISTORY_CHECK']); e=runpy.run_path(str(r/'tools/course_public_evaluator.py')); result=e['evidence_sha_matches'](r,'86e44dd125677ac07d3a275f5eb356acac4792cd',e['git_sha'](r)); print('Full history result:', result); assert result[0]"
+git -C $historyCheckDir rev-parse --is-shallow-repository
+```
+
+| Estado de la misma copia | Resultado real del evaluador original | Indicador de copia superficial |
+|---|---|---|
+| Antes de descargar el historial restante | `False`, con el mismo mensaje de SHA padre observado en Actions | `true` |
+| Después de `git fetch --unshallow` | `True`, `evidence-only commit; invalid changes=[]` | `false` |
+
+La modificación aplicada al entorno de CI agrega únicamente esta configuración al checkout del workflow semanal:
+
+```yaml
+- name: Checkout
+  uses: actions/checkout@v4
+  with:
+    fetch-depth: 0
+```
+
+Se eligió descargar el historial completo en lugar de limitarlo a dos commits. Ambas opciones permiten consultar al padre inmediato; el historial completo también conserva la trazabilidad de las aportaciones y etiquetas. El costo aceptado es descargar más historial. No se alteran pruebas, aserciones, evaluador, umbrales ni comandos de evaluación.
+
+El cambio de configuración se guardó como nuevo trabajo técnico en `bccdf8c83e8506895798f16a19284f36b58605a6`. Los dos JSON se actualizan a ese SHA en el commit siguiente, que vuelve a contener exclusivamente `reports/` y `evidence/`. El SHA `86e44dd...` queda como referencia histórica de la primera incidencia, no como el SHA vigente de los reportes.
+
+Para comprobar la integridad de las pruebas y el evaluador después de este ajuste:
+
+```bash
+git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 HEAD -- course-tests tools/course_public_evaluator.py package.json Makefile
+```
+
+Resultado observado: código 0, sin diferencias. El diff del workflow muestra sólo las dos líneas de configuración de profundidad del checkout.
+
 ## Decisión, alternativas y beneficio/costo
 
 Para resolver la omisión se eligió publicar ahora los dos reportes respaldados por evidencia, mediante un commit exclusivo de evidencias. La alternativa considerada fue esperar a que los tres integrantes terminaran y publicar todos los JSON juntos.
 
-Publicarlos ahora permite comprobar de inmediato los dos errores de SHA y deja visible el diagnóstico real. El costo es que el workflow semanal seguirá fallando por la aportación individual pendiente. Al incorporar nuevos cambios del equipo habrá que obtener un SHA vigente y regenerar las evidencias siguiendo los pasos 9 a 14; no debe mantenerse un SHA que deje de cumplir la relación de padre inmediato.
+Publicarlos ahora permite comprobar los errores de SHA y deja visible el diagnóstico real. La primera ejecución mostró además la necesidad de descargar el historial, corregida en el segundo diagnóstico. El costo es que el workflow semanal seguirá fallando por la aportación individual pendiente. Al incorporar nuevos cambios del equipo habrá que obtener un SHA vigente y regenerar las evidencias siguiendo los pasos 9 a 14; no debe mantenerse un SHA que deje de cumplir la relación de padre inmediato.
 
 La decisión de ingeniería sobre la falla controlada y sus alternativas está en `engineering.json`. Debe revisarse con el equipo antes del cierre.
 
@@ -87,4 +134,3 @@ La falla controlada evaluable sigue siendo la transición incorrecta de `App.tsx
 Cuando estén las tres aportaciones, seguir `LEEME_PRIMERO.md` desde el paso 9: fijar el SHA definitivo del trabajo técnico, completar los tres JSON con datos reales, ejecutar todas las comprobaciones y crear el commit exclusivo de evidencias sólo cuando todo pase. Después crear `week-01-final`, ejecutar `make evidence-week-01`, comprobar `failure.json`, subir rama y etiqueta y entregar en Classroom únicamente URL, etiqueta y SHA completo.
 
 No se crea una etiqueta final mientras falten aportaciones o verificaciones.
-
