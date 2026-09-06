@@ -1,6 +1,12 @@
 # Starter security status
 
-## Current baseline — 2026-08-25, compatible maintenance
+## Team 4 submission check — 2026-09-06
+
+The unchanged project lockfile was checked with `npm audit --omit=dev --audit-level=critical` during `make feedback`, `make verify-week-01` and `make public-test-week-01`. These runs reported one moderate advisory affecting `@xmldom/xmldom` and exited with code 0 under the original critical threshold. Evidence: `reports/week-01/logs/oscar-feedback-cierre.txt` and the toolchain checks in `reports/week-01/verify.json` and `reports/week-01/public-tests.json`.
+
+This is the observed submission result, not a claim of zero vulnerabilities. Dependencies, lockfile and audit threshold were preserved. The dated results below describe the supplied starter's earlier maintenance and are not new tests performed by this team.
+
+## Distributed baseline — 2026-08-25, compatible maintenance
 
 The distributed lockfile reports **0 critical, 0 high, 0 medium and 0 low** known vulnerabilities in both `npm audit --json` (including development dependencies) and `npm audit --omit=dev --json`. Clean installation, public feedback, backend self-tests, dependency API checks, full course contract regression and the native Android debug build passed. The starter ZIP is independently installed and audited before handoff.
 
@@ -12,7 +18,7 @@ The distributed lockfile reports **0 critical, 0 high, 0 medium and 0 low** know
 
 Upstream fixes: [Metro 0.84.5](https://github.com/react/metro/releases/tag/v0.84.5) and [uuid 11.1.1](https://github.com/uuidjs/uuid/releases/tag/v11.1.1).
 
-## Historical baseline — superseded by the current section
+## Historical baseline — before the distributed maintenance
 
 Audit date: 2026-08-21.
 

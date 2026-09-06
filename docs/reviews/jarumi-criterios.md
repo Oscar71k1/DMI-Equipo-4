@@ -32,8 +32,7 @@ No se realizó ningún cambio a `docs/risk-register.md` ni a `docs/problem-defin
 
 ## 6. Comando y resultado real
 
-Comando ejecutado:npm test -- --ci --runInBand course-tests/public/week-01.test.ts
-
+Comando ejecutado: `npm test -- --ci --runInBand course-tests/public/week-01.test.ts`.
 
 Resultado real: la prueba pasó correctamente (PASS). Se ejecutó 1 suite de pruebas con 1 prueba total, ambas exitosas (`Test Suites: 1 passed, 1 total`; `Tests: 1 passed, 1 total`), con código de salida `EXIT_CODE=0`. El resultado coincide con mi predicción de la sección 2.
 

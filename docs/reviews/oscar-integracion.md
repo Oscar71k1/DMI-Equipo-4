@@ -39,3 +39,11 @@ El criterio 7 exige un solo evento para la misma clave y contenido y el rechazo 
 Los comandos previstos son `make feedback`, `make verify-week-01` y `make public-test-week-01`. Las salidas de cierre se conservan en `reports/week-01/logs/` y los resultados estructurados en `reports/week-01/verify.json` y `reports/week-01/public-tests.json`. El resultado real y la explicación de esta sesión se registran después de ejecutar en el objeto de Oscar de `evidence/week-01/individual.json`.
 
 Un resultado aprobado de estas comprobaciones acredita la línea base y la estructura de evidencia que revisan. No demuestra sincronización, idempotencia, permisos de negocio ni conectividad con un servidor real. La evidencia de la falla de interfaz conserva sus observaciones originales y la repetición independiente documentada por Fernanda.
+
+## Revisión posterior de coherencia documental
+
+Se contrastaron los archivos Markdown y los cinco entregables de semana 1 contra `LEEME_PRIMERO.md`, `RUBRICA.md` y `course-contracts.json`. La versión etiquetada inicial contenía los cinco archivos requeridos y sus registros completos, pero la guía opcional conservaba el reparto propuesto y pendientes anteriores a la integración. También había instrucciones generales que colocaban el comando de evidencia antes de la etiqueta.
+
+La revisión sustituye esa guía por un índice de los archivos reales, conserva un riesgo por integrante, ordena los comandos de README y SUBMISSION conforme al paso 15, distingue la auditoría de seguridad actual de la del paquete original e identifica el diagnóstico de Actions como antecedente histórico. En el JSON individual se añade una aclaración a la explicación de Jarumi sin reescribir su predicción. Las rutas de verificación de ingeniería se expresan completas.
+
+Antes de repetir las comprobaciones de esta revisión, la predicción es que seguirán pasando al actualizar los SHA de evidencia: los ajustes afectan documentación y claridad de los registros, y no cambian la aplicación, las dependencias, el evaluador ni las pruebas. Los resultados reales de esta repetición se registran en los reportes y en `evidence/week-01/cierre-integracion.md` después de ejecutar los comandos.
