@@ -27,15 +27,25 @@
       "explanation": "El resultado coincidió con mi predicción. La prueba confirma que existe evidencia de una falla reproducida y su corrección, pero no comprueba mi riesgo 1 (reasignación offline), ya que esa función de sincronización todavía no está implementada en el proyecto — corresponde a un hito posterior del curso."
 },
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_3",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
-      "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "studentId": "a3523110496",
+      "commitShas": ["780833cc8ee890ea21211cbd1ff64ec951e5a55b"],
+      "files": [
+        "docs/reviews/fernanda-diagnostico.md",
+        "reports/week-01/logs/fernanda-smoke-antes.txt",
+        "reports/week-01/logs/fernanda-smoke-falla.txt",
+        "reports/week-01/logs/fernanda-smoke-corregido.txt"],
+      "tests": [
+        "npm run test:smoke (estado original, App.tsx sin modificar): PASS, 1/1, exit code 0",
+        "npm run test:smoke (con setStatus('offline') forzado en la rama de éxito): FAIL, 1/1, exit code 1, 'Expected substring: \"available\" / Received string: \"Backend: offline\"'",
+        "npm run test:smoke (App.tsx restaurado con git checkout): PASS, 1/1, exit code 0"
+      ],
+      "reviews": [
+        "Revisión del Riesgo 3 de docs/risk-register.md (interfaz muestra incorrectamente la disponibilidad del backend): comparé la fila existente contra el resultado de mi propio experimento (falla y corrección reproducidas en App.tsx) y concluí que la fila ya describe correctamente el evento, la probabilidad, el impacto, la mitigación y la comprobación, por lo que la conservé sin cambios."
+      ],
+      "prediction": "La prueba seguiría encontrando el título 'CampusOps', pero fallaría esperando 'available' en backend-status y recibiendo 'Backend: offline', porque el doble del backend responde exitosamente pero la transición .then() lo traduciría mal a 'offline'.",
+      "command": "npm run test:smoke",
+      "observedResult": "Estado original: 1 suite y 1 test aprobados, exit code 0. Falla provocada: 1 suite y 1 test fallidos, exit code 1, mensaje 'Expected substring: \"available\" / Received string: \"Backend: offline\"'. Corrección: 1 suite y 1 test aprobados, exit code 0, con git diff -- App.tsx vacío.",
+      "explanation": "La rama .then() de getBackendHealth() en App.tsx asignaba setStatus('offline') en vez de setStatus('available') para una respuesta exitosa del backend simulado. Esto confirma que npm run test:smoke detecta correctamente esta regresión de interfaz descrita en el Riesgo 3, sin que se trate de una caída real de servidor. La prueba no demuestra conectividad real ni mitiga los riesgos 1 y 2 del registro del equipo."
     }
   ]
 }
