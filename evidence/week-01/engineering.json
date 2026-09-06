@@ -1,20 +1,28 @@
 {
-  "_instructions": "Eliminen este campo cuando terminen. Comparen alternativas reales y relacionen la decisión con una comprobación ejecutada.",
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "REEMPLAZAR_CON_SHA_DEL_COMMIT_DE_CODIGO_Y_DOCUMENTOS",
-  "decision": "REEMPLAZAR_CON_LA_DECISION_DE_ALCANCE_RIESGO_O_ACEPTACION",
+  "commitSha": "86e44dd125677ac07d3a275f5eb356acac4792cd",
+  "decision": "Para el diagnostico de semana 1 se elige conservar la prueba smoke existente con su doble determinista de backend y comprobar la transicion de respuesta exitosa a available. El alcance de esta semana es verificar el starter: una regresion reversible de esa transicion aborda el riesgo 3 del registro y el criterio 9 de la definicion del problema sin implementar los flujos futuros. La preparacion fue asistida; el equipo debe revisar y adoptar o ajustar esta decision antes del cierre.",
   "alternatives": [
-    "REEMPLAZAR_CON_PRIMERA_ALTERNATIVA_REAL",
-    "REEMPLAZAR_CON_SEGUNDA_ALTERNATIVA_REAL"
+    "Usar la prueba smoke existente, cuyo doble resuelve getBackendHealth(), alterar temporalmente la rama de exito y comprobar tanto el fallo como la correccion de la transicion a available.",
+    "Comprobar la pantalla contra un servidor iniciado y disponible durante cada ejecucion: aportaria evidencia de integracion real, pero introduce preparacion y variaciones de disponibilidad que dificultan aislar esta regresion de interfaz.",
+    "Limitar el criterio de la linea base a que aparezca el titulo CampusOps: simplifica la observacion visual, pero no detectaria que la respuesta exitosa se convierte en offline. Se descarta porque deja sin comprobar la transicion."
   ],
-  "tradeoff": "REEMPLAZAR_CON_EL_BENEFICIO_Y_EL_COSTO_DE_LA_DECISION",
-  "requirementIds": ["AC-02", "AC-04"],
+  "tradeoff": "El doble permite repetir la misma entrada y atribuir el fallo a la transicion de la interfaz: la prueba detecto offline y paso al restaurar available. A cambio, esta evidencia no demuestra conectividad HTTP real, autenticacion ni sincronizacion. Esas comprobaciones quedan para los hitos correspondientes. Se conservan la prueba y sus aserciones originales; no se reduce el criterio para conseguir un resultado aprobado.",
+  "requirementIds": [
+    "AC-02",
+    "AC-04"
+  ],
   "verification": [
     {
-      "command": "REEMPLAZAR_CON_COMANDO_EJECUTADO",
-      "result": "REEMPLAZAR_CON_RESULTADO_OBSERVADO",
-      "evidence": "REEMPLAZAR_CON_ARCHIVO_REPORTE_O_SALIDA_QUE_LO_DEMUESTRA"
+      "command": "npm run test:smoke",
+      "result": "Con la transicion de exito alterada: codigo 1, una prueba fallida; se esperaba available y se recibio Backend: offline. El titulo permanecia renderizado.",
+      "evidence": "reports/week-01/logs/smoke-falla.txt y reports/week-01/logs/falla-controlada.patch; procedimiento en evidence/week-01/procedimiento-falla.md."
+    },
+    {
+      "command": "npm run test:smoke",
+      "result": "Tras restaurar la transicion de exito: codigo 0, una suite y una prueba aprobadas, sin modificar course-tests/. La prueba vuelve a observar available.",
+      "evidence": "reports/week-01/logs/smoke-corregido.txt; criterio 9 en docs/problem-definition.md y riesgo 3 en docs/risk-register.md."
     }
   ]
 }

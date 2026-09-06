@@ -1,23 +1,22 @@
 {
-  "_instructions": "Eliminen este campo cuando terminen. Los demás campos deben contener evidencia real y commitSha debe ser un SHA Git completo de 40 caracteres.",
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "REEMPLAZAR_CON_SHA_DEL_COMMIT_DE_CODIGO_Y_DOCUMENTOS",
-  "generatedAt": "REEMPLAZAR_CON_FECHA_HORA_ISO_8601",
+  "commitSha": "86e44dd125677ac07d3a275f5eb356acac4792cd",
+  "generatedAt": "2026-09-05T18:35:55-06:00",
   "checks": [
     {
-      "id": "falla-controlada",
+      "id": "backend-exitoso-mostrado-offline",
       "status": "fail",
       "scenarioType": "failure",
       "command": "npm run test:smoke",
-      "evidence": "REEMPLAZAR_CON_SINTOMA_OBSERVADO_Y_CAUSA_IDENTIFICADA"
+      "evidence": "Se cambio temporalmente la rama .then de getBackendHealth() en App.tsx para ejecutar setStatus('offline') en lugar de setStatus('available'). Sintoma: una suite y una prueba fallaron, codigo 1; Expected substring: \"available\", Received string: \"Backend: offline\". Causa: se asignaba el estado offline tras una respuesta exitosa del doble, no una caida real del backend. Salida: reports/week-01/logs/smoke-falla.txt. Cambio temporal: reports/week-01/logs/falla-controlada.patch."
     },
     {
-      "id": "correccion-verificada",
+      "id": "backend-exitoso-mostrado-available",
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npm run test:smoke",
-      "evidence": "REEMPLAZAR_CON_RESULTADO_OBSERVABLE_DESPUES_DE_CORREGIR"
+      "evidence": "Se restauro setStatus('available') en la rama de exito y se repitio el mismo comando. Resultado: Test Suites: 1 passed, 1 total; Tests: 1 passed, 1 total; codigo 0. App.tsx quedo restaurado y no se modificaron las pruebas. La comprobacion acredita el titulo y la transicion de estado con el doble exitoso, no conectividad real. Salida: reports/week-01/logs/smoke-corregido.txt. Procedimiento y limites: evidence/week-01/procedimiento-falla.md."
     }
   ]
 }
