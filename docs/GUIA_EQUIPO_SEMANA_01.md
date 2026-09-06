@@ -4,7 +4,7 @@ Repositorio del equipo: https://github.com/Oscar71k1/DMI-Equipo-4
 
 Entrega: 7 de septiembre de 2026, 23:59, hora de Ciudad de México. Deben participar exactamente tres personas. La guía obligatoria es `LEEME_PRIMERO.md`: leerla completa y seguir su secuencia. Este archivo es un apoyo opcional para organizar invitaciones y aportaciones; no agrega requisitos de evaluación ni sustituye las instrucciones del ZIP corregido.
 
-Conservar todo el trabajo completado y copiar del ZIP corregido únicamente los archivos que falten. Las pruebas predeterminadas, los workflows, el evaluador público y sus criterios deben permanecer como en el paquete original. La falla controlada se introduce temporalmente en el código de la aplicación y se corrige allí; nunca se edita, elimina, ignora o desactiva una prueba para conseguir que pase.
+Conservar todo el trabajo completado y copiar del ZIP corregido únicamente los archivos que falten. Las pruebas predeterminadas, el evaluador público y sus criterios deben permanecer como en el paquete original. Los workflows deben ejecutar todos los comandos obligatorios, sin omitirlos ni suavizar sus resultados. El workflow semanal descarga el historial Git completo para que el evaluador original pueda comprobar el commit padre de evidencias. La falla controlada se introduce temporalmente en el código de la aplicación y se corrige allí; nunca se edita, elimina, ignora o desactiva una prueba para conseguir que pase.
 
 ## 1. Oscar invita a sus dos compañeros
 
