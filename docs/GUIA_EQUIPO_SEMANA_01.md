@@ -2,7 +2,9 @@
 
 Repositorio del equipo: https://github.com/Oscar71k1/DMI-Equipo-4
 
-Entrega: 7 de septiembre de 2026, 23:59, hora de Ciudad de México. Deben participar exactamente tres personas. Esta guía organiza lo que falta; los requisitos completos siguen en `LEEME_PRIMERO.md` y `RUBRICA.md`.
+Entrega: 7 de septiembre de 2026, 23:59, hora de Ciudad de México. Deben participar exactamente tres personas. La guía obligatoria es `LEEME_PRIMERO.md`: leerla completa y seguir su secuencia. Este archivo es un apoyo opcional para organizar invitaciones y aportaciones; no agrega requisitos de evaluación ni sustituye las instrucciones del ZIP corregido.
+
+Conservar todo el trabajo completado y copiar del ZIP corregido únicamente los archivos que falten. Las pruebas predeterminadas, los workflows, el evaluador público y sus criterios deben permanecer como en el paquete original. La falla controlada se introduce temporalmente en el código de la aplicación y se corrige allí; nunca se edita, elimina, ignora o desactiva una prueba para conseguir que pase.
 
 ## 1. Oscar invita a sus dos compañeros
 
@@ -62,13 +64,13 @@ make feedback
 $env:PYTHON = 'python'
 ```
 
-El evaluador público incluye un ajuste de compatibilidad para localizar `npm.cmd` en Windows. Ejecuta las mismas comprobaciones y conserva los códigos de salida; no modifica las pruebas ni permite ignorar un fallo.
+El evaluador público se conserva idéntico al del paquete original. En esta computadora se detectó que Python para Windows no localiza `npm` al lanzarlo desde el evaluador, aunque `npm run test:smoke` funciona desde PowerShell. Resolver la compatibilidad del entorno antes del cierre, usando un entorno compatible con las herramientas originales o solicitando al docente una indicación de entorno. No parchear el evaluador ni presentar un fallo de herramientas como la falla controlada. Las ejecuciones previas con un lanzador modificado no acreditan la validación final del paquete original.
 
 Leer `docs/CAMPUSOPS.md`, `RUBRICA.md`, `docs/problem-definition.md` y `docs/risk-register.md`. La instalación original debe pasar antes de provocar una falla. Un problema de instalación no cuenta como la falla controlada del equipo.
 
 ## 4. Reparto propuesto: cada persona produce evidencia propia
 
-Los documentos iniciales y el procedimiento fueron preparados con asistencia de Codex. Cada integrante debe comprender, revisar y comprobar su aportación antes de registrarla como propia. Ejecutar comandos personalmente y explicar resultados aporta evidencia; copiar salidas de otra sesión no demuestra ejecución propia.
+Los documentos iniciales y el procedimiento fueron preparados con asistencia de Codex. Cada integrante debe comprender, revisar y comprobar su aportación antes de registrarla como propia. Ejecutar comandos personalmente y explicar resultados aporta evidencia; copiar salidas de otra sesión no demuestra ejecución propia. El reparto y los archivos de revisión propuestos abajo son opcionales: el equipo puede elegir otras aportaciones técnicas verificables dentro de `LEEME_PRIMERO.md`; los registros obligatorios siguen siendo las plantillas del paquete.
 
 | Responsable | Trabajo concreto | Archivo propio y comprobación |
 |---|---|---|

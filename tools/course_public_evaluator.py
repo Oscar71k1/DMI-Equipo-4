@@ -6,9 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
-import os
 import re
-import shutil
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -25,11 +23,8 @@ SECRET_PATTERNS = {
 
 
 def run(repo: Path, command: list[str], timeout: int = 300) -> tuple[bool, str]:
-    # npm also ships a Unix script named npm; Windows must use its .cmd launcher.
-    executable = "npm.cmd" if os.name == "nt" and command[0] == "npm" else command[0]
-    resolved_command = [shutil.which(executable) or executable, *command[1:]]
     try:
-        result = subprocess.run(resolved_command, cwd=repo, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=timeout)
+        result = subprocess.run(command, cwd=repo, text=True, capture_output=True, timeout=timeout)
     except (OSError, subprocess.TimeoutExpired) as exc:
         return False, str(exc)
     tail = ((result.stdout or "") + "\n" + (result.stderr or ""))[-3000:]
@@ -289,8 +284,7 @@ def main() -> int:
     report_dir.mkdir(parents=True, exist_ok=True)
     filename = {"verify": "verify.json", "public": "public-tests.json", "evidence": "failure.json"}[args.mode]
     (report_dir / filename).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    # Keep stdout compatible with Windows consoles; the saved report remains UTF-8.
-    print(json.dumps(result, ensure_ascii=True, indent=2))
+    print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if passed else 1
 
 
