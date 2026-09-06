@@ -16,9 +16,9 @@ Este archivo relaciona el trabajo integrado con la rúbrica. Sustituye la propue
 
 | Integrante | Riesgo revisado | Documento propio | Comprobación documentada |
 |---|---|---|---|
-| Jarumi | 1: un cambio sin conexión sobrescribe una reasignación posterior | [jarumi-criterios.md](reviews/jarumi-criterios.md) | Revisión contra el criterio 6 y ejecución de la prueba pública de semana 1. |
-| Oscar | 2: un reintento después de perder una respuesta duplica eventos | [oscar-integracion.md](reviews/oscar-integracion.md) | Revisión contra el criterio 7, integración de las ramas y ejecución asistida de feedback y evaluadores. |
-| Fernanda | 3: la interfaz interpreta incorrectamente una respuesta exitosa del backend | [fernanda-diagnostico.md](reviews/fernanda-diagnostico.md) | Experimento independiente con smoke: estado original aprobado, falla detectada y corrección aprobada. |
+| Jarumi | 1: un cambio sin conexión sobrescribe una reasignación posterior | [jarumi-criterios.md](jarumi-criterios.md) | Revisión contra el criterio 6 y ejecución de la prueba pública de semana 1. |
+| Oscar | 2: un reintento después de perder una respuesta duplica eventos | [oscar-integracion.md](oscar-integracion.md) | Revisión contra el criterio 7, integración de las ramas y ejecución asistida de feedback y evaluadores. |
+| Fernanda | 3: la interfaz interpreta incorrectamente una respuesta exitosa del backend | [fernanda-diagnostico.md](fernanda-diagnostico.md) | Experimento independiente con smoke: estado original aprobado, falla detectada y corrección aprobada. |
 
 Cada persona revisó un riesgo. Los tres riesgos corresponden al equipo; la consigna no pide tres incidencias ni tres escenarios por estudiante. Las revisiones explican conclusiones concretas, aunque las filas originales del registro no necesitaran correcciones. Los commits originales de Jarumi y Fernanda se conservaron al integrar sus ramas.
 
@@ -35,7 +35,38 @@ La predicción original de Jarumi se conserva. Su documento contiene una aclarac
 | Evidencia individual | 0.5 | Tres registros completos y aportaciones trazables a sus archivos y commits. |
 | Total de la actividad | 8.0 | El quiz individual de 3 puntos se evalúa por separado. |
 
-El [registro de cierre](../evidence/week-01/cierre-integracion.md) enlaza las salidas y sus resultados. El [plan y diagnóstico de la falla](../evidence/week-01/procedimiento-falla.md) conserva el cambio reversible en `App.tsx`; el [diagnóstico histórico de Actions](../evidence/week-01/diagnostico-github-actions.md) explica problemas de versiones anteriores que ya se resolvieron.
+El [registro de cierre](cierre-integracion.md) enlaza las salidas y sus resultados. El [plan y diagnóstico de la falla](procedimiento-falla.md) conserva el cambio reversible en `App.tsx`; el [diagnóstico histórico de Actions](diagnostico-github-actions.md) explica problemas de versiones anteriores que ya se resolvieron.
+
+## Documentación centralizada en esta carpeta
+
+Los documentos de trabajo generados están directamente en `docs/`. Los cinco entregables obligatorios conservan sus nombres y rutas según la guía docente; los JSON y los logs continúan en `evidence/` y `reports/`.
+
+| Documento | Uso |
+|---|---|
+| [procedimiento-falla.md](procedimiento-falla.md) | Plan anterior al experimento, síntoma, causa y corrección. |
+| [cierre-integracion.md](cierre-integracion.md) | Integración, matriz de rúbrica y referencias a comprobaciones reales. |
+| [diagnostico-github-actions.md](diagnostico-github-actions.md) | Antecedentes de errores de validación ya resueltos. |
+| [entorno-windows.md](entorno-windows.md) | Reproducción del evaluador original en Windows. |
+| [GUIA_JARUMI.md](GUIA_JARUMI.md) | Indicaciones de preparación de Jarumi; aportación ya completada. |
+| [GUIA_FERNANDA.md](GUIA_FERNANDA.md) | Indicaciones de preparación de Fernanda; aportación ya completada. |
+
+Las tres revisiones individuales están enlazadas en la tabla de aportaciones. Las guías personales conservan el reparto de un riesgo por persona y explican qué evalúa la rúbrica; son antecedentes de preparación y no evidencia de una ejecución nueva.
+
+### Trazabilidad de los documentos trasladados
+
+El traslado cambia la ruta de consulta actual. Los SHA originales de Jarumi y Fernanda permanecen en `individual.json`; la reorganización corresponde a la sesión asistida de Oscar. Para consultar la aportación en su commit original se utiliza la ruta anterior de esta tabla. `git log --follow -- docs/jarumi-criterios.md` y el comando equivalente de Fernanda permiten seguir el cambio de nombre.
+
+| Ruta en los commits anteriores | Ruta actual |
+|---|---|
+| `docs/reviews/oscar-integracion.md` | [docs/oscar-integracion.md](oscar-integracion.md) |
+| `docs/reviews/jarumi-criterios.md` | [docs/jarumi-criterios.md](jarumi-criterios.md) |
+| `docs/reviews/fernanda-diagnostico.md` | [docs/fernanda-diagnostico.md](fernanda-diagnostico.md) |
+| `evidence/week-01/procedimiento-falla.md` | [docs/procedimiento-falla.md](procedimiento-falla.md) |
+| `evidence/week-01/diagnostico-github-actions.md` | [docs/diagnostico-github-actions.md](diagnostico-github-actions.md) |
+| `evidence/week-01/cierre-integracion.md` | [docs/cierre-integracion.md](cierre-integracion.md) |
+| `evidence/week-01/entorno-windows/LEEME.md` | [docs/entorno-windows.md](entorno-windows.md) |
+
+Las instrucciones oficiales `LEEME_PRIMERO.md` y `RUBRICA.md` se conservan en la raíz del proyecto. Los archivos README y SECURITY mantienen sus ubicaciones habituales.
 
 ## Reproducción y congelamiento
 
@@ -46,7 +77,7 @@ El [registro de cierre](../evidence/week-01/cierre-integracion.md) enlaza las sa
 5. Crear la etiqueta anotada `week-01-final` y después ejecutar `make evidence-week-01`. Confirmar `status: pass` en `reports/week-01/failure.json` y no crear otro commit para añadirlo.
 6. Publicar rama y etiqueta y obtener el SHA con `git rev-list -n 1 week-01-final`. Si la etiqueta ya existe, estos pasos describen el proceso de cierre; no se debe sustituir su destino sin acordar la actualización de la entrega.
 
-En Windows, la [nota de entorno](../evidence/week-01/entorno-windows/LEEME.md) documenta cómo ejecutar el evaluador original con la instalación disponible, sin modificarlo. En GitHub Actions se utiliza npm directamente sobre Ubuntu.
+En Windows, la [nota de entorno](entorno-windows.md) documenta cómo ejecutar el evaluador original con la instalación disponible, sin modificarlo. En GitHub Actions se utiliza npm directamente sobre Ubuntu.
 
 ## Alcance de las comprobaciones
 

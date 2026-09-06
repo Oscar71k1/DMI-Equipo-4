@@ -46,4 +46,10 @@ Se contrastaron los archivos Markdown y los cinco entregables de semana 1 contra
 
 La revisión sustituye esa guía por un índice de los archivos reales, conserva un riesgo por integrante, ordena los comandos de README y SUBMISSION conforme al paso 15, distingue la auditoría de seguridad actual de la del paquete original e identifica el diagnóstico de Actions como antecedente histórico. En el JSON individual se añade una aclaración a la explicación de Jarumi sin reescribir su predicción. Las rutas de verificación de ingeniería se expresan completas.
 
-Antes de repetir las comprobaciones de esta revisión, la predicción es que seguirán pasando al actualizar los SHA de evidencia: los ajustes afectan documentación y claridad de los registros, y no cambian la aplicación, las dependencias, el evaluador ni las pruebas. Los resultados reales de esta repetición se registran en los reportes y en `evidence/week-01/cierre-integracion.md` después de ejecutar los comandos.
+Antes de repetir las comprobaciones de esta revisión, la predicción es que seguirán pasando al actualizar los SHA de evidencia: los ajustes afectan documentación y claridad de los registros, y no cambian la aplicación, las dependencias, el evaluador ni las pruebas. Los resultados reales de esta repetición se registran en los reportes y en `docs/cierre-integracion.md` después de ejecutar los comandos.
+
+## Organización de los documentos en docs
+
+Se trasladan las revisiones, el procedimiento de falla, el diagnóstico histórico, la nota de Windows y el cierre a la raíz de `docs/`. Las guías personales se incorporan como indicaciones de preparación cuyas aportaciones ya están completadas. El índice conserva la correspondencia con las rutas de los commits originales de Jarumi y Fernanda; sus autorías, predicciones y resultados permanecen identificados.
+
+Antes de validar esta reorganización, la predicción es que los cinco entregables obligatorios seguirán disponibles y las comprobaciones originales pasarán al actualizar las rutas de referencia y el SHA técnico de los reportes. La aplicación y las pruebas se mantienen sin diferencias. Los resultados reales se registrarán en los logs de `reports/week-01/` y en el registro individual de Oscar después de ejecutar los comandos.

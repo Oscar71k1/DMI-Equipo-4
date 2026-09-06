@@ -4,25 +4,25 @@ Revisión y comandos de integración realizados en la sesión de Oscar con asist
 
 ## Versiones y aportaciones
 
-SHA del trabajo técnico integrado y revisado: `6d7d06c036c9f6cf254dd3912badb83e550383af`. `baseline.json` y `engineering.json` referencian este SHA. El commit posterior sólo debe contener archivos de `reports/` y `evidence/`, según el paso 14 de `LEEME_PRIMERO.md`.
+El SHA técnico vigente se consulta en el campo `commitSha` de [baseline.json](../reports/week-01/baseline.json) y [engineering.json](../evidence/week-01/engineering.json); ambos deben coincidir. La versión final se obtiene con `git rev-list -n 1 week-01-final`. El commit posterior sólo debe contener archivos de `reports/` y `evidence/`, según el paso 14 de `LEEME_PRIMERO.md`.
 
 | Integrante | Riesgo revisado | Commit técnico propio | Evidencia principal |
 |---|---|---|---|
-| Oscar | 2: duplicación por reintentos e integración documental | `bb6c47ba1dd299483cf8f55e6dabaced77a68bdd` y `6d7d06c036c9f6cf254dd3912badb83e550383af` | `docs/reviews/oscar-integracion.md` y `reports/week-01/logs/oscar-feedback-rubrica.txt` |
-| Jarumi | 1: reasignación durante trabajo sin conexión | `22dc628e5a423047cfcf76d49777eae31641a209` | `docs/reviews/jarumi-criterios.md` y `reports/week-01/logs/jarumi-prueba-publica.txt` |
-| Fernanda | 3: disponibilidad incorrecta en la interfaz | `780833cc8ee890ea21211cbd1ff64ec951e5a55b` | `docs/reviews/fernanda-diagnostico.md` y sus tres logs de smoke |
+| Oscar | 2: duplicación por reintentos e integración documental | `bb6c47ba1dd299483cf8f55e6dabaced77a68bdd` y `6d7d06c036c9f6cf254dd3912badb83e550383af` | `docs/oscar-integracion.md` y `reports/week-01/logs/oscar-feedback-rubrica.txt` |
+| Jarumi | 1: reasignación durante trabajo sin conexión | `22dc628e5a423047cfcf76d49777eae31641a209` | `docs/jarumi-criterios.md` y `reports/week-01/logs/jarumi-prueba-publica.txt` |
+| Fernanda | 3: disponibilidad incorrecta en la interfaz | `780833cc8ee890ea21211cbd1ff64ec951e5a55b` | `docs/fernanda-diagnostico.md` y sus tres logs de smoke |
 
-Los commits originales de las compañeras son antecesores de la integración. Se conservaron sus identificadores, commits, archivos, predicciones y resultados. Se completó el objeto de Oscar y el identificador compartido del equipo con los datos confirmados. La revisión posterior añadió una aclaración identificada como nota de integración en la explicación de Jarumi, para precisar qué comprueba la prueba pública sin reconstruir su predicción. Los SHA citados existen, tienen el autor esperado y, en conjunto para cada integrante, contienen los archivos indicados en su registro individual.
+Los commits originales de las compañeras son antecesores de la integración. Se conservaron sus identificadores, commits, archivos, predicciones y resultados. Se completó el objeto de Oscar y el identificador compartido del equipo con los datos confirmados. La revisión posterior añadió una aclaración identificada como nota de integración en la explicación de Jarumi, para precisar qué comprueba la prueba pública sin reconstruir su predicción. Los SHA citados existen y tienen el autor esperado. Los documentos trasladados a `docs/` conservan su autoría: la tabla de rutas anteriores y actuales del [índice](GUIA_EQUIPO_SEMANA_01.md#trazabilidad-de-los-documentos-trasladados) permite localizar cada archivo en el commit de su autora.
 
-## Comprobaciones reales anteriores al commit de evidencias
+## Comprobaciones registradas en la revisión anterior
 
 | Comando | Resultado observado | Archivo |
 |---|---|---|
 | `make feedback` | Código 0. Typecheck, lint y smoke aprobados; 1 suite y 1 prueba de smoke aprobadas; auditoría dentro del umbral crítico original; exportación Android completada con 581 módulos. | `reports/week-01/logs/oscar-feedback-rubrica.txt` |
-| `make verify-week-01` | `status: pass`, 9 comprobaciones aprobadas, código 0. | `reports/week-01/verify.json` y `reports/week-01/logs/oscar-verify-rubrica.txt` |
-| `make public-test-week-01` | `status: pass`, 13 comprobaciones aprobadas, código 0; los tres JSON obligatorios pasan su validación. | `reports/week-01/public-tests.json` y `reports/week-01/logs/oscar-public-rubrica.txt` |
+| `make verify-week-01` | `status: pass`, 9 comprobaciones aprobadas, código 0. | `reports/week-01/logs/oscar-verify-rubrica.txt` |
+| `make public-test-week-01` | `status: pass`, 13 comprobaciones aprobadas, código 0; los tres JSON obligatorios pasan su validación. | `reports/week-01/logs/oscar-public-rubrica.txt` |
 
-El reporte de verificación fue generado a las `2026-09-06T22:54:14.386427+00:00` y el público a las `2026-09-06T22:54:42.731443+00:00`. La auditoría informó una vulnerabilidad moderada y terminó correctamente con el umbral crítico definido por el proyecto; no se modificó ese umbral ni se actualizaron dependencias durante el cierre.
+En esa revisión, sobre `6d7d06c036c9f6cf254dd3912badb83e550383af`, el reporte de verificación fue generado a las `2026-09-06T22:54:14.386427+00:00` y el público a las `2026-09-06T22:54:42.731443+00:00`. La auditoría informó una vulnerabilidad moderada y terminó correctamente con el umbral crítico definido por el proyecto; no se modificó ese umbral ni se actualizaron dependencias durante el cierre.
 
 ## Relación con la rúbrica
 
@@ -40,7 +40,7 @@ Se comprobó con `git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 
 
 Tres logs se convirtieron de UTF-16 a UTF-8, normalizando finales de línea y líneas vacías, sin cambiar mensajes, tiempos ni códigos de salida. Los bytes anteriores siguen accesibles en los commits originales. La aclaración de la revisión de Jarumi se añadió después de su texto, conservando su predicción y su resultado.
 
-Los reportes locales antiguos que mostraban errores del entorno se conservaron fuera del repositorio como antecedentes; los reportes de cierre aquí citados proceden de las nuevas ejecuciones originales y aprobadas. La adaptación local de Windows se documenta en `evidence/week-01/entorno-windows/`; GitHub Actions usa npm directamente en Ubuntu.
+Los reportes locales antiguos que mostraban errores del entorno se conservaron fuera del repositorio como antecedentes; los reportes de cierre aquí citados proceden de las nuevas ejecuciones originales y aprobadas. La adaptación local de Windows se documenta en [entorno-windows.md](entorno-windows.md), con su fuente en `evidence/week-01/entorno-windows/npm-launcher.cs`; GitHub Actions usa npm directamente en Ubuntu.
 
 ## Alcance de los resultados
 
@@ -56,4 +56,10 @@ Se sustituyó la guía opcional de incorporación, que conservaba tareas propues
 
 Esta revisión comprueba la presencia, coherencia y trazabilidad de la evidencia visible. Los resultados de los evaluadores originales se registran en la tabla de comprobaciones; la matriz de rúbrica identifica la evidencia de cada criterio sin asignarse una calificación automática.
 
-Las comprobaciones de la revisión documental se repitieron sobre el SHA técnico indicado arriba. Los logs anteriores con sufijo `-cierre.txt` se conservan como antecedentes de la integración inicial; los logs con sufijo `-rubrica.txt` y los JSON de verificación y prueba pública corresponden a esta revisión.
+Los logs con sufijo `-cierre.txt` conservan la integración inicial y los terminados en `-rubrica.txt` conservan la revisión del SHA `6d7d06c036c9f6cf254dd3912badb83e550383af`. Los reportes estructurados [verify.json](../reports/week-01/verify.json) y [public-tests.json](../reports/week-01/public-tests.json) se actualizan en cada cierre: sus campos `commitSha`, `evaluatedAt`, `status` y `checks` identifican la ejecución vigente. Así se distinguen los resultados históricos de la versión entregada.
+
+## Reorganización de la documentación
+
+Se trasladaron los siete documentos de revisión, diagnóstico y cierre a la raíz de `docs/`, se incorporaron las dos guías personales como referencias de preparación completada y se actualizaron enlaces y referencias de los JSON. El [índice del equipo](GUIA_EQUIPO_SEMANA_01.md) contiene la correspondencia entre rutas anteriores y actuales. Los logs de las ejecuciones históricas conservan sus contenidos originales; la reorganización no cambia las aportaciones ni los SHA de las compañeras.
+
+Esta modificación documental requiere fijar otro SHA técnico y repetir `make feedback`, `make verify-week-01` y `make public-test-week-01` antes del commit exclusivo de evidencias. Los resultados de esa repetición se registran en los JSON y logs de `reports/week-01/`; después se comprueba la etiqueta con `make evidence-week-01`. Los documentos no incorporan un SHA final literal que quede obsoleto al crear el commit de evidencias.

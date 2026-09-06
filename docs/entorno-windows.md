@@ -2,7 +2,7 @@
 
 El evaluador llama `npm` con `subprocess.run` y sin shell. En este entorno de Windows, Python no resuelve el lanzador `npm.cmd` como ejecutable. Se utiliza un adaptador local `npm.exe` que ejecuta el `npm-cli.js` de la instalación existente mediante su mismo `node.exe`.
 
-`npm-launcher.cs` contiene el código completo: transmite los argumentos, stdout, stderr y el código de salida del proceso real. No inspecciona ni modifica pruebas, reportes ni resultados. El ejecutable se compila fuera del repositorio y sólo se añade al PATH de la sesión de validación. El código y la versión de npm permanecen iguales. En Ubuntu/GitHub Actions se usa npm directamente, sin este adaptador.
+[npm-launcher.cs](../evidence/week-01/entorno-windows/npm-launcher.cs) contiene el código completo: transmite los argumentos, stdout, stderr y el código de salida del proceso real. No inspecciona ni modifica pruebas, reportes ni resultados. El ejecutable se compila fuera del repositorio y sólo se añade al PATH de la sesión de validación. El código y la versión de npm permanecen iguales. En Ubuntu/GitHub Actions se usa npm directamente, sin este adaptador.
 
 En la sesión de cierre se utilizaron Node 22.22.0, npm 10.9.4 y Python 3.13.7. Para reproducir en PowerShell con esa instalación preparada, desde la raíz del repositorio:
 

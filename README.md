@@ -12,7 +12,7 @@ La entrega de esta semana contiene la definición del caso, tres riesgos prioriz
 | Decisión, alternativas, beneficio/costo y verificación | [engineering.json](evidence/week-01/engineering.json) |
 | Tres integrantes, commits propios, archivos, predicciones y resultados | [individual.json](evidence/week-01/individual.json) |
 
-El [índice de la entrega](docs/GUIA_EQUIPO_SEMANA_01.md) relaciona las aportaciones con la [rúbrica](RUBRICA.md). El [registro de cierre](evidence/week-01/cierre-integracion.md) enlaza comandos y resultados. Las instrucciones completas y el orden obligatorio están en [LEEME_PRIMERO.md](LEEME_PRIMERO.md).
+El [índice de la entrega](docs/GUIA_EQUIPO_SEMANA_01.md) relaciona las aportaciones con la [rúbrica](RUBRICA.md). El [registro de cierre](docs/cierre-integracion.md) enlaza comandos y resultados. Las instrucciones completas y el orden obligatorio están en [LEEME_PRIMERO.md](LEEME_PRIMERO.md).
 
 Para identificar la versión congelada se utiliza `git rev-list -n 1 week-01-final`. Los SHA de `baseline.json` y `engineering.json` identifican el trabajo técnico; el último commit de evidencias sólo puede modificar `reports/` y `evidence/`. El reporte `failure.json` se genera después de etiquetar, según el paso 15, y no requiere un commit posterior.
 

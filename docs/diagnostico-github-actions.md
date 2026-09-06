@@ -1,6 +1,6 @@
 # Diagnóstico histórico del fallo de GitHub Actions — semana 1
 
-Este documento conserva los errores y decisiones de los avances `86e44dd...`, `7853102...` y `bccdf8c...`. Las referencias a integrantes pendientes y verificaciones fallidas describen esas versiones anteriores. Los tres registros ya fueron integrados y las comprobaciones posteriores aprobaron; los resultados y rutas vigentes se encuentran en [cierre-integracion.md](cierre-integracion.md), [individual.json](individual.json), [verify.json](../../reports/week-01/verify.json) y [public-tests.json](../../reports/week-01/public-tests.json). El historial se conserva para explicar las causas, sin presentarlo como el estado actual de la entrega.
+Este documento conserva los errores y decisiones de los avances `86e44dd...`, `7853102...` y `bccdf8c...`. Las referencias a integrantes pendientes y verificaciones fallidas describen esas versiones anteriores. Los tres registros ya fueron integrados y las comprobaciones posteriores aprobaron; los resultados y rutas vigentes se encuentran en [cierre-integracion.md](cierre-integracion.md), [individual.json](../evidence/week-01/individual.json), [verify.json](../reports/week-01/verify.json) y [public-tests.json](../reports/week-01/public-tests.json). El historial se conserva para explicar las causas, sin presentarlo como el estado actual de la entrega.
 
 ## Ejecución afectada y síntoma
 
@@ -125,7 +125,7 @@ El fallo de Windows al lanzar npm desde Python es un problema de entorno local s
 |---|---|---|
 | Reproducción | SHA técnico completo, historial Git y ejecución original de Actions con instalación, feedback y verificación aprobados. | Workflow semanal totalmente aprobado desde la versión definitiva y etiqueta final comprobada. |
 | Definición del caso | `docs/problem-definition.md` y `docs/risk-register.md`: alcance, actores, flujo, criterios observables y exactamente tres riesgos priorizados. | Revisión y aportaciones del equipo. |
-| Diagnóstico de falla | `baseline.json`, `evidence/week-01/procedimiento-falla.md` y los logs `smoke-falla.txt` y `smoke-corregido.txt`. | Repetición personal por los integrantes que la registren como propia. |
+| Diagnóstico de falla | `baseline.json`, `docs/procedimiento-falla.md` y los logs `smoke-falla.txt` y `smoke-corregido.txt`. | Repetición personal por los integrantes que la registren como propia. |
 | Decisión técnica | `engineering.json`: decisión sobre la prueba determinista, alternativas, beneficio/costo y resultados fail/pass reales. Este documento explica además la decisión de publicación. | Adopción o ajuste por el equipo antes de la entrega. |
 | Evidencia individual | Plantilla original y guía de colaboración, apartados 4 a 7. | Identificador oficial de equipo, identificadores escolares, commits propios, archivos, predicción, prueba o revisión, resultado y explicación de exactamente tres personas. |
 
