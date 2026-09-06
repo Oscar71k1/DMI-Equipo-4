@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "6d7d06c036c9f6cf254dd3912badb83e550383af",
-  "generatedAt": "2026-09-06T16:50:36-06:00",
+  "commitSha": "a1318165f2bd6f703a9e408e6d81d35bdd17cd8e",
+  "generatedAt": "2026-09-06T17:32:40-06:00",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -16,7 +16,7 @@
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npm run test:smoke",
-      "evidence": "Se restauro setStatus('available') en la rama de exito y se repitio el mismo comando. Resultado: Test Suites: 1 passed, 1 total; Tests: 1 passed, 1 total; codigo 0. App.tsx quedo restaurado y no se modificaron las pruebas. La comprobacion acredita el titulo y la transicion de estado con el doble exitoso, no conectividad real. Salida: reports/week-01/logs/smoke-corregido.txt. Procedimiento y limites: evidence/week-01/procedimiento-falla.md."
+      "evidence": "Se restauro setStatus('available') en la rama de exito y se repitio el mismo comando. Resultado: Test Suites: 1 passed, 1 total; Tests: 1 passed, 1 total; codigo 0. App.tsx quedo restaurado y no se modificaron las pruebas. La comprobacion acredita el titulo y la transicion de estado con el doble exitoso, no conectividad real. Salida: reports/week-01/logs/smoke-corregido.txt. Procedimiento y limites: docs/procedimiento-falla.md."
     },
     {
       "id": "cierre-integrado-feedback",
@@ -31,6 +31,13 @@
       "scenarioType": "nominal",
       "command": "make feedback",
       "evidence": "Repeticion real tras revisar los Markdown: codigo 0, tipos y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, auditoria dentro del umbral critico original y exportacion Android completada con 581 modulos. Salida: reports/week-01/logs/oscar-feedback-rubrica.txt. El codigo de la app y las pruebas siguen iguales al starter."
+    },
+    {
+      "id": "organizacion-documental-feedback",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make feedback",
+      "evidence": "Repeticion asistida en la sesion de Oscar despues de trasladar la documentacion a docs: codigo 0; typecheck y lint aprobados; smoke con 1 suite y 1 prueba aprobadas; audit:ci dentro del umbral critico original (una advertencia moderada); exportacion Android completada con 581 modulos. Salida real: reports/week-01/logs/oscar-feedback-organizacion.txt. Pruebas y aplicacion conservadas."
     }
   ]
 }
