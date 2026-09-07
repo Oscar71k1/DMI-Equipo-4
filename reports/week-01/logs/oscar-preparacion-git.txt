@@ -1,0 +1,68 @@
+Verificacion asistida de preparacion Git: 2026-09-06T17:49:31.527387-06:00
+Copias de comprobacion: C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe
+$ git init --initial-branch=main
+Initialized empty Git repository in C:/Users/oscar/.codex/visualizations/2026/09/06/01a0740c-ad13-74d3-bb1a-b18f6d68dc57/cierre-equipo-4/historial-git-ugrpqsqe/repositorio-completo-sin-remoto/.git/
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\repositorio-completo-sin-remoto\tools\prepare_git_history.py
+Historial Git: completo; no se necesita descargar historial.
+EXIT_CODE=0
+PASS: repositorio completo no necesita remoto ni descarga.
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\repositorio-completo-sin-remoto\paquete-sin-git\tools\prepare_git_history.py
+Historial Git: paquete sin repositorio; no se necesita descargar historial.
+EXIT_CODE=0
+PASS: paquete sin .git no opera sobre el repositorio de su carpeta padre.
+$ git clone --depth 1 --no-local C:\Users\oscar\Desktop\CampusOps-Semana-01 C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\copia-superficial
+
+Cloning into 'C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\copia-superficial'...
+EXIT_CODE=0
+Antes de preparar: el evaluador original debe detectar la falta de historial.
+{
+  "baseline": [
+    false,
+    "commitSha must be HEAD or its direct evidence-only parent"
+  ],
+  "engineering": [
+    false,
+    "commitSha must be HEAD or its direct evidence-only parent"
+  ]
+}
+$ git remote set-url origin C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\remoto-inexistente
+
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\copia-superficial\tools\prepare_git_history.py
+Historial Git: copia superficial; descargando historial real desde origin.
+fatal: 'C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\remoto-inexistente' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+Command '['git', 'fetch', '--unshallow', '--tags', '--no-recurse-submodules', 'origin']' returned non-zero exit status 128.
+EXIT_CODE=128
+PASS: descarga fallida conserva HEAD y devuelve error real.
+$ git remote set-url origin C:\Users\oscar\Desktop\CampusOps-Semana-01
+
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\copia-superficial\tools\prepare_git_history.py
+Historial Git: copia superficial; descargando historial real desde origin.
+Historial Git: completo; SHA de trabajo conservado: 7acbbb8a4a452827eee5528d6703a5ef351bf4bd
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new tag]         week-01-final-anterior-4e1888c -> week-01-final-anterior-4e1888c
+ * [new tag]         week-01-final-anterior-e801eb9 -> week-01-final-anterior-e801eb9
+EXIT_CODE=0
+Despues de preparar: HEAD, rama y archivos conservados; historial completo.
+{
+  "baseline": [
+    true,
+    "5 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]"
+  ],
+  "engineering": [
+    true,
+    "decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]"
+  ]
+}
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\historial-git-ugrpqsqe\copia-superficial\tools\prepare_git_history.py
+Historial Git: completo; no se necesita descargar historial.
+EXIT_CODE=0
+PASS: repeticion con historial completo termina sin descargar otra vez.
+RESULTADO_GLOBAL=PASS
+EXIT_CODE=0

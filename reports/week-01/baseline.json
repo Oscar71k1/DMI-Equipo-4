@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "a1318165f2bd6f703a9e408e6d81d35bdd17cd8e",
-  "generatedAt": "2026-09-06T17:32:40-06:00",
+  "commitSha": "d9476c8e7186c309f1f449509014fd73949a4001",
+  "generatedAt": "2026-09-06T22:07:54-06:00",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -38,6 +38,20 @@
       "scenarioType": "nominal",
       "command": "make feedback",
       "evidence": "Repeticion asistida en la sesion de Oscar despues de trasladar la documentacion a docs: codigo 0; typecheck y lint aprobados; smoke con 1 suite y 1 prueba aprobadas; audit:ci dentro del umbral critico original (una advertencia moderada); exportacion Android completada con 581 modulos. Salida real: reports/week-01/logs/oscar-feedback-organizacion.txt. Pruebas y aplicacion conservadas."
+    },
+    {
+      "id": "preparacion-con-workflow-original",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make setup",
+      "evidence": "Ejecucion asistida: el nuevo paso de preparacion detecto el historial local completo y no descargo; npm ci instalo 970 paquetes y termino con codigo 0. Log: reports/week-01/logs/oscar-setup-historial.txt. La comprobacion separada en una copia superficial detecto el error de SHA antes de descargar y aprobo baseline y engineering despues, conservando HEAD, rama y archivos; un remoto inexistente devolvio codigo 128. Casos y limites: docs/preparacion-historial-git.md y reports/week-01/logs/oscar-preparacion-git.txt."
+    },
+    {
+      "id": "feedback-con-workflows-originales",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make feedback",
+      "evidence": "Ejecucion asistida despues de preparar el historial desde Makefile y restaurar los workflows: codigo 0, typecheck y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, auditoria dentro del umbral critico original y exportacion Android completada con 581 modulos. Log: reports/week-01/logs/oscar-feedback-historial.txt. Pruebas, evaluador, aplicacion y workflows coinciden con el paquete inicial."
     }
   ]
 }
