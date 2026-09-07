@@ -1,0 +1,25 @@
+python -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: completo; no requiere descarga.
+npm ci
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated whatwg-encoding@2.0.0: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 970 packages, and audited 971 packages in 58s
+
+184 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+EXIT_CODE=0

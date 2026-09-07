@@ -1,0 +1,174 @@
+$ git init --initial-branch=main
+Initialized empty Git repository in C:/Users/oscar/.codex/visualizations/2026/09/06/01a0740c-ad13-74d3-bb1a-b18f6d68dc57/cierre-equipo-4/makefile-integrado-fg_udl5y/completo-sin-remoto/.git/
+EXIT_CODE=0
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: completo; no requiere descarga.
+EXIT_CODE=0
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: paquete sin repositorio; no requiere descarga.
+EXIT_CODE=0
+PASS: repositorio completo sin remoto y paquete sin Git.
+
+CASO: rama
+$ git init --initial-branch=main
+Initialized empty Git repository in C:/Users/oscar/.codex/visualizations/2026/09/06/01a0740c-ad13-74d3-bb1a-b18f6d68dc57/cierre-equipo-4/makefile-integrado-fg_udl5y/rama/.git/
+EXIT_CODE=0
+$ git remote add origin C:\Users\oscar\Desktop\CampusOps-Semana-01
+
+EXIT_CODE=0
+$ git fetch --no-tags --depth=1 origin +ff3714c320e20598855a74f2125d51979457b270:refs/remotes/origin/main
+
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new ref]         ff3714c320e20598855a74f2125d51979457b270 -> origin/main
+EXIT_CODE=0
+$ git checkout -B main refs/remotes/origin/main
+branch 'main' set up to track 'origin/main'.
+Reset branch 'main'
+EXIT_CODE=0
+Validacion antes de preparar: (False, 'commitSha must be HEAD or its direct evidence-only parent')
+$ git remote set-url origin C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\makefile-integrado-fg_udl5y\remoto-inexistente
+
+EXIT_CODE=0
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: copia superficial; descargando historial real.
+fatal: 'C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\makefile-integrado-fg_udl5y\remoto-inexistente' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+make: *** [prepare-git-history] Error 128
+EXIT_CODE=2
+$ git remote set-url origin C:\Users\oscar\Desktop\CampusOps-Semana-01
+
+EXIT_CODE=0
+PASS: Make detiene la preparacion cuando Git falla.
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: copia superficial; descargando historial real.
+Historial Git: completo; SHA conservado: ff3714c320e20598855a74f2125d51979457b270
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new branch]      codex/revision-rubrica-semana-01 -> origin/codex/revision-rubrica-semana-01
+EXIT_CODE=0
+{
+  "baseline": [
+    true,
+    "7 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]"
+  ],
+  "engineering": [
+    true,
+    "decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]"
+  ]
+}
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: completo; no requiere descarga.
+EXIT_CODE=0
+PASS: rama, sin script adicional, HEAD y referencia conservados.
+
+CASO: etiqueta
+$ git init --initial-branch=main
+Initialized empty Git repository in C:/Users/oscar/.codex/visualizations/2026/09/06/01a0740c-ad13-74d3-bb1a-b18f6d68dc57/cierre-equipo-4/makefile-integrado-fg_udl5y/etiqueta/.git/
+EXIT_CODE=0
+$ git remote add origin C:\Users\oscar\Desktop\CampusOps-Semana-01
+
+EXIT_CODE=0
+$ git fetch --no-tags --depth=1 origin +ff3714c320e20598855a74f2125d51979457b270:refs/tags/week-01-final
+
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new ref]         ff3714c320e20598855a74f2125d51979457b270 -> week-01-final
+EXIT_CODE=0
+$ git checkout --detach refs/tags/week-01-final
+
+HEAD is now at ff3714c docs: registrar correccion y comprobaciones del checkout de etiqueta
+EXIT_CODE=0
+Validacion antes de preparar: (False, 'commitSha must be HEAD or its direct evidence-only parent')
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: copia superficial; descargando historial real.
+Historial Git: completo; SHA conservado: ff3714c320e20598855a74f2125d51979457b270
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new branch]      codex/revision-rubrica-semana-01 -> origin/codex/revision-rubrica-semana-01
+ * [new branch]      main       -> origin/main
+EXIT_CODE=0
+{
+  "baseline": [
+    true,
+    "7 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]"
+  ],
+  "engineering": [
+    true,
+    "decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]"
+  ]
+}
+$ make prepare-git-history
+C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe -c "from pathlib import Path; import subprocess as sp; import sys; present = Path('.git').exists(); print('Historial Git: paquete sin repositorio; no requiere descarga.') if not present else None; sys.exit(0) if not present else None; shallow = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip(); print('Historial Git: completo; no requiere descarga.') if shallow == 'false' else None; sys.exit(0) if shallow == 'false' else None; before = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); print('Historial Git: copia superficial; descargando historial real.', flush=True); result = sp.run(['git', 'fetch', '--unshallow', '--no-tags', '--no-recurse-submodules', 'origin']); sys.exit(result.returncode) if result.returncode else None; after = sp.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(); complete = sp.check_output(['git', 'rev-parse', '--is-shallow-repository'], text=True).strip() == 'false'; valid = complete and before == after; print('Historial Git: completo; SHA conservado: ' + after if valid else 'Error: historial incompleto o SHA modificado.'); sys.exit(0 if valid else 1)"
+Historial Git: completo; no requiere descarga.
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe tools/course_public_evaluator.py --week 01 --mode evidence
+{
+  "schemaVersion": 1,
+  "week": 1,
+  "mode": "evidence",
+  "commitSha": "ff3714c320e20598855a74f2125d51979457b270",
+  "evaluatedAt": "2026-09-07T04:32:46.797776+00:00",
+  "status": "pass",
+  "checks": [
+    {
+      "id": "base_files",
+      "status": "pass",
+      "detail": "missing=[]"
+    },
+    {
+      "id": "react_native_profile",
+      "status": "pass",
+      "detail": "missing packages=[]"
+    },
+    {
+      "id": "toolchain_scripts",
+      "status": "pass",
+      "detail": "missing scripts=[]"
+    },
+    {
+      "id": "workflow_integrity",
+      "status": "pass",
+      "detail": "bypass markers=[]"
+    },
+    {
+      "id": "secret_scan",
+      "status": "pass",
+      "detail": "hits=[]"
+    },
+    {
+      "id": "required_evidence",
+      "status": "pass",
+      "detail": "missing/empty=[]"
+    },
+    {
+      "id": "schema:reports/week-01/baseline.json",
+      "status": "pass",
+      "detail": "7 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]"
+    },
+    {
+      "id": "schema:evidence/week-01/engineering.json",
+      "status": "pass",
+      "detail": "decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]"
+    },
+    {
+      "id": "schema:evidence/week-01/individual.json",
+      "status": "pass",
+      "detail": "three individual evidence records found"
+    },
+    {
+      "id": "frozen_sha",
+      "status": "pass",
+      "detail": "tag=week-01-final tagSha=ff3714c320e20598855a74f2125d51979457b270 head=ff3714c320e20598855a74f2125d51979457b270"
+    }
+  ]
+}
+EXIT_CODE=0
+PASS: etiqueta, sin script adicional, HEAD y referencia conservados.
+RESULTADO_GLOBAL=PASS
+EXIT_CODE=0
