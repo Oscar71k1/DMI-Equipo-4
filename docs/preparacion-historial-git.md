@@ -1,6 +1,6 @@
 # Preparación del historial Git con el workflow original
 
-El workflow de semana 1 se restaura a su versión inicial. La preparación del historial se ejecuta desde `make setup`, antes de instalar las dependencias. Las pruebas, el evaluador y los comandos de comprobación mantienen sus versiones originales.
+Los workflows conservan su versión inicial. La preparación del historial está implementada directamente en el Makefile y se ejecuta antes de instalar las dependencias con `make setup`. La carpeta `tools/` contiene únicamente `course_public_evaluator.py`, con su contenido original. Las pruebas y los comandos de comprobación también permanecen originales.
 
 ## Problema y causa
 
@@ -10,15 +10,17 @@ El síntoma es `commitSha must be HEAD or its direct evidence-only parent`. La c
 
 ## Cambio realizado y alternativas
 
-Se conserva el objetivo de instalar con `npm ci` y se añade una sola instrucción previa en [Makefile](../Makefile):
+Se conserva la instalación con `npm ci` y se prepara el historial mediante un requisito previo en [Makefile](../Makefile):
 
 ```make
-setup:
-	$(PYTHON) tools/prepare_git_history.py
+setup: prepare-git-history
 	$(NPM) ci
+
+prepare-git-history:
+	$(PYTHON) -c "$(CAMPUSOPS_PREPARE_HISTORY)"
 ```
 
-[prepare_git_history.py](../tools/prepare_git_history.py) usa Git para comprobar si existe un repositorio y si es superficial. Si el paquete todavía no tiene `.git`, continúa con la instalación, como necesita el paso 2 de la guía. Si el historial ya está completo, continúa sin hacer una descarga.
+La variable `CAMPUSOPS_PREPARE_HISTORY` contiene el código de preparación, legible en el propio Makefile. Make une sus líneas antes de pasarlo a Python; no se crea ni se importa un archivo Python adicional. Se comprueba si existe un repositorio y si es superficial. Si el paquete todavía no tiene `.git`, continúa con la instalación, como necesita el paso 2 de la guía. Si el historial ya está completo, continúa sin hacer una descarga.
 
 Si la copia es superficial, ejecuta:
 
@@ -30,9 +32,9 @@ Después comprueba que el historial esté completo y que `HEAD` conserve el mism
 
 `--no-tags` conserva la referencia de la etiqueta que ya creó el checkout de Actions. Para ejecutar desde `week-01-final`, el checkout puede crear esa referencia directamente en el commit; intentar descargarla de nuevo como etiqueta anotada produce un conflicto aunque apunte al mismo commit. Recuperar el historial de commits no requiere sustituir esa referencia. La validación original de `frozen_sha` sigue comprobando que la etiqueta corresponda al SHA evaluado.
 
-Se consideraron dos ubicaciones para la misma preparación: configurar `fetch-depth` en el checkout, o recuperar el historial desde `make setup`. Se elige la segunda para conservar ambos workflows exactamente como en el paquete inicial, conforme a la preferencia de Oscar. El costo es mantener este pequeño script y necesitar Git, Python y acceso a `origin` cuando falte historial; esos requisitos ya forman parte del entorno del curso y de Actions. Un cambio de ubicación no elimina la necesidad de descargar el historial.
+Se consideraron dos ubicaciones para la misma preparación: configurar `fetch-depth` en el checkout, o recuperar el historial desde `make setup`. Se elige la segunda para conservar ambos workflows exactamente como en el paquete inicial, conforme a la preferencia de Oscar. Después se integró el código en el Makefile para conservar también la composición original de `tools/`. El costo es mantener ese bloque de preparación y necesitar Git, Python y acceso a `origin` cuando falte historial; esos requisitos ya forman parte del entorno del curso y de Actions. Un cambio de ubicación no elimina la necesidad de descargar el historial.
 
-## Comprobación realizada antes del cierre
+## Antecedentes de la preparación con un archivo separado
 
 La verificación se ejecutó con asistencia de Codex en copias aisladas, usando el helper en preparación y el evaluador original. La copia superficial se creó desde `7acbbb8a4a452827eee5528d6703a5ef351bf4bd`, la entrega anterior; no se modificaron sus JSON para cambiar el resultado. La salida completa está en [oscar-preparacion-git.txt](../reports/week-01/logs/oscar-preparacion-git.txt).
 
@@ -53,7 +55,15 @@ La [ejecución de la etiqueta sobre 98e3bfb](https://github.com/Oscar71k1/DMI-Eq
 
 Con el helper anterior, `git fetch --unshallow --tags` devolvió código 1 y el mensaje `would clobber existing tag`. Con el helper corregido a `--no-tags`, se recuperó el historial con código 0; `HEAD`, la referencia de la etiqueta y el estado de los archivos permanecieron iguales. Después, el evaluador original en modo `evidence` aprobó todos sus controles, incluido `frozen_sha`. La reproducción completa se conserva en [oscar-checkout-etiqueta.txt](../reports/week-01/logs/oscar-checkout-etiqueta.txt).
 
-Esta corrección modifica únicamente el helper de preparación. Los workflows continúan originales y no se fuerza la sustitución de ninguna etiqueta durante setup. Los reportes `verify.json` y `public-tests.json` y los logs con sufijo `-etiqueta.txt` registran las comprobaciones completas posteriores a esta corrección.
+En esa revisión se modificó únicamente el helper de preparación. Los logs con sufijo `-etiqueta.txt` conservan sus comprobaciones completas. Después se retiró el archivo separado, manteniendo la corrección `--no-tags` dentro del Makefile.
+
+## Integración directa en Makefile
+
+Se eliminó `tools/prepare_git_history.py` y se trasladó su función al objetivo `prepare-git-history` del Makefile. La comprobación se realizó con copias aisladas de rama y etiqueta, usando el checkout superficial por SHA que utiliza Actions. En cada copia se retiró el archivo Python adicional antes de ejecutar el nuevo objetivo de Make; `tools/` contenía únicamente el evaluador original.
+
+Ambas copias rechazaron los SHA de evidencia antes de preparar el historial y los aprobaron después. Se conservaron `HEAD`, la referencia seleccionada y el estado de los archivos. La validación original de evidencia congelada también aprobó en el caso de etiqueta. Un repositorio completo sin remoto y un paquete sin `.git` terminaron sin descargar; con un remoto inexistente, Git devolvió 128 y Make detuvo la preparación con código 2. La segunda ejecución sobre una copia ya preparada terminó sin descargar otra vez. La salida real está en [oscar-makefile-integrado.txt](../reports/week-01/logs/oscar-makefile-integrado.txt).
+
+Antes de las comprobaciones completas de este cambio, se espera que `make setup` y los comandos de evaluación sigan pasando: la preparación conserva su función, los archivos obligatorios mantienen sus rutas y el código de la aplicación, el evaluador y las pruebas permanecen originales. Los nuevos logs con sufijo `-makefile.txt` y los reportes estructurados registran los resultados de esa versión.
 
 ## Reproducción desde la etiqueta publicada
 

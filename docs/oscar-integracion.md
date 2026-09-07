@@ -61,3 +61,9 @@ Tras la reorganización, Oscar solicitó conservar el workflow original y resolv
 Se comprobó en copias aisladas que la validación original de baseline y engineering falla antes de recuperar el historial y pasa después, sin modificar esos JSON. También se comprobaron un paquete sin Git, un repositorio completo sin remoto, un remoto inaccesible y la repetición de la preparación. Los casos, resultados y límites están en [preparacion-historial-git.md](preparacion-historial-git.md), con la salida en `reports/week-01/logs/oscar-preparacion-git.txt`.
 
 Antes de ejecutar las comprobaciones completas, espero que pasen porque la preparación recupera el padre del commit que exige el evaluador, mientras que el código de aplicación y sus pruebas no cambian. El resultado real se añadirá al registro individual y los logs de cierre después de cada ejecución.
+
+## Preparación integrada directamente en Makefile
+
+En una revisión posterior se eliminó el archivo `tools/prepare_git_history.py` y se trasladó la preparación a `make prepare-git-history`, requisito previo de `make setup`. La carpeta `tools/` vuelve a contener únicamente el evaluador original. El código retirado permanece consultable en los commits de preparación anteriores; la ruta vigente de esta aportación es `Makefile`.
+
+La comprobación asistida en copias superficiales de rama y etiqueta pasó sin el archivo eliminado: se recuperó el historial y se conservaron el SHA, la referencia y los archivos. También se comprobaron el paquete sin Git, el historial completo, la repetición y el error real de un remoto inaccesible. El procedimiento y las salidas están en [preparacion-historial-git.md](preparacion-historial-git.md#integración-directa-en-makefile) y `reports/week-01/logs/oscar-makefile-integrado.txt`. La predicción antes de ejecutar las comprobaciones completas es que pasarán al conservar la preparación y el material original de evaluación; sus resultados se registrarán después de ejecutar.
