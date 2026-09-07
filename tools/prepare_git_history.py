@@ -27,8 +27,9 @@ def main() -> int:
 
     original_head = git_output("rev-parse", "HEAD")
     print("Historial Git: copia superficial; descargando historial real desde origin.", flush=True)
+    # checkout may create the selected tag at its commit; keep that ref unchanged.
     subprocess.run(
-        ["git", "fetch", "--unshallow", "--tags", "--no-recurse-submodules", "origin"],
+        ["git", "fetch", "--unshallow", "--no-tags", "--no-recurse-submodules", "origin"],
         cwd=REPO,
         check=True,
     )

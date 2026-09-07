@@ -23,10 +23,12 @@ setup:
 Si la copia es superficial, ejecuta:
 
 ```bash
-git fetch --unshallow --tags --no-recurse-submodules origin
+git fetch --unshallow --no-tags --no-recurse-submodules origin
 ```
 
 Después comprueba que el historial esté completo y que `HEAD` conserve el mismo SHA. Si Git falla, el script devuelve un error y Make detiene la preparación. No cambia reportes, SHA declarados, ramas de trabajo, pruebas ni resultados.
+
+`--no-tags` conserva la referencia de la etiqueta que ya creó el checkout de Actions. Para ejecutar desde `week-01-final`, el checkout puede crear esa referencia directamente en el commit; intentar descargarla de nuevo como etiqueta anotada produce un conflicto aunque apunte al mismo commit. Recuperar el historial de commits no requiere sustituir esa referencia. La validación original de `frozen_sha` sigue comprobando que la etiqueta corresponda al SHA evaluado.
 
 Se consideraron dos ubicaciones para la misma preparación: configurar `fetch-depth` en el checkout, o recuperar el historial desde `make setup`. Se elige la segunda para conservar ambos workflows exactamente como en el paquete inicial, conforme a la preferencia de Oscar. El costo es mantener este pequeño script y necesitar Git, Python y acceso a `origin` cuando falte historial; esos requisitos ya forman parte del entorno del curso y de Actions. Un cambio de ubicación no elimina la necesidad de descargar el historial.
 
@@ -44,6 +46,14 @@ La verificación se ejecutó con asistencia de Codex en copias aisladas, usando 
 | Segunda ejecución sobre la copia ya preparada | Código 0, sin descargar otra vez. |
 
 La predicción antes de ejecutar las comprobaciones completas de esta versión es que `make setup` preparará el historial que necesita el evaluador y que las comprobaciones de aplicación seguirán pasando: el cambio no toca su código ni sus pruebas. Los resultados completos del cierre se guardan en los logs y reportes de `reports/week-01/` y en el registro individual de Oscar. La comprobación final en GitHub Actions debe corresponder al SHA de la entrega actual.
+
+## Corrección del caso de etiqueta en Actions
+
+La [ejecución de la etiqueta sobre 98e3bfb](https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/34082203744) se detuvo en `Reproducible setup`. La comprobación inicial con `git clone --depth 1` no representaba la forma particular en que Actions obtiene una etiqueta a partir de su SHA. Se reprodujo esa forma de checkout en dos copias nuevas utilizando el mismo commit, el mismo nombre de etiqueta y el mismo evaluador original.
+
+Con el helper anterior, `git fetch --unshallow --tags` devolvió código 1 y el mensaje `would clobber existing tag`. Con el helper corregido a `--no-tags`, se recuperó el historial con código 0; `HEAD`, la referencia de la etiqueta y el estado de los archivos permanecieron iguales. Después, el evaluador original en modo `evidence` aprobó todos sus controles, incluido `frozen_sha`. La reproducción completa se conserva en [oscar-checkout-etiqueta.txt](../reports/week-01/logs/oscar-checkout-etiqueta.txt).
+
+Esta corrección modifica únicamente el helper de preparación. Los workflows continúan originales y no se fuerza la sustitución de ninguna etiqueta durante setup. Los reportes `verify.json` y `public-tests.json` y los logs con sufijo `-etiqueta.txt` registran las comprobaciones completas posteriores a esta corrección.
 
 ## Reproducción desde la etiqueta publicada
 
