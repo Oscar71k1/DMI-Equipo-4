@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "d9476c8e7186c309f1f449509014fd73949a4001",
-  "generatedAt": "2026-09-06T22:07:54-06:00",
+  "commitSha": "9a119d1fca7d01ef000af1c270a3aeeb7a594557",
+  "generatedAt": "2026-09-06T22:18:09-06:00",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -51,7 +51,7 @@
       "status": "pass",
       "scenarioType": "nominal",
       "command": "make feedback",
-      "evidence": "Ejecucion asistida despues de preparar el historial desde Makefile y restaurar los workflows: codigo 0, typecheck y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, auditoria dentro del umbral critico original y exportacion Android completada con 581 modulos. Log: reports/week-01/logs/oscar-feedback-historial.txt. Pruebas, evaluador, aplicacion y workflows coinciden con el paquete inicial."
+      "evidence": "Ejecucion asistida tras corregir la conservacion de la etiqueta en el helper de setup: codigo 0, typecheck y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, auditoria dentro del umbral critico original y exportacion Android completada con 581 modulos. Log actual: reports/week-01/logs/oscar-feedback-etiqueta.txt. La ejecucion anterior se conserva en reports/week-01/logs/oscar-feedback-historial.txt. Pruebas, evaluador, aplicacion y workflows coinciden con el paquete inicial."
     }
   ]
 }

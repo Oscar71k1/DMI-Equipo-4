@@ -1,0 +1,118 @@
+
+CASO: anterior-con-tags
+$ git init --initial-branch=main
+Initialized empty Git repository in C:/Users/oscar/.codex/visualizations/2026/09/06/01a0740c-ad13-74d3-bb1a-b18f6d68dc57/cierre-equipo-4/checkout-etiqueta-d0y7a8sz/anterior-con-tags/.git/
+EXIT_CODE=0
+$ git remote add origin C:\Users\oscar\Desktop\CampusOps-Semana-01
+
+EXIT_CODE=0
+$ git fetch --no-tags --depth=1 origin +98e3bfb66440d35560eba138f32b4bfcb85f141a:refs/tags/week-01-final
+
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new ref]         98e3bfb66440d35560eba138f32b4bfcb85f141a -> week-01-final
+EXIT_CODE=0
+$ git checkout --detach refs/tags/week-01-final
+
+HEAD is now at 98e3bfb docs: registrar validacion con workflows originales y setup de historial
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\checkout-etiqueta-d0y7a8sz\anterior-con-tags\tools\prepare_git_history.py
+Historial Git: copia superficial; descargando historial real desde origin.
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new branch]      codex/revision-rubrica-semana-01 -> origin/codex/revision-rubrica-semana-01
+ * [new branch]      main          -> origin/main
+ ! [rejected]        week-01-final -> week-01-final  (would clobber existing tag)
+ * [new tag]         week-01-final-anterior-4e1888c -> week-01-final-anterior-4e1888c
+ * [new tag]         week-01-final-anterior-7acbbb8 -> week-01-final-anterior-7acbbb8
+ * [new tag]         week-01-final-anterior-e801eb9 -> week-01-final-anterior-e801eb9
+Command '['git', 'fetch', '--unshallow', '--tags', '--no-recurse-submodules', 'origin']' returned non-zero exit status 1.
+EXIT_CODE=1
+Fallo reproducido: fetch --tags intenta sustituir la referencia local de la etiqueta.
+
+CASO: corregido-sin-tags
+$ git init --initial-branch=main
+Initialized empty Git repository in C:/Users/oscar/.codex/visualizations/2026/09/06/01a0740c-ad13-74d3-bb1a-b18f6d68dc57/cierre-equipo-4/checkout-etiqueta-d0y7a8sz/corregido-sin-tags/.git/
+EXIT_CODE=0
+$ git remote add origin C:\Users\oscar\Desktop\CampusOps-Semana-01
+
+EXIT_CODE=0
+$ git fetch --no-tags --depth=1 origin +98e3bfb66440d35560eba138f32b4bfcb85f141a:refs/tags/week-01-final
+
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new ref]         98e3bfb66440d35560eba138f32b4bfcb85f141a -> week-01-final
+EXIT_CODE=0
+$ git checkout --detach refs/tags/week-01-final
+
+HEAD is now at 98e3bfb docs: registrar validacion con workflows originales y setup de historial
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\checkout-etiqueta-d0y7a8sz\corregido-sin-tags\tools\prepare_git_history.py
+Historial Git: copia superficial; descargando historial real desde origin.
+Historial Git: completo; SHA de trabajo conservado: 98e3bfb66440d35560eba138f32b4bfcb85f141a
+From C:\Users\oscar\Desktop\CampusOps-Semana-01
+ * [new branch]      codex/revision-rubrica-semana-01 -> origin/codex/revision-rubrica-semana-01
+ * [new branch]      main       -> origin/main
+EXIT_CODE=0
+$ C:\Users\oscar\AppData\Local\Programs\Python\Python313\python.exe tools/course_public_evaluator.py --week 01 --mode evidence
+{
+  "schemaVersion": 1,
+  "week": 1,
+  "mode": "evidence",
+  "commitSha": "98e3bfb66440d35560eba138f32b4bfcb85f141a",
+  "evaluatedAt": "2026-09-07T04:14:43.080447+00:00",
+  "status": "pass",
+  "checks": [
+    {
+      "id": "base_files",
+      "status": "pass",
+      "detail": "missing=[]"
+    },
+    {
+      "id": "react_native_profile",
+      "status": "pass",
+      "detail": "missing packages=[]"
+    },
+    {
+      "id": "toolchain_scripts",
+      "status": "pass",
+      "detail": "missing scripts=[]"
+    },
+    {
+      "id": "workflow_integrity",
+      "status": "pass",
+      "detail": "bypass markers=[]"
+    },
+    {
+      "id": "secret_scan",
+      "status": "pass",
+      "detail": "hits=[]"
+    },
+    {
+      "id": "required_evidence",
+      "status": "pass",
+      "detail": "missing/empty=[]"
+    },
+    {
+      "id": "schema:reports/week-01/baseline.json",
+      "status": "pass",
+      "detail": "7 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]"
+    },
+    {
+      "id": "schema:evidence/week-01/engineering.json",
+      "status": "pass",
+      "detail": "decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]"
+    },
+    {
+      "id": "schema:evidence/week-01/individual.json",
+      "status": "pass",
+      "detail": "three individual evidence records found"
+    },
+    {
+      "id": "frozen_sha",
+      "status": "pass",
+      "detail": "tag=week-01-final tagSha=98e3bfb66440d35560eba138f32b4bfcb85f141a head=98e3bfb66440d35560eba138f32b4bfcb85f141a"
+    }
+  ]
+}
+EXIT_CODE=0
+PASS: historial completo, HEAD y etiqueta conservados; evidencia congelada aprobada.
+RESULTADO_GLOBAL=PASS
+EXIT_CODE=0

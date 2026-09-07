@@ -1,9 +1,10 @@
+python tools/course_public_evaluator.py --week 01 --mode public --execute-toolchain
 {
   "schemaVersion": 1,
   "week": 1,
-  "mode": "verify",
+  "mode": "public",
   "commitSha": "9a119d1fca7d01ef000af1c270a3aeeb7a594557",
-  "evaluatedAt": "2026-09-07T04:18:07.551686+00:00",
+  "evaluatedAt": "2026-09-07T04:18:34.806684+00:00",
   "status": "pass",
   "checks": [
     {
@@ -32,6 +33,26 @@
       "detail": "hits=[]"
     },
     {
+      "id": "required_evidence",
+      "status": "pass",
+      "detail": "missing/empty=[]"
+    },
+    {
+      "id": "schema:reports/week-01/baseline.json",
+      "status": "pass",
+      "detail": "7 checks indexed, 1 boundary/failure; report evaluates HEAD"
+    },
+    {
+      "id": "schema:evidence/week-01/engineering.json",
+      "status": "pass",
+      "detail": "decision evidence is substantive and reproducible; report evaluates HEAD"
+    },
+    {
+      "id": "schema:evidence/week-01/individual.json",
+      "status": "pass",
+      "detail": "three individual evidence records found"
+    },
+    {
       "id": "toolchain_1",
       "status": "pass",
       "detail": "npm run typecheck\n> dmi-react-native-starter@1.0.0 typecheck\n> tsc --noEmit"
@@ -49,7 +70,8 @@
     {
       "id": "toolchain_4",
       "status": "pass",
-      "detail": "npm run test:smoke\n> dmi-react-native-starter@1.0.0 test:smoke\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/smoke.test.tsx\n\n\nPASS course-tests/smoke.test.tsx\n  √ renders the reproducible baseline and resolves backend state (254 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        2.765 s, estimated 3 s\nRan all test suites matching /course-tests\\\\smoke.test.tsx/i."
+      "detail": "npm test -- --ci --runInBand course-tests/public/week-01.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-01.test.ts\n\n\nPASS course-tests/public/week-01.test.ts\n  √ baseline preserves the reproduced failure and its verified correction (6 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        2.179 s\nRan all test suites matching /course-tests\\\\public\\\\week-01.test.ts/i."
     }
   ]
 }
+EXIT_CODE=0
