@@ -36,7 +36,7 @@ En esa revisión, sobre `6d7d06c036c9f6cf254dd3912badb83e550383af`, el reporte d
 
 ## Integridad y ajustes documentados
 
-El Makefile, el directorio `tools/`, las pruebas, la aplicación, `package.json`, el lockfile y el workflow inicial coinciden con el paquete original. El workflow de Semana 1 incorpora únicamente el bloque `with` solicitado por Oscar: referencia explícita al SHA evaluado y `fetch-depth: 2`. El procedimiento, comparación de integridad y antecedentes están en [preparacion-historial-git.md](preparacion-historial-git.md).
+El Makefile, el directorio `tools/`, las pruebas, la aplicación, `package.json`, el lockfile y el workflow inicial coinciden con el paquete original. El workflow de Semana 1 incorpora el bloque `with` solicitado por Oscar: referencia explícita al SHA evaluado y `fetch-depth: 2`. Antes de validar la evidencia congelada, un paso condicionado al evento de etiqueta descarga su referencia real desde origin, necesaria porque checkout por SHA no la crea. El procedimiento, comparación de integridad y antecedentes están en [preparacion-historial-git.md](preparacion-historial-git.md).
 
 Tres logs se convirtieron de UTF-16 a UTF-8, normalizando finales de línea y líneas vacías, sin cambiar mensajes, tiempos ni códigos de salida. Los bytes anteriores siguen accesibles en los commits originales. La aclaración de la revisión de Jarumi se añadió después de su texto, conservando su predicción y su resultado.
 
@@ -80,3 +80,6 @@ La revisión posterior elimina el archivo Python adicional y conserva esa prepar
 El 9 de septiembre se solicitó conservar la instalación original y descargar el padre desde el checkout de Semana 1. La reproducción en copias aisladas de rama y etiqueta rechazó los SHA con profundidad 1 y los aprobó con profundidad 2, sin cambiar archivos ni referencias. El modo de evidencia congelada aprobó sus 10 controles en la copia de etiqueta. Log: `reports/week-01/logs/oscar-checkout-depth2.txt`.
 
 La configuración y esta documentación se guardan primero como trabajo técnico. Después se regeneran los JSON y los reportes en un commit exclusivo de evidencias; sus salidas usan el sufijo `-depth2.txt`. La etiqueta final se crea sobre ese segundo commit y se comprueba con el evaluador original. `failure.json` se retira del índice de Git y se vuelve a generar después de etiquetar, conforme al paso 15; su resultado se conserva localmente y como artefacto de Actions, sin crear un commit posterior.
+
+
+La comprobación posterior del checkout seleccionado por SHA detectó la etiqueta ausente: ambos JSON pasaron, pero `frozen_sha` falló. Descargar explícitamente la referencia de la etiqueta real del remoto de prueba corrigió ese control sin cambiar HEAD ni archivos; los 10 controles pasaron. Se añadió ese paso condicionado al mismo YAML, manteniendo intacto el bloque solicitado, el Makefile y los comandos originales. Log: `reports/week-01/logs/oscar-checkout-sha-etiqueta.txt`. Las comprobaciones completas de esta configuración final utilizan el sufijo `-depth2-final.txt`.

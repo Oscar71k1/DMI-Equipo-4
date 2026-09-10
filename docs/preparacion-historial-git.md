@@ -2,7 +2,7 @@
 
 ## Configuración vigente
 
-El Makefile, `package.json`, las pruebas y el evaluador coinciden con el paquete inicial. `make setup` ejecuta únicamente `npm ci`; no queda ningún script adicional de preparación en `tools/`. El 9 de septiembre de 2026, Oscar solicitó configurar exclusivamente el checkout de [week-01-feedback.yml](../.github/workflows/week-01-feedback.yml):
+El Makefile, `package.json`, las pruebas y el evaluador coinciden con el paquete inicial. `make setup` ejecuta únicamente `npm ci`; no queda ningún script adicional de preparación en `tools/`. El 9 de septiembre de 2026, Oscar solicitó configurar el checkout de [week-01-feedback.yml](../.github/workflows/week-01-feedback.yml):
 
 ```yaml
 - name: Checkout
@@ -13,6 +13,17 @@ El Makefile, `package.json`, las pruebas y el evaluador coinciden con el paquete
 ```
 
 En una solicitud de cambios se selecciona el commit de la rama propuesta; en los demás eventos se usa el SHA del evento. La profundidad 2 obtiene ese commit y su padre inmediato. El workflow inicial `starter-feedback.yml` conserva su contenido original. Ningún comando de evaluación, condición de fallo, prueba ni umbral cambia.
+
+Al dar un SHA explícito a checkout, su descarga no crea por sí sola la referencia local `week-01-final`. El modo `evidence` la necesita para el control `frozen_sha`. Por eso, antes del paso original de validación congelada, se descarga la etiqueta real del remoto únicamente en los eventos de esa etiqueta:
+
+```yaml
+- name: Fetch final evidence tag
+  if: startsWith(github.ref, 'refs/tags/week-01-final')
+  run: git fetch --no-tags --depth=2 origin "${GITHUB_REF}:${GITHUB_REF}"
+```
+
+Este paso no crea una etiqueta arbitraria en HEAD ni reemplaza las comprobaciones: obtiene la referencia publicada y el evaluador comprueba que apunte al SHA evaluado. En ejecuciones de rama y pull request no se ejecuta. El comportamiento del checkout por SHA se puede revisar en el [código original de actions/checkout](https://github.com/actions/checkout/blob/v4/src/ref-helper.ts).
+
 
 ## Problema y causa
 
@@ -32,7 +43,10 @@ Se reprodujo el problema con el commit real `a4349d0f7d2153235e486e6f5ae1e976a3f
 
 La salida completa está en [oscar-checkout-depth2.txt](../reports/week-01/logs/oscar-checkout-depth2.txt). Esta reproducción demuestra el efecto de la profundidad; la ejecución del workflow publicado comprueba además la resolución de la referencia en Actions.
 
-Antes de las comprobaciones completas del nuevo cierre, se espera que pasen `make feedback`, `make verify-week-01` y `make public-test-week-01`: se conserva el material original y se regeneran los SHA tras el cambio de configuración. Sus resultados reales se registrarán en los logs con sufijo `-depth2.txt` y en los reportes estructurados. La evidencia congelada se ejecutará después de etiquetar.
+La comprobación específica de checkout por SHA, sobre `de23553dae79b0f4b32541cbee48d64b2cc49c1f`, mostró que el padre ya estaba disponible y ambos JSON pasaban, pero `frozen_sha` fallaba por la etiqueta ausente. Omitir `--no-tags` por sí solo tampoco la obtuvo. Al descargar explícitamente `refs/tags/week-01-final:refs/tags/week-01-final` desde el remoto aislado, los 10 controles originales pasaron; se conservaron HEAD, archivos y profundidad 2. Salida: [oscar-checkout-sha-etiqueta.txt](../reports/week-01/logs/oscar-checkout-sha-etiqueta.txt). Esta prueba sí reproduce la selección por SHA del bloque solicitado.
+
+
+Antes de las comprobaciones completas del nuevo cierre, se espera que pasen `make feedback`, `make verify-week-01` y `make public-test-week-01`: se conserva el material original y se regeneran los SHA tras el cambio de configuración. Los logs `-depth2.txt` registran las comprobaciones del primer ajuste. Tras añadir la descarga explícita de la etiqueta, los resultados reales del cierre se registrarán en los logs `-depth2-final.txt` y en los reportes estructurados. La evidencia congelada se ejecutará después de etiquetar.
 
 ## Decisión y límites
 
@@ -100,4 +114,4 @@ git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 -- Makefile course
 git diff 635d471c3bce751720adbe0e2c50bcd245520d51 -- .github/workflows/week-01-feedback.yml
 ```
 
-La primera comparación debe terminar sin diferencias. La segunda muestra únicamente las tres líneas solicitadas del bloque `with`. No se alteran las pruebas ni el evaluador.
+La primera comparación debe terminar sin diferencias. La segunda muestra las tres líneas solicitadas del bloque `with` y las tres líneas del paso condicionado que descarga la etiqueta real. No se alteran las pruebas ni el evaluador.
