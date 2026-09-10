@@ -36,7 +36,7 @@ En esa revisión, sobre `6d7d06c036c9f6cf254dd3912badb83e550383af`, el reporte d
 
 ## Integridad y ajustes documentados
 
-Se comprobó con `git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 -- .github/workflows course-tests tools/course_public_evaluator.py App.tsx package.json package-lock.json` que esos archivos coinciden con el inicio. El resultado fue código 0, sin diferencias. Los workflows se restauraron al original. La preparación del historial ahora está integrada en el propio Makefile, antes de `npm ci`; `tools/` contiene únicamente el evaluador original. Los comandos de comprobación y sus umbrales siguen iguales. La razón y los casos comprobados se explican en [preparacion-historial-git.md](preparacion-historial-git.md).
+El Makefile, el directorio `tools/`, las pruebas, la aplicación, `package.json`, el lockfile y el workflow inicial coinciden con el paquete original. El workflow de Semana 1 incorpora únicamente el bloque `with` solicitado por Oscar: referencia explícita al SHA evaluado y `fetch-depth: 2`. El procedimiento, comparación de integridad y antecedentes están en [preparacion-historial-git.md](preparacion-historial-git.md).
 
 Tres logs se convirtieron de UTF-16 a UTF-8, normalizando finales de línea y líneas vacías, sin cambiar mensajes, tiempos ni códigos de salida. Los bytes anteriores siguen accesibles en los commits originales. La aclaración de la revisión de Jarumi se añadió después de su texto, conservando su predicción y su resultado.
 
@@ -73,3 +73,10 @@ Las salidas completas del nuevo cierre se registran en `reports/week-01/logs/` c
 La ejecución inicial de Actions desde la etiqueta detectó un conflicto al intentar descargar nuevamente una referencia que checkout ya había creado en el commit. Se reprodujo el caso y se corrigió el helper a `--no-tags`, conservando la referencia y descargando el historial necesario. El evaluador original de evidencia congelada aprobó en esa reproducción. El detalle y los logs están en [preparacion-historial-git.md](preparacion-historial-git.md#corrección-del-caso-de-etiqueta-en-actions); las comprobaciones completas posteriores utilizan el sufijo `-etiqueta.txt`.
 
 La revisión posterior elimina el archivo Python adicional y conserva esa preparación directamente en Makefile. Las copias aisladas de rama y etiqueta pasaron la comprobación sin ese archivo; se verificaron también el paquete sin Git, la copia completa y la propagación de errores. El log es `reports/week-01/logs/oscar-makefile-integrado.txt`; las comprobaciones completas posteriores utilizan el sufijo `-makefile.txt`.
+
+
+## Cierre con checkout de dos commits
+
+El 9 de septiembre se solicitó conservar la instalación original y descargar el padre desde el checkout de Semana 1. La reproducción en copias aisladas de rama y etiqueta rechazó los SHA con profundidad 1 y los aprobó con profundidad 2, sin cambiar archivos ni referencias. El modo de evidencia congelada aprobó sus 10 controles en la copia de etiqueta. Log: `reports/week-01/logs/oscar-checkout-depth2.txt`.
+
+La configuración y esta documentación se guardan primero como trabajo técnico. Después se regeneran los JSON y los reportes en un commit exclusivo de evidencias; sus salidas usan el sufijo `-depth2.txt`. La etiqueta final se crea sobre ese segundo commit y se comprueba con el evaluador original. `failure.json` se retira del índice de Git y se vuelve a generar después de etiquetar, conforme al paso 15; su resultado se conserva localmente y como artefacto de Actions, sin crear un commit posterior.

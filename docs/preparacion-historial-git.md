@@ -1,38 +1,48 @@
-# Preparación del historial Git con el workflow original
+# Preparación del historial Git desde el checkout
 
-Los workflows conservan su versión inicial. La preparación del historial está implementada directamente en el Makefile y se ejecuta antes de instalar las dependencias con `make setup`. La carpeta `tools/` contiene únicamente `course_public_evaluator.py`, con su contenido original. Las pruebas y los comandos de comprobación también permanecen originales.
+## Configuración vigente
+
+El Makefile, `package.json`, las pruebas y el evaluador coinciden con el paquete inicial. `make setup` ejecuta únicamente `npm ci`; no queda ningún script adicional de preparación en `tools/`. El 9 de septiembre de 2026, Oscar solicitó configurar exclusivamente el checkout de [week-01-feedback.yml](../.github/workflows/week-01-feedback.yml):
+
+```yaml
+- name: Checkout
+  uses: actions/checkout@v4
+  with:
+    ref: ${{ github.event.pull_request.head.sha || github.sha }}
+    fetch-depth: 2
+```
+
+En una solicitud de cambios se selecciona el commit de la rama propuesta; en los demás eventos se usa el SHA del evento. La profundidad 2 obtiene ese commit y su padre inmediato. El workflow inicial `starter-feedback.yml` conserva su contenido original. Ningún comando de evaluación, condición de fallo, prueba ni umbral cambia.
 
 ## Problema y causa
 
-El checkout original de GitHub Actions descarga un solo commit. La guía de entrega pide que `baseline.json` y `engineering.json` apunten al commit técnico anterior al commit exclusivo de evidencias. El evaluador original consulta `git rev-parse HEAD^` y compara los archivos cambiados entre esos dos commits. Una copia superficial no permite esa consulta, aunque contenga los archivos finales del proyecto.
+El paso 14 de `LEEME_PRIMERO.md` permite que los JSON apunten al padre inmediato si el último commit modifica únicamente `reports/` y `evidence/`. El checkout original obtenía un solo commit y el evaluador no podía consultar `git rev-parse HEAD^`. El síntoma era `commitSha must be HEAD or its direct evidence-only parent`, aunque la relación fuera válida en una copia con historial suficiente.
 
-El síntoma es `commitSha must be HEAD or its direct evidence-only parent`. La causa, en este caso, es la ausencia del historial necesario. Esta incidencia de preparación es distinta de la falla controlada de interfaz de la actividad.
+Actualizar archivos y ejecutar `git commit --amend` genera otro SHA; no mantiene el identificador del commit modificado ni descarga el historial. El cierre debe seguir los pasos 9 a 15: commit técnico con configuración y documentos terminados, JSON con ese SHA, comprobaciones, commit exclusivo de evidencias y etiqueta final.
 
-## Cambio realizado y alternativas
+## Comprobación del ajuste
 
-Se conserva la instalación con `npm ci` y se prepara el historial mediante un requisito previo en [Makefile](../Makefile):
+Se reprodujo el problema con el commit real `a4349d0f7d2153235e486e6f5ae1e976a3f5224b`, cuyos JSON apuntan a su padre `4ba75a4ab463f14a9bc5fcb61ba0b251dfc74267`. Las copias aisladas obtuvieron por SHA una referencia de rama y otra de etiqueta, usando `git fetch --no-tags --depth=1` y luego `--depth=2`. Los JSON permanecieron intactos.
 
-```make
-setup: prepare-git-history
-	$(NPM) ci
+| Caso | Resultado real |
+|---|---|
+| Rama y etiqueta con profundidad 1 | El evaluador original rechazó ambos SHA por no poder comprobar el padre. |
+| Las mismas copias con profundidad 2 | Aprobó baseline y engineering; `git rev-list --count HEAD` devolvió 2 y se conservaron HEAD, referencia y archivos. |
+| Etiqueta de la copia aislada con profundidad 2 | El modo original `evidence` aprobó sus 10 controles, incluido `frozen_sha`, con código 0. |
 
-prepare-git-history:
-	$(PYTHON) -c "$(CAMPUSOPS_PREPARE_HISTORY)"
-```
+La salida completa está en [oscar-checkout-depth2.txt](../reports/week-01/logs/oscar-checkout-depth2.txt). Esta reproducción demuestra el efecto de la profundidad; la ejecución del workflow publicado comprueba además la resolución de la referencia en Actions.
 
-La variable `CAMPUSOPS_PREPARE_HISTORY` contiene el código de preparación, legible en el propio Makefile. Make une sus líneas antes de pasarlo a Python; no se crea ni se importa un archivo Python adicional. Se comprueba si existe un repositorio y si es superficial. Si el paquete todavía no tiene `.git`, continúa con la instalación, como necesita el paso 2 de la guía. Si el historial ya está completo, continúa sin hacer una descarga.
+Antes de las comprobaciones completas del nuevo cierre, se espera que pasen `make feedback`, `make verify-week-01` y `make public-test-week-01`: se conserva el material original y se regeneran los SHA tras el cambio de configuración. Sus resultados reales se registrarán en los logs con sufijo `-depth2.txt` y en los reportes estructurados. La evidencia congelada se ejecutará después de etiquetar.
 
-Si la copia es superficial, ejecuta:
+## Decisión y límites
 
-```bash
-git fetch --unshallow --no-tags --no-recurse-submodules origin
-```
+Se elige descargar dos commits desde el checkout para satisfacer la consulta del padre inmediato sin añadir preparación al Makefile ni a npm. Descargar el historial completo también funciona, con mayor descarga; los scripts de preparación anteriores recuperaban ese historial durante la instalación y añadían mantenimiento. La configuración vigente usa la opción solicitada por Oscar y mantiene la instalación original.
 
-Después comprueba que el historial esté completo y que `HEAD` conserve el mismo SHA. Si Git falla, el script devuelve un error y Make detiene la preparación. No cambia reportes, SHA declarados, ramas de trabajo, pruebas ni resultados.
+La profundidad 2 basta para la relación entre el trabajo técnico y su commit de evidencias. Para revisar todas las aportaciones antiguas debe usarse un clon completo. Este arreglo de preparación respalda el criterio de reproducción de la rúbrica; no sustituye la falla controlada de interfaz, los tres riesgos ni la decisión de ingeniería de la actividad.
 
-`--no-tags` conserva la referencia de la etiqueta que ya creó el checkout de Actions. Para ejecutar desde `week-01-final`, el checkout puede crear esa referencia directamente en el commit; intentar descargarla de nuevo como etiqueta anotada produce un conflicto aunque apunte al mismo commit. Recuperar el historial de commits no requiere sustituir esa referencia. La validación original de `frozen_sha` sigue comprobando que la etiqueta corresponda al SHA evaluado.
+## Antecedentes históricos
 
-Se consideraron dos ubicaciones para la misma preparación: configurar `fetch-depth` en el checkout, o recuperar el historial desde `make setup`. Se elige la segunda para conservar ambos workflows exactamente como en el paquete inicial, conforme a la preferencia de Oscar. Después se integró el código en el Makefile para conservar también la composición original de `tools/`. El costo es mantener ese bloque de preparación y necesitar Git, Python y acceso a `origin` cuando falte historial; esos requisitos ya forman parte del entorno del curso y de Actions. Un cambio de ubicación no elimina la necesidad de descargar el historial.
+Las secciones siguientes describen versiones anteriores, ya retiradas. Sus logs conservan resultados de esas versiones; no son instrucciones de instalación vigentes.
 
 ## Antecedentes de la preparación con un archivo separado
 
@@ -67,32 +77,27 @@ Antes de las comprobaciones completas de este cambio, se espera que `make setup`
 
 ## Reproducción desde la etiqueta publicada
 
-En una carpeta nueva, con las herramientas del curso instaladas:
+Para reproducir la profundidad usada en Actions, con las herramientas del curso instaladas:
 
 ```bash
-git clone --depth 1 --branch week-01-final https://github.com/Oscar71k1/DMI-Equipo-4.git CampusOps-verificacion
+git clone --depth 2 --branch week-01-final https://github.com/Oscar71k1/DMI-Equipo-4.git CampusOps-verificacion
 cd CampusOps-verificacion
-git rev-parse --is-shallow-repository
 git rev-parse HEAD
+git rev-parse HEAD^
 make setup
-git rev-parse --is-shallow-repository
-git rev-parse HEAD
 make feedback
 make verify-week-01
 make public-test-week-01
 make evidence-week-01
 ```
 
-La primera consulta de superficialidad debe indicar `true` y la segunda `false`; el SHA debe coincidir antes y después. En Windows se aplica la [preparación local de Python y npm](entorno-windows.md). El reporte de evidencia congelada se genera después de que la etiqueta ya existe, siguiendo la guía.
+La copia sigue siendo superficial: lo necesario aquí es disponer del padre inmediato. El Makefile no descarga historial. En Windows se aplica la [preparación local de Python y npm](entorno-windows.md). Para revisar los commits de los tres integrantes, se omite `--depth 2` al clonar.
 
-## Integridad y relación con la rúbrica
-
-El ajuste respalda la reproducción y la comprobación del SHA. La falla y corrección de interfaz, los tres riesgos y la decisión de ingeniería de la actividad mantienen su evidencia original. Esta reparación de preparación no sustituye esos entregables.
-
-La comparación con el inicio se hace sin incluir el Makefile, cuyo cambio está expresamente documentado:
+## Integridad
 
 ```bash
-git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 -- .github/workflows course-tests tools/course_public_evaluator.py App.tsx package.json package-lock.json
+git diff --exit-code 635d471c3bce751720adbe0e2c50bcd245520d51 -- Makefile course-tests tools App.tsx package.json package-lock.json .github/workflows/starter-feedback.yml
+git diff 635d471c3bce751720adbe0e2c50bcd245520d51 -- .github/workflows/week-01-feedback.yml
 ```
 
-Los diagnósticos anteriores que describen `fetch-depth: 0` permanecen como antecedentes. En la versión actual los workflows están restaurados y la descarga corresponde a `make setup`.
+La primera comparación debe terminar sin diferencias. La segunda muestra únicamente las tres líneas solicitadas del bloque `with`. No se alteran las pruebas ni el evaluador.

@@ -47,7 +47,7 @@ Los documentos de trabajo generados están directamente en `docs/`. Los cinco en
 | [cierre-integracion.md](cierre-integracion.md) | Integración, matriz de rúbrica y referencias a comprobaciones reales. |
 | [diagnostico-github-actions.md](diagnostico-github-actions.md) | Antecedentes de errores de validación ya resueltos. |
 | [entorno-windows.md](entorno-windows.md) | Reproducción del evaluador original en Windows. |
-| [preparacion-historial-git.md](preparacion-historial-git.md) | Descarga del historial desde `make setup`, con los workflows restaurados al original. |
+| [preparacion-historial-git.md](preparacion-historial-git.md) | Checkout de Semana 1 con profundidad 2 y referencia explícita; Makefile original y antecedentes de preparación. |
 | [GUIA_JARUMI.md](GUIA_JARUMI.md) | Indicaciones de preparación de Jarumi; aportación ya completada. |
 | [GUIA_FERNANDA.md](GUIA_FERNANDA.md) | Indicaciones de preparación de Fernanda; aportación ya completada. |
 

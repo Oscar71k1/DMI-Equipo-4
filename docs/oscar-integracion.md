@@ -67,3 +67,10 @@ Antes de ejecutar las comprobaciones completas, espero que pasen porque la prepa
 En una revisión posterior se eliminó el archivo `tools/prepare_git_history.py` y se trasladó la preparación a `make prepare-git-history`, requisito previo de `make setup`. La carpeta `tools/` vuelve a contener únicamente el evaluador original. El código retirado permanece consultable en los commits de preparación anteriores; la ruta vigente de esta aportación es `Makefile`.
 
 La comprobación asistida en copias superficiales de rama y etiqueta pasó sin el archivo eliminado: se recuperó el historial y se conservaron el SHA, la referencia y los archivos. También se comprobaron el paquete sin Git, el historial completo, la repetición y el error real de un remoto inaccesible. El procedimiento y las salidas están en [preparacion-historial-git.md](preparacion-historial-git.md#integración-directa-en-makefile) y `reports/week-01/logs/oscar-makefile-integrado.txt`. La predicción antes de ejecutar las comprobaciones completas es que pasarán al conservar la preparación y el material original de evaluación; sus resultados se registrarán después de ejecutar.
+
+
+## Checkout de Semana 1 con profundidad 2
+
+El 9 de septiembre Oscar solicitó añadir al checkout `ref: ${{ github.event.pull_request.head.sha || github.sha }}` y `fetch-depth: 2`, conservando el Makefile original. La revisión asistida confirmó que Makefile, package.json, pruebas y evaluador ya estaban restaurados; no se añadió preparación en npm ni un archivo nuevo en tools.
+
+Antes de ejecutar las comprobaciones completas se espera que el checkout disponga del padre inmediato y el evaluador acepte un commit final que sólo cambie reports/ y evidence/. En copias aisladas sobre el SHA real a4349d0f7d2153235e486e6f5ae1e976a3f5224b se observó rechazo con profundidad 1 y aprobación con profundidad 2, conservando SHA, referencias y archivos. La copia de etiqueta pasó además los 10 controles del modo evidence. La salida real es reports/week-01/logs/oscar-checkout-depth2.txt; los resultados completos posteriores se registrarán en los logs -depth2.txt y en los reportes JSON.

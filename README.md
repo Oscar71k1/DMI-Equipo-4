@@ -40,7 +40,7 @@ make setup
 make feedback
 ```
 
-`make setup` comprueba el historial Git antes de ejecutar `npm ci`. Si la copia es superficial, descarga el historial real necesario para validar el padre del commit de evidencias; si el historial está completo o el paquete aún no tiene repositorio, continúa sin descargar. El ajuste y su comprobación están en [preparación del historial Git](docs/preparacion-historial-git.md). Ambos workflows se conservan como en el paquete original.
+`make setup` ejecuta `npm ci`, con el Makefile original. El workflow de Semana 1 obtiene el SHA evaluado y su padre mediante `ref: ${{ github.event.pull_request.head.sha || github.sha }}` y `fetch-depth: 2` en checkout. El cambio y sus comprobaciones están en [preparación del historial Git](docs/preparacion-historial-git.md). Las pruebas, el evaluador y el workflow inicial permanecen originales.
 
 Para desarrollo local:
 
