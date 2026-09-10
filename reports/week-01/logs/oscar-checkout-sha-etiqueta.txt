@@ -1,0 +1,8 @@
+Copia aislada: C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\sha-etiqueta-corregido-gtfg4ro8
+SHA evaluado: de23553dae79b0f4b32541cbee48d64b2cc49c1f
+fetch-tags-false: checkout por SHA con profundidad 2: JSON validos; frozen_sha falla porque no existe la referencia week-01-final; codigo 1.
+fetch-tags-false: tras git fetch --no-tags --depth=2 origin refs/tags/week-01-final:refs/tags/week-01-final: 10 controles pass; codigo 0; SHA y archivos conservados. Se descarga la etiqueta real del remoto de prueba, no se inventa una referencia en el checkout.
+fetch-tags-true: checkout por SHA con profundidad 2: JSON validos; frozen_sha falla porque no existe la referencia week-01-final; codigo 1.
+fetch-tags-true: tras git fetch --no-tags --depth=2 origin refs/tags/week-01-final:refs/tags/week-01-final: 10 controles pass; codigo 0; SHA y archivos conservados. Se descarga la etiqueta real del remoto de prueba, no se inventa una referencia en el checkout.
+RESULTADO_GLOBAL=PASS
+EXIT_CODE=0
