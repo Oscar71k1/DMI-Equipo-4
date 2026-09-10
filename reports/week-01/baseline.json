@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "4ba75a4ab463f14a9bc5fcb61ba0b251dfc74267",
-  "generatedAt": "2026-09-06T22:35:47-06:00",
+  "commitSha": "4724fffa61c67830201314f1dc97b7e53573cbd4",
+  "generatedAt": "2026-09-09T20:05:45-06:00",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -47,11 +47,11 @@
       "evidence": "Ejecucion asistida: el nuevo paso de preparacion detecto el historial local completo y no descargo; npm ci instalo 970 paquetes y termino con codigo 0. Log: reports/week-01/logs/oscar-setup-historial.txt. La comprobacion separada en una copia superficial detecto el error de SHA antes de descargar y aprobo baseline y engineering despues, conservando HEAD, rama y archivos; un remoto inexistente devolvio codigo 128. Casos y limites: docs/preparacion-historial-git.md y reports/week-01/logs/oscar-preparacion-git.txt."
     },
     {
-      "id": "feedback-con-workflows-originales",
+      "id": "feedback-con-checkout-depth2",
       "status": "pass",
       "scenarioType": "nominal",
       "command": "make feedback",
-      "evidence": "Ejecucion asistida tras corregir la conservacion de la etiqueta en el helper de setup: codigo 0, typecheck y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, auditoria dentro del umbral critico original y exportacion Android completada con 581 modulos. Log actual: reports/week-01/logs/oscar-feedback-etiqueta.txt. La ejecucion anterior se conserva en reports/week-01/logs/oscar-feedback-historial.txt. Pruebas, evaluador, aplicacion y workflows coinciden con el paquete inicial."
+      "evidence": "Ejecucion asistida sobre el nuevo SHA tecnico con Makefile original y checkout de Semana 1 configurado con ref explicito y fetch-depth: 2: codigo 0, typecheck y lint aprobados, smoke con 1 suite y 1 prueba aprobadas, exportacion Android completada con 581 modulos. La auditoria informo 2 vulnerabilidades de severidad alta y paso con el umbral critico original, que no se modifico. Log: reports/week-01/logs/oscar-feedback-depth2.txt. Esta ejecucion local comprueba el proyecto; el efecto de la profundidad sobre el evaluador se reprodujo separadamente en reports/week-01/logs/oscar-checkout-depth2.txt. Pruebas, evaluador, aplicacion, dependencias y Makefile coinciden con el paquete inicial."
     }
   ]
 }

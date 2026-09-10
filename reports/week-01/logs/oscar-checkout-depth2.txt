@@ -1,0 +1,10 @@
+Reproduccion aislada; no modifica el repositorio de entrega.
+SHA comprobado: a4349d0f7d2153235e486e6f5ae1e976a3f5224b
+Copias: C:\Users\oscar\.codex\visualizations\2026\09\06\01a0740c-ad13-74d3-bb1a-b18f6d68dc57\cierre-equipo-4\checkout-depth-2-sddi7vqb
+rama: depth=1: [(False, 'commitSha must be HEAD or its direct evidence-only parent'), (False, 'commitSha must be HEAD or its direct evidence-only parent')]
+rama: depth=2: [(True, '7 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]'), (True, 'decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]')]; HEAD, referencia y archivos conservados.
+etiqueta: depth=1: [(False, 'commitSha must be HEAD or its direct evidence-only parent'), (False, 'commitSha must be HEAD or its direct evidence-only parent')]
+etiqueta: depth=2: [(True, '7 checks indexed, 1 boundary/failure; evidence-only commit; invalid changes=[]'), (True, 'decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]')]; HEAD, referencia y archivos conservados.
+Etiqueta: evaluador original evidence: 10 checks pass, incluido frozen_sha; exit=0.
+RESULTADO_GLOBAL=PASS
+EXIT_CODE=0
