@@ -1,0 +1,75 @@
+# ADR-001 — Organizar el código para trabajar en equipo
+
+## Contexto: qué problema queremos resolver
+
+Somos un equipo de tres personas y necesitamos una forma común de organizar CampusOps. Si cada quien mezcla pantallas, reglas y conexiones a su manera, juntar el trabajo puede ser difícil y provocar errores.
+
+Actualmente, la pantalla de `App.tsx` llama directamente al código que consulta el servidor. Si seguimos así, cambiar la forma de obtener los datos podría obligarnos a cambiar también las pantallas.
+
+Esta semana necesitamos mostrar una lista de incidencias y abrir su detalle con datos ficticios. Más adelante agregaremos sesión, almacenamiento y ubicación. Mantendremos React Native, Expo y TypeScript, como pide el proyecto.
+
+## Alternativas: qué opciones tenemos
+
+### Opción 1. Separar el código según el trabajo que hace
+
+Tener cuatro carpetas principales: pantallas, acciones de la app, reglas y acceso a datos. Sus nombres en el código serán `ui`, `application`, `domain` e `infrastructure`.
+
+- **A favor:** es una estructura pequeña y fácil de explicar entre los tres.
+- **En contra:** para revisar una función completa, como consultar una incidencia, habrá que abrir archivos de varias carpetas.
+
+### Opción 2. Separar primero por funciones de la app
+
+Tener una carpeta para incidencias, otra para sesión y otras según crezca la aplicación. Dentro de cada una, separar también pantallas, acciones, reglas y acceso a datos.
+
+- **A favor:** los archivos de una función quedan juntos y cada integrante puede trabajar en una parte.
+- **En contra:** hay más divisiones y debemos decidir dónde poner el código que varias partes necesitan. Para la lista y el detalle de esta semana resulta más complicado.
+
+Las dos opciones permiten probar y cambiar la fuente de datos si acordamos cómo se conectan sus partes.
+
+## Decisión: qué vamos a hacer
+
+Elegimos la opción 1 porque es más sencilla para el tamaño actual del proyecto.
+
+| Parte | Qué hará |
+|---|---|
+| Pantallas — UI | Mostrar la lista, el detalle y los mensajes al usuario. |
+| Acciones — Aplicación | Coordinar tareas, como pedir la lista o buscar una incidencia por su identificador. |
+| Reglas y datos — Dominio | Definir qué contiene una incidencia, sus reglas y qué operaciones necesitamos para consultarla. |
+| Acceso a datos — Infraestructura | Obtener los datos. Esta semana usará información ficticia guardada en memoria. |
+
+Las pantallas pedirán las tareas a aplicación. Aplicación usará un contrato definido en dominio: un acuerdo escrito en código que indica qué se puede pedir y qué debe devolverse. Infraestructura cumplirá ese acuerdo al entregar los datos.
+
+Un archivo separado conectará las partes al iniciar la app. Las pantallas no llamarán directamente al servidor ni al almacenamiento. Dominio no dependerá de pantallas, Expo o conexiones de red.
+
+Antes de dividir el trabajo, acordaremos qué datos devuelve una lista, qué devuelve un detalle y qué ocurre si una incidencia no existe. Así podremos avanzar por separado y después conectar nuestras partes.
+
+Los perfiles de reportante, técnico y coordinador se definirán en dominio. Dejaremos previstos los límites de sesión, almacenamiento y ubicación para las semanas correspondientes. Cuando se implementen los permisos, el servidor también deberá comprobar qué puede hacer cada usuario.
+
+## Consecuencias: qué ganamos y qué nos cuesta
+
+- **Pruebas más fáciles:** podremos probar las pantallas con datos ficticios sin tener el servidor encendido.
+- **Menos ajustes al juntar el trabajo:** todos seguiremos el mismo acuerdo para pedir y entregar datos. Si ese acuerdo cambia, tendremos que revisarlo juntos.
+- **Cambios más localizados:** después podremos conectar otra fuente de datos manteniendo el mismo acuerdo. Todavía será necesario comprobar sus respuestas y manejar sus errores.
+- **Más archivos:** esta organización requiere más archivos que poner todo en una pantalla. Aceptamos ese trabajo extra para mantener separadas las responsabilidades.
+
+Revisaremos la decisión si el proyecto crece y esta organización empieza a dificultar encontrar o cambiar el código.
+
+## Cómo comprobaremos que funciona
+
+1. Abrir la lista y consultar el detalle de una incidencia ficticia.
+2. Cambiar la fuente de datos por otra de prueba sin cambiar las pantallas ni las acciones de aplicación.
+3. Probar una lista vacía y una incidencia que no exista. La app debe explicar lo ocurrido sin cerrarse ni inventar información.
+4. Revisar qué archivos usan a otros. Detectar la llamada directa actual de la pantalla al cliente del servidor, corregirla y guardar evidencia del antes y después.
+5. Comprobar que el dibujo de `docs/architecture.mmd` coincida con el código y ejecutar las revisiones de semana 2, conservando las de semana 1.
+
+Estas comprobaciones todavía deben realizarse. Sus resultados se guardarán en las evidencias de semana 2.
+
+## Referencias
+
+- [Aclaración de semana 2](../../ACLARACION_ANTES_DE_INICIAR.md).
+- [Actividad de arquitectura](../assignments/week-02.md).
+- [Alcance de CampusOps](../CAMPUSOPS.md).
+
+## Asistencia utilizada
+
+Se usó IA para ayudar a redactar este documento a partir del proyecto. El equipo todavía debe revisarlo y comprobar que el código cumpla lo acordado.
