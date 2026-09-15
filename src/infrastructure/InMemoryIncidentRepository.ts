@@ -14,7 +14,10 @@ const defaultIncidents: readonly Incident[] = [
     id: 'inc-002',
     category: 'water',
     description: 'Fuga de agua cerca de los servidores del laboratorio de Software.',
-    location: { source: 'manual', label: 'Edificio C, Laboratorio de Software' },
+    location: {
+      source: 'manual',
+      label: 'Edificio C, Laboratorio de Software',
+    },
     status: 'assigned',
     work: { assignedTechnicianId: 'tech-07', status: 'assigned' },
   },
@@ -22,7 +25,10 @@ const defaultIncidents: readonly Incident[] = [
     id: 'inc-003',
     category: 'equipment',
     description: 'Proyector del laboratorio de Electrónica no enciende.',
-    location: { source: 'manual', label: 'Edificio A, Laboratorio de Electrónica' },
+    location: {
+      source: 'manual',
+      label: 'Edificio A, Laboratorio de Electrónica',
+    },
     status: 'in_progress',
     work: { assignedTechnicianId: 'tech-03', status: 'in_progress' },
   },
@@ -31,13 +37,18 @@ const defaultIncidents: readonly Incident[] = [
 export function createInMemoryIncidentRepository(
   initialIncidents: readonly Incident[] = defaultIncidents,
 ): IncidentRepository {
-  const incidents = initialIncidents;
+  const copyIncident = (incident: Incident): Incident => ({
+    ...incident,
+    location: { ...incident.location },
+    work: { ...incident.work },
+  });
+  const incidents = initialIncidents.map(copyIncident);
 
   return {
-    list: () => Promise.resolve(incidents),
+    list: () => Promise.resolve(incidents.map(copyIncident)),
     getById: (id: string) => {
       const found = incidents.find((incident) => incident.id === id) ?? null;
-      return Promise.resolve(found);
+      return Promise.resolve(found === null ? null : copyIncident(found));
     },
   };
 }

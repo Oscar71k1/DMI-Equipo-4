@@ -1,0 +1,80 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/incidents.test.tsx
+
+FAIL tests/incidents.test.tsx
+  esqueleto de lista/detalle de incidencias
+    √ lista, selecciona una incidencia, muestra su detalle y permite regresar (912 ms)
+    √ seleccionar una incidencia distinta muestra datos distintos, no siempre el primero (27 ms)
+    √ lista vacía muestra el mensaje acordado, sin cerrarse (6 ms)
+    √ un identificador inexistente devuelve null y la UI muestra "no encontrada" (6 ms)
+    √ sustituir el repositorio cambia los datos observados sin tocar UI ni application (17 ms)
+    √ un proveedor que rechaza la consulta muestra un mensaje de error controlado (8 ms)
+    √ un error del detalle conserva la opcion de regresar a la lista (18 ms)
+    √ la lista ficticia funciona cuando el puerto de salud falla (12 ms)
+    × al cambiar de identificador se oculta el detalle anterior mientras llega el nuevo (13 ms)
+    × al sustituir la consulta de lista se ocultan los datos del proveedor anterior (14 ms)
+    × el fake conserva sus datos aunque se modifiquen los datos iniciales o una respuesta (1 ms)
+
+  ● esqueleto de lista/detalle de incidencias › al cambiar de identificador se oculta el detalle anterior mientras llega el nuevo
+
+    expect(received).toBeNull()
+
+    Received: <Text>Primera incidencia de prueba</Text>
+
+      198 |       <IncidentDetailScreen incidentId="a2" getIncidentDetail={getDetail} onBack={() => {}} />,
+      199 |     );
+    > 200 |     expect(screen.queryByText('Primera incidencia de prueba')).toBeNull();
+          |                                                                ^
+      201 |     expect(screen.getByText('Cargando incidencia…')).toBeTruthy();
+      202 |     await act(async () => { resolveDetail(sampleIncidents[1] ?? null); });
+      203 |     expect(screen.getByText('Segunda incidencia de prueba')).toBeTruthy();
+
+      at Object.toBeNull (tests/incidents.test.tsx:200:64)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● esqueleto de lista/detalle de incidencias › al sustituir la consulta de lista se ocultan los datos del proveedor anterior
+
+    expect(received).toBeNull()
+
+    Received: <Text>Primera incidencia de prueba</Text>
+
+      210 |     expect(screen.getByText('Primera incidencia de prueba')).toBeTruthy();
+      211 |     await view.rerender(<IncidentListScreen listIncidents={() => delayedList} onSelect={() => {}} />);
+    > 212 |     expect(screen.queryByText('Primera incidencia de prueba')).toBeNull();
+          |                                                                ^
+      213 |     expect(screen.getByText('Cargando incidencias…')).toBeTruthy();
+      214 |     await act(async () => { resolveList([]); });
+      215 |     expect(screen.getByText('No hay incidencias registradas todavía.')).toBeTruthy();
+
+      at Object.toBeNull (tests/incidents.test.tsx:212:64)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● esqueleto de lista/detalle de incidencias › el fake conserva sus datos aunque se modifiquen los datos iniciales o una respuesta
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      222 |     seed.length = 0;
+      223 |     const result = await repository.list();
+    > 224 |     expect(result).toHaveLength(1);
+          |                    ^
+      225 |     expect(result[0]?.location.label).toBe('Ubicación inicial');
+      226 |     // Simula un consumidor JavaScript: readonly no protege objetos en ejecucion.
+      227 |     Object.assign(result[0]!.location, { label: 'Respuesta modificada' });
+
+      at Object.toHaveLength (tests/incidents.test.tsx:224:20)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 8 passed, 11 total
+Snapshots:   0 total
+Time:        4.813 s, estimated 18 s
+Ran all test suites within paths "tests/incidents.test.tsx".
+EXIT_CODE=1

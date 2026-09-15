@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Incident } from '../domain/Incident';
+import { incidentCategoryLabels, incidentStatusLabels } from './incidentLabels';
 
 type DetailState =
   | { kind: 'loading' }
@@ -16,17 +17,29 @@ type Props = Readonly<{
 }>;
 
 export function IncidentDetailScreen({ incidentId, getIncidentDetail, onBack }: Props) {
-  const [state, setState] = useState<DetailState>({ kind: 'loading' });
+  const [result, setResult] = useState<{
+    incidentId: string;
+    query: Props['getIncidentDetail'];
+    state: DetailState;
+  } | null>(null);
+  const state: DetailState =
+    result?.incidentId === incidentId && result.query === getIncidentDetail
+      ? result.state
+      : { kind: 'loading' };
 
   useEffect(() => {
     let active = true;
     getIncidentDetail(incidentId)
       .then((incident) => {
         if (!active) return;
-        setState(incident === null ? { kind: 'not-found' } : { kind: 'loaded', incident });
+        setResult({
+          incidentId,
+          query: getIncidentDetail,
+          state: incident === null ? { kind: 'not-found' } : { kind: 'loaded', incident },
+        });
       })
       .catch(() => {
-        if (active) setState({ kind: 'error' });
+        if (active) setResult({ incidentId, query: getIncidentDetail, state: { kind: 'error' } });
       });
     return () => {
       active = false;
@@ -49,10 +62,10 @@ export function IncidentDetailScreen({ incidentId, getIncidentDetail, onBack }: 
       )}
       {state.kind === 'loaded' && (
         <View testID="incident-detail-content">
-          <Text style={styles.title}>{state.incident.category}</Text>
+          <Text style={styles.title}>{incidentCategoryLabels[state.incident.category]}</Text>
           <Text>{state.incident.description}</Text>
           <Text>{state.incident.location.label}</Text>
-          <Text>Estado: {state.incident.status}</Text>
+          <Text>Estado: {incidentStatusLabels[state.incident.status]}</Text>
         </View>
       )}
     </View>

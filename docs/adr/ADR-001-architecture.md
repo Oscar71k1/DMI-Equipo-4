@@ -4,7 +4,7 @@
 
 Somos un equipo de tres personas y necesitamos una forma común de organizar CampusOps. Si cada quien mezcla pantallas, reglas y conexiones a su manera, juntar el trabajo puede ser difícil y provocar errores.
 
-Actualmente, la pantalla de `App.tsx` llama directamente al código que consulta el servidor. Si seguimos así, cambiar la forma de obtener los datos podría obligarnos a cambiar también las pantallas.
+En el estado anterior a la refactorización, `App.tsx` llamaba directamente al cliente del servidor mientras dibujaba la pantalla. Esa dependencia obligaba a la UI a conocer al proveedor. En el esqueleto actual, `App.tsx` sólo monta la UI y las acciones creadas en composición; la consulta de salud pasa por aplicación y un puerto de dominio.
 
 Esta semana necesitamos mostrar una lista de incidencias y abrir su detalle con datos ficticios. Más adelante agregaremos sesión, almacenamiento y ubicación. Mantendremos React Native, Expo y TypeScript, como pide el proyecto.
 
@@ -62,7 +62,7 @@ type Incident = Readonly<{
 
 **Operaciones del contrato de dominio:**
 
-- `list(): Promise<Incident[]>` — devuelve la lista completa de incidencias. Una lista vacía es un resultado válido.
+- `list(): Promise<readonly Incident[]>` — devuelve la lista completa de incidencias. Una lista vacía es un resultado válido. El fake copia los datos de entrada y sus respuestas para evitar que un consumidor modifique el estado de otras consultas.
 - `getById(id: string): Promise<Incident | null>` — devuelve la incidencia solicitada o `null` si no existe. Nunca se inventa información.
 
 **Mensajes de la UI:**
@@ -74,6 +74,10 @@ type Incident = Readonly<{
 **Composición e indicador de salud heredado:** la raíz de composición conecta los adaptadores concretos (incluyendo el indicador de salud heredado de `src/api/courseBackend`) con los casos de uso de aplicación, a través de un contrato de dominio. La pantalla no importa directamente ese cliente.
 
 **Clasificación de `src/campusops/contracts.ts`:** se trata como vocabulario de dominio compartido, aunque su ruta original se conserve fuera de la carpeta `domain/`.
+
+**Rutas implementadas:** `src/domain/Incident.ts` define el modelo y `IncidentRepository.ts` su puerto; `src/application/createIncidentQueries.ts` coordina las consultas; `src/infrastructure/InMemoryIncidentRepository.ts` implementa el fake. `src/composition/createCampusOps.ts` conecta esas piezas y el adaptador de salud. `src/ui/CampusOpsScreen.tsx` muestra el indicador heredado y selecciona lista/detalle; sus pantallas reciben acciones, sin importar composición. El puerto de salud se llama `BackendHealthPort`; lo implementa `CourseBackendHealthAdapter`, que utiliza el cliente `src/api/courseBackend.ts`. El cliente por sí solo no implementa ese puerto.
+
+**Presentación:** los identificadores del contrato permanecen en inglés; `src/ui/incidentLabels.ts` traduce categorías y estados para mostrarlos en español. Al cambiar la consulta de lista o el identificador del detalle, la pantalla vuelve a carga y deja de mostrar los datos anteriores mientras espera la nueva respuesta.
 
 Los perfiles de reportante, técnico y coordinador se definirán en dominio. Dejaremos previstos los límites de sesión, almacenamiento y ubicación para las semanas correspondientes. Cuando se implementen los permisos, el servidor también deberá comprobar qué puede hacer cada usuario.
 
@@ -91,11 +95,11 @@ Revisaremos la decisión si el proyecto crece y esta organización empieza a dif
 1. Abrir la lista y consultar el detalle de una incidencia ficticia.
 2. Cambiar la fuente de datos por otra de prueba sin cambiar las pantallas ni las acciones de aplicación.
 3. Probar una lista vacía y una incidencia que no exista. La app debe explicar lo ocurrido sin cerrarse ni inventar información.
-4. Revisar qué archivos usan a otros. Detectar la llamada directa actual de la pantalla al cliente del servidor, corregirla y guardar evidencia del antes y después.
+4. Revisar qué archivos usan a otros. Conservar la evidencia de la llamada directa anterior de la pantalla al cliente del servidor y comprobar que el estado corregido respeta los límites.
  Esta detección se realiza con una prueba automática (`tests/architecture.test.ts`) que analiza los imports reales del código, en vez de depender de una revisión manual.
 5. Comprobar que el dibujo de `docs/architecture.mmd` coincida con el código y ejecutar las revisiones de semana 2, conservando las de semana 1.
 
-Estas comprobaciones todavía deben realizarse. Sus resultados se guardarán en las evidencias de semana 2.
+Las comprobaciones de cada aportación se conservan con su procedencia en las evidencias de Semana 02. El cierre del equipo requiere repetirlas sobre la versión integrada y actualizar sus reportes; una ejecución sobre una rama de trabajo no equivale a validar la etiqueta final.
 
 ## Referencias
 

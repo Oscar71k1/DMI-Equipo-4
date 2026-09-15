@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 
 import type { Incident } from '../domain/Incident';
+import { incidentCategoryLabels } from './incidentLabels';
 
 type ListState =
   | { kind: 'loading' }
@@ -15,17 +16,24 @@ type Props = Readonly<{
 }>;
 
 export function IncidentListScreen({ listIncidents, onSelect }: Props) {
-  const [state, setState] = useState<ListState>({ kind: 'loading' });
+  const [result, setResult] = useState<{
+    query: Props['listIncidents'];
+    state: ListState;
+  } | null>(null);
+  const state: ListState = result?.query === listIncidents ? result.state : { kind: 'loading' };
 
   useEffect(() => {
     let active = true;
     listIncidents()
       .then((incidents) => {
         if (!active) return;
-        setState(incidents.length === 0 ? { kind: 'empty' } : { kind: 'loaded', incidents });
+        setResult({
+          query: listIncidents,
+          state: incidents.length === 0 ? { kind: 'empty' } : { kind: 'loaded', incidents },
+        });
       })
       .catch(() => {
-        if (active) setState({ kind: 'error' });
+        if (active) setResult({ query: listIncidents, state: { kind: 'error' } });
       });
     return () => {
       active = false;
@@ -58,7 +66,7 @@ export function IncidentListScreen({ listIncidents, onSelect }: Props) {
           style={styles.item}
           onPress={() => onSelect(item.id)}
         >
-          <Text style={styles.itemTitle}>{item.category}</Text>
+          <Text style={styles.itemTitle}>{incidentCategoryLabels[item.category]}</Text>
           <Text>{item.description}</Text>
         </Pressable>
       )}

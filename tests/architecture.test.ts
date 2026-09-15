@@ -17,13 +17,7 @@ import * as ts from 'typescript';
  * - Excluye node_modules, pruebas, generado y el harness del curso.
  */
 
-type Layer =
-  | 'ui'
-  | 'application'
-  | 'domain'
-  | 'infrastructure'
-  | 'composition'
-  | 'unclassified';
+type Layer = 'ui' | 'application' | 'domain' | 'infrastructure' | 'composition' | 'unclassified';
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
@@ -79,7 +73,7 @@ function extractImports(filePath: string): ImportRecord[] {
     sourceText,
     ts.ScriptTarget.Latest,
     true,
-    filePath.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+    filePath.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
   );
 
   const imports: ImportRecord[] = [];
@@ -100,17 +94,25 @@ function extractImports(filePath: string): ImportRecord[] {
       ts.isIdentifier(node.expression) &&
       node.expression.text === 'require' &&
       node.arguments.length === 1 &&
+      node.arguments[0] !== undefined &&
       ts.isStringLiteral(node.arguments[0])
     ) {
-      imports.push({ specifier: (node.arguments[0] as ts.StringLiteral).text, kind: 'require' });
+      imports.push({
+        specifier: (node.arguments[0] as ts.StringLiteral).text,
+        kind: 'require',
+      });
     }
     if (
       ts.isCallExpression(node) &&
       node.expression.kind === ts.SyntaxKind.ImportKeyword &&
       node.arguments.length === 1 &&
+      node.arguments[0] !== undefined &&
       ts.isStringLiteral(node.arguments[0])
     ) {
-      imports.push({ specifier: (node.arguments[0] as ts.StringLiteral).text, kind: 'dynamic-import' });
+      imports.push({
+        specifier: (node.arguments[0] as ts.StringLiteral).text,
+        kind: 'dynamic-import',
+      });
     }
     ts.forEachChild(node, visit);
   }
@@ -170,7 +172,10 @@ type Edge = {
 
 type Violation = Edge & { rule: string };
 
-function scanArchitecture(rootDir: string): { edges: Edge[]; violations: Violation[] } {
+function scanArchitecture(rootDir: string): {
+  edges: Edge[];
+  violations: Violation[];
+} {
   const files = listSourceFiles(rootDir);
   const edges: Edge[] = [];
   const violations: Violation[] = [];
@@ -207,6 +212,13 @@ function scanArchitecture(rootDir: string): { edges: Edge[]; violations: Violati
         });
       }
 
+      if (fromLayer === 'application' && (toLayer === 'ui' || toLayer === 'composition')) {
+        violations.push({
+          ...edge,
+          rule: 'application solo puede depender de application y domain; no puede obtener proveedores a traves de composition.',
+        });
+      }
+
       if (fromLayer === 'domain' && toLayer !== 'domain') {
         violations.push({
           ...edge,
@@ -214,7 +226,11 @@ function scanArchitecture(rootDir: string): { edges: Edge[]; violations: Violati
         });
       }
 
-      if (fromLayer === 'ui' && toLayer === 'composition' && toRelative(file, rootDir) !== 'App.tsx') {
+      if (
+        fromLayer === 'ui' &&
+        toLayer === 'composition' &&
+        toRelative(file, rootDir) !== 'App.tsx'
+      ) {
         violations.push({
           ...edge,
           rule: 'Una pantalla no debe importar composition directamente; solo App.tsx puede hacerlo para el montaje.',
@@ -235,30 +251,55 @@ describe('arquitectura: limites entre capas', () => {
 
     fs.writeFileSync(
       path.join(srcDir, 'infrastructure', 'fakeClient.ts'),
-      'export function fakeClient() { return true; }\n'
+      'export function fakeClient() { return true; }\n',
     );
     fs.writeFileSync(
       path.join(srcDir, 'ui', 'Screen.tsx'),
-      "import { fakeClient } from '../infrastructure/fakeClient';\nexport function Screen() { return fakeClient(); }\n"
+      "import { fakeClient } from '../infrastructure/fakeClient';\nexport function Screen() { return fakeClient(); }\n",
     );
 
     const { violations } = scanArchitecture(tmpRoot);
     fs.rmSync(tmpRoot, { recursive: true, force: true });
 
     expect(violations.length).toBeGreaterThan(0);
-    expect(violations[0].rule).toContain('UI no debe depender de infrastructure');
+    expect(violations[0]?.rule).toContain('UI no debe depender de infrastructure');
+  });
+
+  test('una reexportacion desde application no permite acceder a composition', () => {
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'arch-fixture-'));
+    try {
+      fs.mkdirSync(path.join(tmpRoot, 'src', 'application'), {
+        recursive: true,
+      });
+      fs.mkdirSync(path.join(tmpRoot, 'src', 'composition'), {
+        recursive: true,
+      });
+      fs.writeFileSync(
+        path.join(tmpRoot, 'src', 'composition', 'root.ts'),
+        'export const provider = {};',
+      );
+      fs.writeFileSync(
+        path.join(tmpRoot, 'src', 'application', 'index.ts'),
+        "export { provider } from '../composition/root';",
+      );
+      expect(scanArchitecture(tmpRoot).violations).toEqual([
+        expect.objectContaining({
+          from: 'src/application/index.ts',
+          to: 'src/composition/root.ts',
+          kind: 'reexport',
+        }),
+      ]);
+    } finally {
+      fs.rmSync(tmpRoot, { recursive: true, force: true });
+    }
   });
 
   test('el codigo real del proyecto no debe tener importaciones prohibidas entre capas', () => {
     const { edges, violations } = scanArchitecture(PROJECT_ROOT);
 
     if (violations.length > 0) {
-      const detail = violations
-        .map((v) => `  - ${v.from} -> ${v.to} [${v.rule}]`)
-        .join('\n');
-      // eslint-disable-next-line no-console
+      const detail = violations.map((v) => `  - ${v.from} -> ${v.to} [${v.rule}]`).join('\n');
       console.log(`Dependencias inspeccionadas: ${edges.length}`);
-      // eslint-disable-next-line no-console
       console.log(`Violaciones encontradas:\n${detail}`);
     }
 
