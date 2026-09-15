@@ -4,20 +4,44 @@
   "teamId": "REEMPLAZAR_CON_ID_DEL_EQUIPO",
   "members": [
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_1",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
-      "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "studentId": "3523110055",
+      "commitShas": [
+        "b9ee82610f958e33477d37a47f42d14058c4b1a4",
+        "752bbdd9d6e20169cc08b5f42cc9e64d679db958",
+        "e5e15dd5832f8907a067a1efaad75514896fb5b2",
+        "6d07a9ff5281402bc3508fb5241f0d6c8c2ab462"
+      ],
+      "files": [
+        "docs/adr/ADR-001-architecture.md",
+        "docs/architecture.mmd",
+        "tests/architecture.test.ts",
+        "reports/week-02/dependencies.json",
+        "evidence/week-02/engineering.json"
+      ],
+      "tests": [
+        "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts (antes, commit b9ee826): FAIL, 1 passed/1 failed, exit code 1, violacion detectada App.tsx -> src/api/courseBackend.ts",
+        "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts (despues de integrar la correccion de Fer, commit 8913a40): PASS, 2/2, exit code 0",
+        "npm run test:smoke (despues del merge, con cache de Jest limpia via npx jest --clearCache): PASS, 1/1"
+      ],
+      "reviews": [
+        "Compare el ADR-001 contra el diagrama docs/architecture.mmd para confirmar que ambos describen las mismas cuatro capas, los tres perfiles y los limites previstos de sesion/persistencia/ubicacion.",
+        "Revise los imports reales de App.tsx con tests/architecture.test.ts antes de la correccion de Fer: encontre que importaba directamente src/api/courseBackend.ts, violando la regla UI->infrastructure.",
+        "Despues de integrar la rama de Fer (git merge origin/codex/semana-02-fernanda), volvi a ejecutar el mismo detector y confirme 2/2 en verde; tambien corri el smoke test heredado para confirmar que el comportamiento observable no cambio.",
+        "Concluyo que el detector demuestra ausencia de imports prohibidos en el codigo inspeccionado en el momento de la ejecucion, pero no demuestra por si solo que todas las reglas de negocio funcionen ni que futuros proveedores sean correctos."
+      ],
+      "prediction": "Antes de ejecutar el detector sobre el codigo original, predije que la prueba detectaria que App.tsx (UI) conocia un cliente de infraestructura (src/api/courseBackend.ts) y que el comando terminaria con un codigo de salida distinto de 0, senalando la regla UI no debe depender de infrastructure directamente.",
+      "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts",
+      "observedResult": "Antes de la correccion: FAIL, exit code 1, con la violacion App.tsx -> src/api/courseBackend.ts reportada explicitamente. Despues de integrar la correccion de Fer (puerto BackendHealthPort, caso de uso createHealthQuery, adaptador CourseBackendHealthAdapter y composicion createCampusOps): PASS, 2/2, exit code 0. El smoke test heredado tambien paso tras limpiar la cache de Jest.",
+      "explanation": "Causa: App.tsx importaba directamente el cliente concreto de infraestructura en vez de depender de un puerto de dominio. Efecto: acoplaba la pantalla al proveedor especifico, dificultando su sustitucion y prueba aislada. Correccion: Fer introdujo un puerto en domain, un caso de uso en application, un adaptador en infrastructure y una raiz de composicion que ensambla todo e inyecta el resultado ya armado a App.tsx. El detector confirma la ausencia de imports prohibidos en el codigo analizado, pero no demuestra que toda regla de negocio futura o cada nuevo proveedor funcionen correctamente; eso requeriria pruebas adicionales especificas para cada caso."
     },
     {
       "studentId": "REEMPLAZAR_INTEGRANTE_2",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "commitShas": [
+        "REEMPLAZAR_CON_SHA_COMPLETO"
+      ],
+      "files": [
+        "REEMPLAZAR_CON_ARCHIVO_TRABAJADO"
+      ],
       "tests": [],
       "reviews": [],
       "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
@@ -27,7 +51,9 @@
     },
     {
       "studentId": "a3523110496",
-      "commitShas": ["da33b2e3b37b70bbbcdbe5ade11cbeaf07a777d4"],
+      "commitShas": [
+        "da33b2e3b37b70bbbcdbe5ade11cbeaf07a777d4"
+      ],
       "files": [
         "App.tsx",
         "src/domain/Incident.ts",
