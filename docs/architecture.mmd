@@ -1,0 +1,56 @@
+flowchart TD
+  subgraph UI["UI"]
+    ListScreen["Pantalla Lista"]
+    DetailScreen["Pantalla Detalle"]
+    HealthIndicator["Indicador de salud heredado (App.tsx)"]
+  end
+
+  subgraph APP["application"]
+    ListUseCase["Caso de uso: listar incidencias"]
+    GetUseCase["Caso de uso: obtener incidencia por id"]
+    HealthUseCase["Caso de uso: comprobar salud heredada"]
+  end
+
+  subgraph DOM["domain"]
+    IncidentModel["Modelo Incident (src/campusops/contracts.ts)"]
+    IncidentPort["Puerto IncidentRepository"]
+    HealthPort["Puerto HealthCheck"]
+  end
+
+  subgraph INFRA["infrastructure"]
+    FakeRepo["Fake de incidencias en memoria"]
+    LegacyBackend["courseBackend.ts (heredado)"]
+  end
+
+  subgraph COMP["composition"]
+    Root["Raiz de composicion"]
+  end
+
+  ListScreen --> ListUseCase
+  DetailScreen --> GetUseCase
+  HealthIndicator --> HealthUseCase
+
+  ListUseCase --> IncidentPort
+  GetUseCase --> IncidentPort
+  HealthUseCase --> HealthPort
+
+  FakeRepo -.implementa.-> IncidentPort
+  LegacyBackend -.implementa.-> HealthPort
+
+  Root --> ListUseCase
+  Root --> GetUseCase
+  Root --> HealthUseCase
+  Root --> FakeRepo
+  Root --> LegacyBackend
+
+  Reporter(["reporter"]) -.usa.-> ListScreen
+  Technician(["technician"]) -.usa.-> DetailScreen
+  Coordinator(["coordinator"]) -.usa.-> ListScreen
+
+  Session["Sesion (previsto; no implementado en Semana 02)"]
+  Persistence["Persistencia (previsto; no implementado en Semana 02)"]
+  Location["Ubicacion/proveedores (previsto; no implementado en Semana 02)"]
+
+  Session -.futuro.-> APP
+  Persistence -.futuro.-> INFRA
+  Location -.futuro.-> INFRA
