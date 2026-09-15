@@ -1,0 +1,56 @@
+npm run typecheck
+
+> dmi-react-native-starter@1.0.0 typecheck
+> tsc --noEmit
+
+npm run lint
+
+> dmi-react-native-starter@1.0.0 lint
+> eslint .
+
+
+C:\Users\oscar\Desktop\CampusOps-Semana-01\src\ui\IncidentDetailScreen.tsx
+  24:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\oscar\Desktop\CampusOps-Semana-01\src\ui\IncidentDetailScreen.tsx:24:5
+  22 |   useEffect(() => {
+  23 |     let active = true;
+> 24 |     setState({ kind: 'loading' });
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  25 |     getIncidentDetail(incidentId)
+  26 |       .then((incident) => {
+  27 |         if (!active) return;  react-hooks/set-state-in-effect
+
+C:\Users\oscar\Desktop\CampusOps-Semana-01\src\ui\IncidentListScreen.tsx
+  23:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\oscar\Desktop\CampusOps-Semana-01\src\ui\IncidentListScreen.tsx:23:5
+  21 |   useEffect(() => {
+  22 |     let active = true;
+> 23 |     setState({ kind: 'loading' });
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  24 |     listIncidents()
+  25 |       .then((incidents) => {
+  26 |         if (!active) return;  react-hooks/set-state-in-effect
+
+C:\Users\oscar\Desktop\CampusOps-Semana-01\tests\architecture.test.ts
+  302:7  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+  304:7  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+
+✖ 4 problems (2 errors, 2 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
+make: *** [verify] Error 1
+EXIT_CODE=2

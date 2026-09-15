@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "teamId": "4",
+  "members": [
+    {
+      "studentId": "REEMPLAZAR_INTEGRANTE_1",
+      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
+      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "tests": [],
+      "reviews": [],
+      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
+      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
+      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
+      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+    },
+    {
+      "studentId": "REEMPLAZAR_INTEGRANTE_2",
+      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
+      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "tests": [],
+      "reviews": [],
+      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
+      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
+      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
+      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+    },
+    {
+      "studentId": "a3523110496",
+      "commitShas": ["da33b2e3b37b70bbbcdbe5ade11cbeaf07a777d4"],
+      "files": [
+        "App.tsx",
+        "src/domain/Incident.ts",
+        "src/domain/IncidentRepository.ts",
+        "src/domain/BackendHealthPort.ts",
+        "src/application/createIncidentQueries.ts",
+        "src/application/createHealthQuery.ts",
+        "src/application/CampusOpsActions.ts",
+        "src/infrastructure/InMemoryIncidentRepository.ts",
+        "src/infrastructure/CourseBackendHealthAdapter.ts",
+        "src/composition/createCampusOps.ts",
+        "src/ui/CampusOpsScreen.tsx",
+        "src/ui/IncidentListScreen.tsx",
+        "src/ui/IncidentDetailScreen.tsx",
+        "tests/incidents.test.tsx"
+      ],
+      "tests": [
+        "npm test -- --runInBand --runTestsByPath tests/incidents.test.tsx: PASS, 6/6 (lista/detalle, selección distinta, lista vacía, ID inexistente, sustitución de proveedor, error controlado), exit code 0",
+        "npm run test:smoke: PASS, 1/1, exit code 0 (comportamiento heredado conservado tras refactorizar a través de BackendHealthPort/CourseBackendHealthAdapter)",
+        "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts (detector de Jarumi): PASS, 2/2, exit code 0, sin dependencias prohibidas en el código real"
+      ],
+      "reviews": [
+        "Revisé el ADR-001 y el contrato acordado con Jarumi (modelo Incident, list()/getById(id), mensajes de UI) antes de implementar, para no inventar campos ni comportamiento fuera de lo acordado.",
+        "Al correr el detector de arquitectura de Jarumi sobre mi código, encontró que CampusOpsScreen.tsx importaba el tipo CampusOpsActions directamente desde composition; moví ese tipo a application/CampusOpsActions.ts para respetar la regla UI->application. Repetí el detector y quedó en 2/2 sin violaciones.",
+        "Revisé tests/architecture.test.ts de Jarumi al bloquear mi propio typecheck (3 errores de posibles undefined en líneas 103, 111 y 249); le propuse la corrección puntual (uso de ! y ?.) para desbloquear make feedback."
+      ],
+      "prediction": "Al separar la UI de src/api/courseBackend.ts mediante un puerto de salud (BackendHealthPort) y un adaptador en infraestructura, esperaba que el smoke test de Semana 1 siguiera pasando sin tocar sus aserciones, y que el detector de arquitectura de Jarumi dejara de encontrar el import prohibido App.tsx -> src/api/courseBackend.",
+      "command": "npm test -- --runInBand --runTestsByPath tests/incidents.test.tsx tests/architecture.test.ts && npm run test:smoke",
+      "observedResult": "Los 6 tests de incidents.test.tsx pasaron (lista/detalle, selección distinta, vacío, ID inexistente, sustitución, error), el smoke heredado siguió pasando 1/1, y el detector de arquitectura pasó 2/2 sin violaciones tras mover CampusOpsActions a application.",
+      "explanation": "La separación en dominio/aplicación/infraestructura/composición/UI permite sustituir el proveedor de incidencias (demostrado inyectando un repositorio distinto sin tocar UI ni application) y corrige la dependencia original UI->infraestructura sin romper el comportamiento observable del indicador de salud heredado. Esto no demuestra conexión a un backend real ni implementa sesión, persistencia o ubicación, que quedan fuera del alcance de esta semana."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+flowchart TD
+  Boot["Montaje: App.tsx"]
+
+  subgraph UI["UI - presentación"]
+    Campus["Contenedor, selección y salud: src/ui/CampusOpsScreen.tsx"]
+    ListScreen["Lista: src/ui/IncidentListScreen.tsx"]
+    DetailScreen["Detalle: src/ui/IncidentDetailScreen.tsx"]
+    Labels["Etiquetas en español: src/ui/incidentLabels.ts"]
+  end
+
+  subgraph APP["application - acciones"]
+    Actions["Contrato de acciones: src/application/CampusOpsActions.ts"]
+    Queries["Lista y detalle: src/application/createIncidentQueries.ts"]
+    HealthQuery["Salud: src/application/createHealthQuery.ts"]
+  end
+
+  subgraph DOM["domain - modelo y puertos"]
+    Incident["Modelo: src/domain/Incident.ts"]
+    Vocabulary["Tipos y perfiles: src/campusops/contracts.ts"]
+    IncidentPort["Puerto: src/domain/IncidentRepository.ts"]
+    HealthPort["Puerto: src/domain/BackendHealthPort.ts"]
+  end
+
+  subgraph INFRA["infrastructure - adaptadores"]
+    Fake["Fake en memoria: src/infrastructure/InMemoryIncidentRepository.ts"]
+    HealthAdapter["Adaptador: src/infrastructure/CourseBackendHealthAdapter.ts"]
+    Client["Cliente heredado: src/api/courseBackend.ts"]
+  end
+
+  subgraph COMP["composition - construcción e inyección"]
+    Factory["src/composition/createCampusOps.ts"]
+  end
+
+  Boot --> Factory
+  Boot --> Campus
+  Campus --> Actions
+  Campus --> ListScreen
+  Campus --> DetailScreen
+  ListScreen --> Incident
+  DetailScreen --> Incident
+  ListScreen --> Labels
+  DetailScreen --> Labels
+  Labels --> Vocabulary
+  Actions --> Incident
+  Actions --> HealthQuery
+  Queries --> Incident
+  Queries --> IncidentPort
+  HealthQuery --> HealthPort
+  IncidentPort --> Incident
+  Incident --> Vocabulary
+  Fake --> Incident
+  Fake -->|implementa| IncidentPort
+  HealthAdapter -->|implementa| HealthPort
+  HealthAdapter --> Client
+  Factory --> Actions
+  Factory --> Queries
+  Factory --> HealthQuery
+  Factory --> Fake
+  Factory --> HealthAdapter
+
+  Reporter(["Reportante - reporter"]) -. usa .-> Campus
+  Technician(["Técnico - technician"]) -. usa .-> Campus
+  Coordinator(["Coordinador - coordinator"]) -. usa .-> Campus
+
+  Session["Sesión: previsto; no implementado en Semana 02"]
+  Persistence["Persistencia: previsto; no implementado en Semana 02"]
+  Location["Ubicación y proveedores: previsto; no implementado en Semana 02"]
+  Session -. coordinación futura .-> APP
+  Session -. contratos futuros .-> DOM
+  Persistence -. adaptadores futuros .-> INFRA
+  Location -. adaptadores futuros .-> INFRA
+
+  Legend["Continua: dependencia interna de código, incluidos tipos. Punteada: uso conceptual o límite futuro, no import implementado. Los perfiles no implican login ni permisos implementados. En ejecución, UI llama a las acciones inyectadas; application usa los puertos. Infraestructura devuelve datos sin invertir las dependencias. React, React Native y Expo se omiten de este mapa interno."]
