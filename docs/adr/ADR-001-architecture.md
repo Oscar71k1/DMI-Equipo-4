@@ -24,6 +24,8 @@ Tener una carpeta para incidencias, otra para sesión y otras según crezca la a
 - **A favor:** los archivos de una función quedan juntos y cada integrante puede trabajar en una parte.
 - **En contra:** hay más divisiones y debemos decidir dónde poner el código que varias partes necesitan. Para la lista y el detalle de esta semana resulta más complicado.
 
+  Por ejemplo, si necesitamos saber quién es el usuario actual y qué permisos tiene, ese código lo necesitarían tanto la función de incidencias como la de sesión. Con la Opción 1 tiene un lugar claro (`domain`); con la Opción 2 no está definido en qué carpeta debería vivir.
+
 Las dos opciones permiten probar y cambiar la fuente de datos si acordamos cómo se conectan sus partes.
 
 ## Decisión: qué vamos a hacer
@@ -43,6 +45,36 @@ Un archivo separado conectará las partes al iniciar la app. Las pantallas no ll
 
 Antes de dividir el trabajo, acordaremos qué datos devuelve una lista, qué devuelve un detalle y qué ocurre si una incidencia no existe. Así podremos avanzar por separado y después conectar nuestras partes.
 
+### Contrato acordado entre Jarumi y Fer
+
+**Campos mínimos de una incidencia** (reutilizando el vocabulario de `src/campusops/contracts.ts`):
+
+```typescript
+type Incident = Readonly<{
+  id: string;
+  category: IncidentCategory;
+  description: string;
+  location: IncidentLocation;
+  status: IncidentStatus;
+  work: IncidentWork;
+}>;
+```
+
+**Operaciones del contrato de dominio:**
+
+- `list(): Promise<Incident[]>` — devuelve la lista completa de incidencias. Una lista vacía es un resultado válido.
+- `getById(id: string): Promise<Incident | null>` — devuelve la incidencia solicitada o `null` si no existe. Nunca se inventa información.
+
+**Mensajes de la UI:**
+
+- Lista vacía: "No hay incidencias registradas todavía."
+- Detalle no encontrado: "No se encontró la incidencia solicitada."
+- Error inesperado: "Ocurrió un problema al cargar la información. Intenta de nuevo."
+
+**Composición e indicador de salud heredado:** la raíz de composición conecta los adaptadores concretos (incluyendo el indicador de salud heredado de `src/api/courseBackend`) con los casos de uso de aplicación, a través de un contrato de dominio. La pantalla no importa directamente ese cliente.
+
+**Clasificación de `src/campusops/contracts.ts`:** se trata como vocabulario de dominio compartido, aunque su ruta original se conserve fuera de la carpeta `domain/`.
+
 Los perfiles de reportante, técnico y coordinador se definirán en dominio. Dejaremos previstos los límites de sesión, almacenamiento y ubicación para las semanas correspondientes. Cuando se implementen los permisos, el servidor también deberá comprobar qué puede hacer cada usuario.
 
 ## Consecuencias: qué ganamos y qué nos cuesta
@@ -60,6 +92,7 @@ Revisaremos la decisión si el proyecto crece y esta organización empieza a dif
 2. Cambiar la fuente de datos por otra de prueba sin cambiar las pantallas ni las acciones de aplicación.
 3. Probar una lista vacía y una incidencia que no exista. La app debe explicar lo ocurrido sin cerrarse ni inventar información.
 4. Revisar qué archivos usan a otros. Detectar la llamada directa actual de la pantalla al cliente del servidor, corregirla y guardar evidencia del antes y después.
+ Esta detección se realiza con una prueba automática (`tests/architecture.test.ts`) que analiza los imports reales del código, en vez de depender de una revisión manual.
 5. Comprobar que el dibujo de `docs/architecture.mmd` coincida con el código y ejecutar las revisiones de semana 2, conservando las de semana 1.
 
 Estas comprobaciones todavía deben realizarse. Sus resultados se guardarán en las evidencias de semana 2.
