@@ -1,0 +1,8 @@
+Predicción antes de ejecutar la prueba de arquitectura:
+
+Espero que la prueba falle porque App.tsx (que es parte de UI)
+importa directamente src/api/courseBackend.ts (que es infraestructura).
+Eso viola la regla de que UI no debe depender de infraestructura
+directamente, debe pasar por application.
+Espero que el detector reporte esa violación y que el comando
+termine con un código de salida distinto de 0.

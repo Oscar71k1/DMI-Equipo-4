@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "commitSha": "8913a40b3604fdeb85552c2eaa80ed2059d67501",
+  "decision": "Para CampusOps se organizo el codigo en cuatro capas globales (ui, application, domain, infrastructure) en vez de organizar por funcionalidad, porque el tamano actual del proyecto (una lista y un detalle de incidencias con datos ficticios) no justifica el costo adicional de decidir carpetas y contratos compartidos entre funcionalidades. La composicion conecta los adaptadores concretos con los casos de uso a traves de un contrato de dominio, y las pantallas ya no llaman directamente al cliente del servidor heredado.",
+  "alternatives": [
+    "Capas globales (ui, application, domain, infrastructure): estructura pequena y facil de explicar entre los tres integrantes; el costo es que revisar una funcion completa (como consultar una incidencia) requiere abrir archivos en varias carpetas.",
+    "Organizacion por funcionalidad con capas internas (una carpeta por funcion, por ejemplo incidencias o sesion, cada una con sus propias subcapas): agrupa el codigo de una funcion en un solo lugar y permite que cada integrante trabaje en una parte, pero anade decisiones sobre donde vive el codigo compartido entre funciones (por ejemplo, el usuario actual y sus permisos) y resulta mas complejo para el alcance actual de solo lista y detalle."
+  ],
+  "tradeoff": "El beneficio principal es la testabilidad: las pantallas se pueden probar con datos ficticios inyectando un adaptador distinto sin encender un servidor real, y sustituir el proveedor de datos solo implica reemplazar el adaptador y ajustar la composicion si el contrato de dominio se mantiene compatible. El costo aceptado es tener mas archivos que si todo estuviera en una sola pantalla, y que cambiar de proveedor sigue exigiendo adaptar datos, manejar errores y probar el nuevo adaptador; no es gratis, solo mas localizado.",
+  "requirementIds": ["AC-01", "AC-02", "AC-03", "AC-04"],
+  "verification": [
+    {
+      "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts (antes de la correccion, commit b9ee82610f958e33477d37a47f42d14058c4b1a4)",
+      "result": "fail (EXIT_CODE=1)",
+      "evidence": "reports/week-02/logs/jarumi-arquitectura-antes.txt. Se detecto el import prohibido App.tsx -> src/api/courseBackend.ts, violando la regla de que UI no debe depender de infrastructure directamente."
+    },
+    {
+      "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts (despues de integrar la correccion de Fer, commit 8913a40b3604fdeb85552c2eaa80ed2059d67501)",
+      "result": "pass (EXIT_CODE=0)",
+      "evidence": "reports/week-02/logs/jarumi-arquitectura-despues.txt. Fer separo App.tsx introduciendo BackendHealthPort (domain), createHealthQuery (application), CourseBackendHealthAdapter (infrastructure) y createCampusOps (composicion). Verificado por Jarumi tras git merge origin/codex/semana-02-fernanda (fast-forward)."
+    },
+    {
+      "command": "npm run test:smoke (despues del merge, con cache de Jest limpia: npx jest --clearCache)",
+      "result": "pass",
+      "evidence": "El smoke test heredado (course-tests/smoke.test.tsx) confirmo que la lista y el detalle de incidencias de Fer siguen funcionando y que el indicador de salud llega a 'available' con el mock configurado."
+    }
+  ],
+  "aiAssistance": {
+    "used": true,
+    "description": "Se uso asistencia de IA para redactar y depurar la prueba de arquitectura (tests/architecture.test.ts), diagnosticar el timeout del smoke test tras el merge, y para redactar este documento a partir de las decisiones y resultados reales del equipo.",
+    "verification": "Jarumi ejecuto personalmente cada comando propuesto, reviso las salidas reales antes de registrarlas, y confirmo con Fer las correcciones de codigo antes de integrarlas."
+  }
+}
