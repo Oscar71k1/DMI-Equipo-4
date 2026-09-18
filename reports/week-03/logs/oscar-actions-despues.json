@@ -1,0 +1,149 @@
+{
+  "runId": 35393105863,
+  "headSha": "3c5042e26850ae87e236c79ec9c675f5ff1ddd6a",
+  "url": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 105755723752,
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-18T20:44:43Z",
+          "completed_at": "2026-09-18T20:44:44Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-18T20:44:44Z",
+          "completed_at": "2026-09-18T20:44:45Z"
+        },
+        {
+          "name": "Use Node.js 22.22.0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-18T20:44:45Z",
+          "completed_at": "2026-09-18T20:44:50Z"
+        },
+        {
+          "name": "Reproducible setup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-18T20:44:50Z",
+          "completed_at": "2026-09-18T20:44:59Z"
+        },
+        {
+          "name": "Public Expo Android build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-18T20:44:59Z",
+          "completed_at": "2026-09-18T20:45:10Z"
+        },
+        {
+          "name": "AC-01 — reproducibility",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-18T20:45:10Z",
+          "completed_at": "2026-09-18T20:45:35Z"
+        },
+        {
+          "name": "Architecture and incident regression tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-09-18T20:45:35Z",
+          "completed_at": "2026-09-18T20:45:37Z"
+        },
+        {
+          "name": "Secret scanner positive and negative controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-18T20:45:37Z",
+          "completed_at": "2026-09-18T20:45:37Z"
+        },
+        {
+          "name": "AC-02 — public behavior",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 9,
+          "started_at": "2026-09-18T20:45:37Z",
+          "completed_at": "2026-09-18T20:45:55Z"
+        },
+        {
+          "name": "Fetch and verify final evidence tag",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-09-18T20:45:55Z",
+          "completed_at": "2026-09-18T20:45:55Z"
+        },
+        {
+          "name": "AC-03 — declared failure evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-09-18T20:45:55Z",
+          "completed_at": "2026-09-18T20:45:55Z"
+        },
+        {
+          "name": "Record CI execution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-09-18T20:45:55Z",
+          "completed_at": "2026-09-18T20:45:55Z"
+        },
+        {
+          "name": "Upload academic evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-09-18T20:45:55Z",
+          "completed_at": "2026-09-18T20:45:56Z"
+        },
+        {
+          "name": "Post Use Node.js 22.22.0",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-09-18T20:45:56Z",
+          "completed_at": "2026-09-18T20:45:56Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-09-18T20:45:56Z",
+          "completed_at": "2026-09-18T20:45:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-09-18T20:45:56Z",
+          "completed_at": "2026-09-18T20:45:56Z"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 10565609962,
+      "name": "academic-evidence-week-03-ci-amenazas",
+      "size": 9184
+    }
+  ]
+}

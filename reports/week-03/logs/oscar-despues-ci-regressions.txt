@@ -1,0 +1,12 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx
+
+PASS tests/incidents.test.tsx
+PASS tests/architecture.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        1.707 s
+Ran all test suites within paths "tests/architecture.test.ts", "tests/incidents.test.tsx".

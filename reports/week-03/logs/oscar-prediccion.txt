@@ -1,0 +1,2 @@
+2026-09-18T20:41:27.908Z
+Sesion de Oscar asistida por Codex. Prediccion previa: un archivo TypeScript con una asignacion number -> string debe hacer fallar make verify-week-03 por typecheck. El job de Actions debe seguir fallido despues de tee y generar/subir diagnostico. Al retirar el archivo deben pasar verify, las regresiones y el escaner. El paso public puede fallar por entregables pendientes de Jarumi/Fernanda y no se declarara la entrega completa.

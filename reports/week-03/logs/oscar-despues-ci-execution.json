@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "commitSha": "3c5042e26850ae87e236c79ec9c675f5ff1ddd6a",
+  "generatedAt": "2026-09-18T20:45:55.380844+00:00",
+  "jobStatusBeforeUpload": "failure",
+  "event": "push",
+  "ref": "refs/heads/codex/semana-03-oscar",
+  "runUrl": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863",
+  "steps": {
+    "checkout": {
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "setup": {
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "build": {
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "verify": {
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "regressions": {
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "scanner": {
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "public": {
+      "outcome": "failure",
+      "conclusion": "failure"
+    },
+    "final_tag": {
+      "outcome": "skipped",
+      "conclusion": "skipped"
+    },
+    "evidence": {
+      "outcome": "skipped",
+      "conclusion": "skipped"
+    }
+  }
+}

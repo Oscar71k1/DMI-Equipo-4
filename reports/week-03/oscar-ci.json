@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "commitSha": "3c5042e26850ae87e236c79ec9c675f5ff1ddd6a",
+  "generatedAt": "2026-09-18T20:47:45.767Z",
+  "scope": "Aporte parcial de Oscar: CI y revision del escaner original. No sustituye security.json de Fernanda ni el cierre del equipo.",
+  "checks": [
+    {
+      "id": "ci-types-before",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "make verify-week-03 (paso AC-01 con shell bash y tee en GitHub Actions)",
+      "evidence": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35392957334, SHA 57b2020d08ad45d4c71a70ba6b250725f481ec73. TS2322 en src/oscarCiFailure.ts: number no asignable a string. El paso y el job fallaron; reporte y subida de artefactos aprobados. reports/week-03/logs/oscar-antes-verify.json y oscar-actions-antes.json."
+    },
+    {
+      "id": "ci-types-corrected",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make verify-week-03",
+      "evidence": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863, SHA 3c5042e26850ae87e236c79ec9c675f5ff1ddd6a. Se retiro exclusivamente el archivo del error; AC-01 aprobado, sin cambiar pruebas ni umbrales. 9 controles locales aprobados. reports/week-03/logs/oscar-despues-verify.json y oscar-verify.txt."
+    },
+    {
+      "id": "ci-regressions",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx",
+      "evidence": "Paso de regresiones aprobado en https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863. Log: reports/week-03/logs/oscar-despues-ci-regressions.txt. La ejecucion local junto con smoke aprobo 16 pruebas en 3 suites; se conserva un timeout inicial de pantalla y su repeticion sin modificar codigo ni timeout en oscar-regresiones-inicial.txt y oscar-regresiones.txt."
+    },
+    {
+      "id": "secret-scanner-controls",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "python3 tests/secret_scanner_test.py",
+      "evidence": "3 pruebas aprobadas localmente y en Actions: configuracion publica aceptada, marcador sintetico temporal detectado y retirado, y exclusion de node_modules comprobada. No se almacenan credenciales reales ni el marcador. Logs: reports/week-03/logs/oscar-secret-scanner.txt y oscar-despues-ci-secret-scanner.txt."
+    },
+    {
+      "id": "ci-team-deliverables-pending",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "make public-test-week-03",
+      "evidence": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863: el paso publico falla por docs/threat-model.md, reports/week-03/security.json y evidencias de equipo ausentes en ese SHA. El test del workflow paso; el del modelo no pudo abrir su archivo. reports/week-03/logs/oscar-despues-public-tests.json. No es un resultado corregido global; falta integrar los aportes de Jarumi y Fernanda."
+    }
+  ],
+  "runs": {
+    "before": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35392957334",
+    "after": "https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863"
+  },
+  "artifacts": {
+    "before": [
+      {
+        "id": 10566396679,
+        "name": "academic-evidence-week-03-ci-amenazas",
+        "size": 4410
+      }
+    ],
+    "after": [
+      {
+        "id": 10565609962,
+        "name": "academic-evidence-week-03-ci-amenazas",
+        "size": 9184
+      }
+    ]
+  },
+  "limitations": [
+    "El tag week-03-final no se ha creado; la rama no ejecuta el cierre etiquetado.",
+    "El detector revisa patrones y carpetas del evaluador original; no toda credencial ni todo el historial.",
+    "El experimento de tipos demuestra propagacion del fallo de CI, no autorizacion de incidencias.",
+    "La integracion final y el modelo de amenazas permanecen pendientes."
+  ]
+}

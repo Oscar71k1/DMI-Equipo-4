@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "teamId": "4",
+  "completionStatus": "partial",
+  "pendingContributions": [
+    "Jarumi",
+    "Fernanda"
+  ],
+  "members": [
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "98972edffea67af98d4534d32e33442a71fa0c3d",
+        "3c5042e26850ae87e236c79ec9c675f5ff1ddd6a"
+      ],
+      "files": [
+        ".github/workflows/week-03-ci-amenazas-feedback.yml",
+        "tests/secret_scanner_test.py",
+        "docs/oscar-integracion-semana-03.md"
+      ],
+      "tests": [
+        "python tests/secret_scanner_test.py: 3 pruebas aprobadas localmente; su equivalente python3 paso tambien en Actions.",
+        "Regresiones locales de arquitectura/incidencias/smoke: 16 pruebas aprobadas en 3 suites. Primera ejecucion con un timeout conservada y repeticion sin cambiar limites.",
+        "make verify-week-03: 9 controles locales aprobados; el mismo paso remoto fallo con TS2322 y paso al retirar el error.",
+        "Pipeline bash con tee: el error no se oculto y se subieron artefactos del job fallido."
+      ],
+      "reviews": [
+        "Revision del detector original scan_secrets: patrones, archivo temporal, diagnostico sin el marcador y exclusion de node_modules. No se modifico tools/course_public_evaluator.py.",
+        "Revision de minimos privilegios, SHA del PR, profundidad 2, recuperacion/verificacion del tag final y distincion entre validacion publica obligatoria y cierre etiquetado.",
+        "Inspeccion de artefactos reales de Actions antes y despues del error de tipos. Los controles propios pasan tras corregirlo, pero el job completo sigue fallando por entregables pendientes."
+      ],
+      "prediction": "Antes de ejecutar: el error number -> string debe causar TS2322 y detener AC-01; el reporte y los artefactos deben conservarse. Retirar el archivo debe restaurar el paso y las regresiones. Prediccion previa: reports/week-03/logs/oscar-prediccion.txt.",
+      "command": "make verify-week-03; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx; python tests/secret_scanner_test.py",
+      "observedResult": "Sesion asistida por Codex. https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35392957334: AC-01 y job fallidos por TS2322, artefactos subidos. https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863: build, AC-01, regresiones y escaner aprobados; public falla por entregables pendientes. Localmente 16 pruebas Jest y 3 del escaner aprobadas, make verify-week-03 codigo 0. Evidencia: reports/week-03/oscar-ci.json.",
+      "explanation": "La contribucion conserva errores como errores y permite inspeccionar el diagnostico aunque el job falle. La prueba del escaner verifica un control real del curso y explicita sus limites; no acredita permisos de incidencias ni un modelo de amenazas completo. Codex realizo implementacion y ejecuciones en esta sesion de Oscar; no se atribuyen resultados a sus companeras. Este archivo parcial debe recibir los otros dos registros reales antes del cierre."
+    }
+  ]
+}
