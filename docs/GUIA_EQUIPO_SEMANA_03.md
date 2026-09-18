@@ -4,9 +4,9 @@
 
 Esta guía organiza trabajo pendiente; no certifica que las pruebas o la actividad estén terminadas. Continúen en el mismo repositorio, con React Native, Expo y TypeScript, conservando el trabajo anterior.
 
-**Entrega:** 21 de septiembre de 2026, 23:59, Ciudad de México. Actividad: 8 puntos. Cada integrante responde aparte el quiz de 3 preguntas y **3 puntos según la consigna compartida**. Los documentos del paquete dicen 2 puntos para el quiz: existe esa diferencia; revisen el anuncio del docente. No cambia los 8 puntos del proyecto.
+**Entrega del paquete:** 21 de septiembre de 2026, 23:59, Ciudad de México. Actividad: 8 puntos. El quiz es independiente y queda fuera de esta guía de trabajo.
 
-## 1. Los archivos de la imagen: para qué sirven
+## 1. Los archivos del paquete: para qué sirven
 
 | Archivo o carpeta | Qué hacer |
 |---|---|
@@ -17,7 +17,15 @@ Esta guía organiza trabajo pendiente; no certifica que las pruebas o la activid
 | `course-tests/public/week-03.test.ts` | Pruebas públicas. Lean qué verifican; conserven sus aserciones. Ya estaba versionado en esta copia. |
 | `.github/workflows/week-03-ci-amenazas-feedback.yml` | Flujo automático del paquete. Incluyan `.github` aunque esté oculta. |
 
-Lean también [CampusOps](CAMPUSOPS.md), [su contrato API](CAMPUSOPS_API.md) y [el formato de evidencias](EVIDENCE_CONTRACT.md). La imagen sólo muestra carpetas: no demuestra que sus archivos estén completos ni publicados.
+Lean también [CampusOps](CAMPUSOPS.md), [su contrato API](CAMPUSOPS_API.md) y [el formato de evidencias](EVIDENCE_CONTRACT.md). La existencia de archivos no demuestra que estén completos ni publicados.
+
+### Requisitos adicionales de las capturas compartidas por Oscar
+
+Las dos capturas nuevas piden registro de Service Worker, precache, runtime cache donde aplique, fallback offline, actualización segura e invalidación controlada. También enumeran `public/sw.js`, `src/lib/pwa/register-service-worker.ts`, `docs/cache-strategy.md`, `tests/service-worker.spec.ts`, `tests/offline.spec.ts` y README con reporte de CI. Estos requisitos no aparecen en el paquete local de CI/amenazas ni en `course-contracts.json`: se registran como alcance adicional aportado en las capturas, sin reemplazar los cinco entregables del paquete.
+
+Un Service Worker corresponde a la versión web. La [documentación de Expo sobre PWA](https://docs.expo.dev/guides/progressive-web-apps/) describe ese soporte para sitios Expo. El proyecto actual exporta Android, no tiene configurada ni comprobada una entrega web/PWA y no contiene los archivos de las capturas. No se puede demostrar un Service Worker ejecutando solamente el bundle Android.
+
+Antes de implementar esa ampliación, hay que resolver si las capturas corresponden a esta misma entrega y cuál será el destino web. La [guía de Oscar](GUIA_OSCAR_SEMANA_03.md) conserva la matriz completa y un reparto propuesto para ese caso. Mientras se aclara, se puede avanzar en CI, modelo de amenazas y controles de seguridad del paquete. No crear archivos vacíos para aparentar cumplimiento.
 
 Al preparar estas guías faltaban `docs/threat-model.md`, `reports/week-03/security.json` y las evidencias de Semana 03. Se incorporó el avance remoto de Semana 02: ya existen las capas de dominio, aplicación, infraestructura, composición y UI, además de `tests/architecture.test.ts` y `tests/incidents.test.tsx`. Partan de ese trabajo y conserven sus comprobaciones; su presencia no acredita todavía los controles de Semana 03.
 
@@ -25,14 +33,17 @@ Al preparar estas guías faltaban `docs/threat-model.md`, `reports/week-03/secur
 
 | Persona | Trabajo principal | Qué entrega al equipo |
 |---|---|---|
-| Jarumi | Modelo de amenazas y justificación de prioridades. | `docs/threat-model.md`, `engineering.json` y revisión técnica de un control/prueba. |
-| Fernanda | CI, pruebas de seguridad y demostración de fallo/corrección. | Workflow comprobado, pruebas del equipo, logs y `reports/week-03/security.json`. |
-| Óscar | Integrar ramas, revisar resultados y cerrar la entrega. | Revisión técnica propia, ejecución final, tag/SHA y su registro individual. |
+| Jarumi | Modelo de amenazas y justificación de prioridades. | `docs/threat-model.md`, `engineering.json` y revisión técnica; estrategia y riesgos de caché si aplica el alcance web. |
+| Fernanda | Pruebas de seguridad y demostración de fallo/corrección. | Controles y pruebas, logs y `reports/week-03/security.json`; pruebas de SW/offline si aplica el alcance web. |
+| Óscar | Responsable de editar/integrar el workflow, revisar artefactos y preservar regresiones. | Revisión técnica propia, ejecución final y registro individual; implementación/registro del SW y ejecución web si aplica ese alcance. |
 
 Cada persona completa su propio registro en **un único** `evidence/week-03/individual.json`. Acuerden turnos para editarlo y no sobrescribir aportaciones.
 
 - [Guía de Jarumi](GUIA_JARUMI_SEMANA_03.md)
 - [Guía de Fernanda](GUIA_FERNANDA_SEMANA_03.md)
+- [Guía de Oscar](GUIA_OSCAR_SEMANA_03.md)
+
+Fernanda indica los comandos de sus pruebas y revisa CI con Oscar; Oscar edita el YAML para evitar cambios simultáneos. Jarumi redacta la estrategia antes de implementar caché; las tres partes acuerdan las mismas rutas y criterios.
 
 ## 3. Preparar la copia
 
@@ -48,7 +59,7 @@ python --version
 make --version
 ```
 
-Conserven los cambios pendientes antes de cambiar de rama. Con la copia limpia, actualicen `main` con `git pull --ff-only origin main` y creen su rama: `codex/semana-03-jarumi` o `codex/semana-03-fernanda`. Si ya existe, cambien a ella sin volver a crearla. Usen su identidad Git real; revisen `git config user.name` y `git config user.email`.
+Conserven los cambios pendientes antes de cambiar de rama. Con la copia limpia, actualicen `main` con `git pull --ff-only origin main` y creen su rama: `codex/semana-03-jarumi`, `codex/semana-03-fernanda` o `codex/semana-03-oscar`. Si ya existe, cambien a ella sin volver a crearla. Usen su identidad Git real; revisen `git config user.name` y `git config user.email`.
 
 La guía oficial pide Node **22.22.0**. Ejecuten `make setup` para instalar desde el lockfile y después `make feedback`. Ejecuten cada comando por separado y revisen su código de salida antes de seguir. Si Windows no reconoce `python3`, usen `make PYTHON=python verify-week-03` y el mismo parámetro en los demás objetivos semanales. Para problemas del lanzador npm, consulten [entorno-windows.md](entorno-windows.md).
 
@@ -63,6 +74,8 @@ Todos los JSON de esta semana usan `schemaVersion: 1` y `week: 3`, guardados com
 | `evidence/week-03/individual.json` | `teamId` registrado y exactamente tres `members`, cada uno con los campos de abajo. |
 
 Un check admite `status` = `pass`, `fail` o `not_applicable`; `scenarioType` = `nominal`, `boundary` o `failure`. Incluyan al menos un límite o fallo. Conserven el fallo histórico y el resultado corregido como observaciones distintas, explicando si el estado describe un comando fallido o una prueba negativa que rechazó correctamente una operación. Un pendiente no equivale a un éxito ni justifica omitir un requisito obligatorio.
+
+`checks[].evidence` debe ser **texto no vacío**, no un objeto. Si necesitan datos estructurados adicionales, consérvenlos en otro campo y enlacen el log desde el texto. El evaluador actual genera `verify.json`, `public-tests.json` y `failure.json` dentro de `reports/week-03/`; este último nombre no significa que el resultado sea necesariamente fallido: lean `status` y sus checks.
 
 Cada integrante registra `studentId`, `commitShas` completos propios, `files`, `tests`, `reviews`, `prediction`, `command`, `observedResult` y `explanation`. Debe tener al menos un archivo técnico y una prueba o revisión real. Escriban la predicción antes de ejecutar y el resultado después. No inventen identidades, autorías, ejecuciones ni SHAs. Declaren la ayuda de IA y cómo la verificaron.
 

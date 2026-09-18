@@ -4,7 +4,7 @@ Tu objetivo es responder: **¿qué protegemos, qué podría salir mal y qué pru
 
 ## 1. Acordar el trabajo con Fernanda
 
-Tú preparas `docs/threat-model.md` y `evidence/week-03/engineering.json`. Fernanda trabaja en CI, controles/pruebas y `security.json`. Acuerden los nombres de los riesgos y las pruebas para usar los mismos identificadores. Por ejemplo, R-01 debe significar lo mismo en el modelo, la prueba y el reporte.
+Tú preparas `docs/threat-model.md` y `evidence/week-03/engineering.json`. Fernanda trabaja en controles/pruebas y `security.json`; Oscar integra y edita CI. Acuerden los nombres de los riesgos y las pruebas para usar los mismos identificadores. Por ejemplo, R-01 debe significar lo mismo en el modelo, la prueba y el reporte.
 
 Revisa primero el código realmente integrado. Una guía anterior o una carpeta planeada no demuestran que una función exista. Distingue en el documento **implementado y probado**, **pendiente** y **previsto para otro hito**. No hace falta construir ahora todo el login o las integraciones futuras, pero una amenaza priorizada necesita una comprobación concreta y sus límites explícitos.
 
@@ -30,6 +30,14 @@ Estas filas son ejemplos para discutir, no resultados ya comprobados:
 | R-04 Exponer credenciales | Alta: permite accesos fuera de la app. | Evitar secretos en código/configuración pública y ejecutar escaneo obligatorio en CI. | Detector rechaza un marcador sintético temporal y deja de fallar al retirarlo. | El escaneo por patrones no detecta todos los formatos ni todo el historial. |
 
 Decide cuál atienden primero según **impacto y probabilidad en el estado actual**. No pongas todas como altas sin establecer un orden y justificarlo. Ajusta las propuestas al contrato CampusOps y al alcance acordado.
+
+### Si las capturas de PWA aplican al proyecto
+
+Prepara también `docs/cache-strategy.md`, coordinado con el SW que implementará Oscar y las pruebas de Fernanda. Define recursos esenciales, reglas de precache/runtime, fallback, política de actualización, nombres/versiones de caché y condiciones de invalidación. Incluye una matriz de ruta/tipo de recurso, estrategia, motivo, exclusiones y prueba asociada. No describas una caché inexistente como implementada.
+
+Añade al modelo las amenazas de datos privados conservados en caché, respuestas de otro usuario, contenido obsoleto y una actualización incompleta. Propón cachear únicamente recursos públicos explícitamente permitidos; tokens, respuestas autenticadas, fotografías privadas, ubicaciones y operaciones de escritura quedan fuera de esa política inicial. Explica que un fallback offline no confirma que una escritura llegó al servidor. La limpieza debe limitarse a las cachés propias de la aplicación, sin borrar las de otras aplicaciones del mismo origen.
+
+La estrategia debe incluir el riesgo residual y qué prueba verifica cada decisión. Consulta la matriz de [la guía de Oscar](GUIA_OSCAR_SEMANA_03.md). La consigna CI/amenazas y las capturas web se mantienen identificadas como fuentes distintas mientras se resuelve su aplicación conjunta.
 
 ## 3. Hacer una revisión técnica propia
 

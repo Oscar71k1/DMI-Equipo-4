@@ -17,7 +17,7 @@ Revisa `.github/workflows/week-03-ci-amenazas-feedback.yml`, `Makefile`, `packag
 
 Conserva `permissions: contents: read`. No añadas permisos de escritura para resolver problemas de lectura. No desactives checks, ignores errores ni conviertas la ausencia de pruebas en éxito.
 
-**Dos detalles que debes revisar antes del cierre:** el paquete selecciona Node `22`, mientras la guía pide `22.22.0`; y el checkout por defecto no trae todo el historial y las etiquetas. La validación necesita el tag final y puede necesitar el padre directo del commit de evidencias. Coordina con Óscar los ajustes mínimos de versión e historial (por ejemplo `fetch-depth: 0` en checkout), manteniendo todos los pasos obligatorios. Compruébalos en Actions. Antes de existir la etiqueta, la validación final puede fallar legítimamente; registra el motivo, no elimines esa comprobación.
+**Detalles revisados en la copia actual:** el workflow selecciona Node `22`, mientras la guía pide `22.22.0`. El checkout ya tiene `ref: ${{ github.event.pull_request.head.sha || github.sha }}` y `fetch-depth: 2`, solicitados por Oscar; no vuelvas a proponer profundidad cero como si ese cambio no existiera. Dos commits permiten consultar el padre directo, pero no garantizan que exista localmente la referencia `week-03-final`. Oscar coordina el ajuste de versión y la recuperación/verificación de esa etiqueta en el cierre, conservando los checks obligatorios y el bloque acordado. Antes de existir la etiqueta, `make evidence-week-03` puede fallar legítimamente: registrar ese motivo no demuestra el experimento de fallo obligatorio. Ese experimento debe fallar por la causa introducida y debe comprobarse también el cierre etiquetado.
 
 ## 2. Preparar pruebas ligadas a los riesgos
 
@@ -38,7 +38,13 @@ Cuando la prueba exista, ejecútala explícitamente:
 npm test -- --ci --runInBand --runTestsByPath tests/security.test.ts
 ```
 
-El nombre de archivo es una propuesta. Si lo cambian, actualicen comandos y documentos. Añadan la ejecución obligatoria de estas pruebas al workflow: el evaluador no descubre automáticamente sus pruebas propias al seleccionar las públicas.
+El nombre de archivo es una propuesta. Si lo cambian, actualicen comandos y documentos. Entrega a Oscar el comando exacto para incorporarlo como paso obligatorio al workflow; él edita el YAML y tú compruebas su ejecución. El evaluador no descubre automáticamente sus pruebas propias al seleccionar las públicas. Conserven también las pruebas propias de arquitectura/incidencias de Semana 02.
+
+### Si las capturas de PWA aplican al proyecto
+
+Tu aporte adicional son `tests/service-worker.spec.ts` y `tests/offline.spec.ts`, acordados con la implementación de Oscar y la estrategia de Jarumi. Verifica registro y alcance del SW, recursos esenciales disponibles offline tras una primera carga correcta, exclusión de respuestas privadas, fallback legible, actualización entre dos versiones e invalidación limitada a cachés de CampusOps. Comprueba que una instalación incompleta no reemplace la versión utilizable.
+
+Las pruebas deben ejercitar el worker/registro reales. Los dobles sirven para lógica aislada, pero no demuestran navegación offline ni control de páginas: esos casos necesitan un navegador real sobre la exportación web. Acuerden primero el runner y su comando; la extensión `.spec.ts` por sí sola no configura Playwright ni convierte Jest en un navegador. Si agregan pruebas de navegador, sepárenlas de Jest y ejecuten ambas suites en CI. No declaren cumplimiento PWA a partir de la exportación Android.
 
 ## 3. Demostrar un fallo sin esconderlo
 
@@ -75,7 +81,7 @@ Sigue el contrato de la guía común. Para cada control añade su identificador,
 - Comando, código y evidencia del estado corregido.
 - Enlaces de Actions y nombres de artefactos cuando estén disponibles.
 
-El evaluador genera sus propios reportes `generated-*`, pero **no redacta `security.json` por ti**. El SHA general del reporte debe actualizarse al cierre conjunto. No sustituyas resultados observados por lo que esperabas ver.
+El evaluador genera `reports/week-03/verify.json`, `public-tests.json` y `failure.json`, pero **no redacta `security.json` por ti**. En cada check, `evidence` es una cadena de texto no vacía con el resultado y la ruta del log; no uses un objeto en ese campo. El SHA general del reporte debe actualizarse al cierre conjunto. No sustituyas resultados observados por lo que esperabas ver.
 
 El detector del curso busca patrones conocidos y excluye algunas carpetas: una salida sin hallazgos no demuestra ausencia absoluta de secretos. Si pruebas el detector con un marcador ficticio, genéralo en un archivo temporal, conserva sólo el diagnóstico necesario y retíralo antes de la verificación final. Evita dejar el patrón detectable en documentación/logs que el mismo escáner revisa.
 
