@@ -1,0 +1,19 @@
+Diagnostico de GitHub Actions, sesion de Oscar asistida por Codex.
+URL: https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35300409056
+SHA: fe7dd634d692c59a59eed02ef0d1d0807680a5b7
+Paso fallido: Public Week 01 tests.
+2026-09-18T02:44:03.1706085Z   "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
+2026-09-18T02:44:03.1706731Z   "evaluatedAt": "2026-09-18T02:44:03.167228+00:00",
+2026-09-18T02:44:03.1707223Z   "status": "fail",
+2026-09-18T02:44:03.1707556Z   "checks": [
+2026-09-18T02:44:03.1707847Z     {
+2026-09-18T02:44:03.1718795Z     {
+2026-09-18T02:44:03.1719234Z       "id": "schema:reports/week-01/baseline.json",
+2026-09-18T02:44:03.1719748Z       "status": "fail",
+2026-09-18T02:44:03.1720391Z       "detail": "commitSha must be HEAD or its direct evidence-only parent"
+2026-09-18T02:44:03.1720948Z     },
+2026-09-18T02:44:03.1721219Z     {
+2026-09-18T02:44:03.1721648Z       "id": "schema:evidence/week-01/engineering.json",
+2026-09-18T02:44:03.1722397Z       "status": "fail",
+2026-09-18T02:44:03.1723094Z       "detail": "commitSha must be HEAD or its direct evidence-only parent"
+2026-09-18T02:44:03.1723755Z     },

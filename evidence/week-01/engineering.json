@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "82eb7ee5b817be0ebaac427c374cfffe316043ef",
+  "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
   "decision": "Para el diagnostico de semana 1 se elige conservar la prueba smoke existente con su doble determinista de backend y comprobar la transicion de respuesta exitosa a available. El alcance de esta semana es verificar el starter: una regresion reversible de esa transicion aborda el riesgo 3 del registro y el criterio 9 de la definicion del problema sin implementar los flujos futuros. La preparacion y la integracion fueron asistidas. La revision y repeticion independiente de Fernanda respaldan esta eleccion y sus limites; su analisis esta en docs/fernanda-diagnostico.md.",
   "alternatives": [
     "Usar la prueba smoke existente, cuyo doble resuelve getBackendHealth(), alterar temporalmente la rama de exito y comprobar tanto el fallo como la correccion de la transicion a available.",
@@ -28,6 +28,15 @@
       "command": "npm run test:smoke",
       "result": "Repeticion independiente registrada por Fernanda: estado original PASS con codigo 0; regresion offline FAIL con codigo 1 y expected available / received Backend: offline; restauracion PASS con codigo 0.",
       "evidence": "docs/fernanda-diagnostico.md; reports/week-01/logs/fernanda-smoke-antes.txt; reports/week-01/logs/fernanda-smoke-falla.txt; reports/week-01/logs/fernanda-smoke-corregido.txt; commit propio 780833cc8ee890ea21211cbd1ff64ec951e5a55b."
+    },
+    {
+      "command": "make public-test-week-01",
+      "result": "pass; 13 controles; EXIT_CODE=0; revalidacion sobre fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
+      "evidence": "reports/week-01/logs/oscar-public-integracion-semana02.txt. Sesion de Oscar asistida por Codex. Se mantuvieron activos el evaluador, las pruebas, el workflow y sus umbrales. Las observaciones previas conservan su alcance historico."
     }
-  ]
+  ],
+  "previousValidation": {
+    "commitSha": "82eb7ee5b817be0ebaac427c374cfffe316043ef",
+    "note": "Las observaciones previas conservan su procedencia historica. Esta actualizacion revalida la version integrada sin cambiar codigo ni pruebas."
+  }
 }

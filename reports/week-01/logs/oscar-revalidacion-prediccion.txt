@@ -1,0 +1,2 @@
+2026-09-18T02:52:11.535Z
+Prediccion previa: el evaluador debe aceptar los reportes de semanas 1 y 2 con el SHA integrado fe7dd63, conservando las observaciones historicas. No se cambian pruebas, workflow ni aplicacion; se espera que ambas pruebas publicas y sus controles de toolchain pasen. El commit siguiente solo incluira reports/ y evidence/ para mantener valido el padre inmediato.

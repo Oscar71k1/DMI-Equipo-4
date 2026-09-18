@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
-  "generatedAt": "2026-09-18T02:40:18.760Z",
+  "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
+  "generatedAt": "2026-09-18T02:54:39.961Z",
   "checks": [
     {
       "id": "arch-before-app-courseBackend",
@@ -60,11 +60,23 @@
       "scenarioType": "boundary",
       "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts",
       "evidence": "11 pruebas de incidencias aprobadas: proveedor independiente sustituible, lista vacia, identificador inexistente, fallos de lista/detalle, salud offline, consultas cambiadas y copias defensivas. Log: reports/week-02/logs/oscar-integracion-pruebas.txt. La primera ejecucion tuvo 17 aprobadas y un timeout; se conserva en oscar-integracion-pruebas-inicial.txt. La repeticion uso el mismo comando y limite, sin modificar el codigo."
+    },
+    {
+      "id": "revalidacion-main-tras-integrar-semana02",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make public-test-week-02",
+      "evidence": "13 controles aprobados, codigo 0, SHA fe7dd634d692c59a59eed02ef0d1d0807680a5b7. reports/week-02/logs/oscar-public-revalidacion-main.txt. Se actualizaron los SHA de los reportes para evaluar la version integrada; no se alteraron codigo, pruebas ni controles. Los experimentos antiguos permanecen como evidencia historica, no como nuevas ejecuciones."
     }
   ],
   "integrationReview": {
     "author": "Oscar (3523110017), sesion asistida por Codex",
     "schemaEvidence": "reports/week-02/logs/oscar-jarumi-schema.txt: el validador original rechaza evidence como objeto y acepta texto. Se conservaron los objetos historicos en details.",
     "historicalBaseline": "b9ee826 identifica el codigo previo; el detector se incorpora en e5e15dd. Las observaciones historicas no son ejecuciones nuevas del SHA integrado."
+  },
+  "previousValidation": {
+    "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
+    "generatedAt": "2026-09-18T02:40:18.760Z",
+    "note": "Las observaciones previas conservan su procedencia historica. Esta actualizacion revalida la version integrada sin cambiar codigo ni pruebas."
   }
 }

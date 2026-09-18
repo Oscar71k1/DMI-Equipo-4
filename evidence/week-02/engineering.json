@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
+  "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
   "decision": "Para CampusOps se organizo el codigo en cuatro capas globales (ui, application, domain, infrastructure) en vez de organizar por funcionalidad, porque el tamano actual del proyecto (una lista y un detalle de incidencias con datos ficticios) no justifica el costo adicional de decidir carpetas y contratos compartidos entre funcionalidades. La composicion conecta los adaptadores concretos con los casos de uso a traves de un contrato de dominio, y las pantallas ya no llaman directamente al cliente del servidor heredado.",
   "alternatives": [
     "Capas globales (ui, application, domain, infrastructure): estructura pequena y facil de explicar entre los tres integrantes; el costo es que revisar una funcion completa (como consultar una incidencia) requiere abrir archivos en varias carpetas.",
@@ -50,6 +50,11 @@
       "command": "make public-test-week-02",
       "result": "make public-test-week-02: pass, 13 controles aprobados, codigo 0",
       "evidence": "reports/week-02/public-tests.json; reports/week-02/logs/oscar-integracion-public.txt. Ejecucion con toolchain y evaluador originales en la sesion de Oscar asistida por Codex."
+    },
+    {
+      "command": "make public-test-week-02",
+      "result": "pass; 13 controles; EXIT_CODE=0; revalidacion sobre fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
+      "evidence": "reports/week-02/logs/oscar-public-revalidacion-main.txt. Sesion de Oscar asistida por Codex. Se mantuvieron activos el evaluador, las pruebas, el workflow y sus umbrales. Las observaciones previas conservan su alcance historico."
     }
   ],
   "aiAssistance": {
@@ -61,5 +66,9 @@
     "author": "Oscar (3523110017)",
     "aiAssistance": "Codex integro la rama de Jarumi, corrigio el esquema, amplio la prueba de arquitectura y ejecuto los comandos de esta sesion. No se atribuyen estas ejecuciones a las companeras ni se afirma una revision personal posterior del estudiante.",
     "individualEvidence": "evidence/week-02/individual.json conserva tres registros, sus SHA de autoria y la contribucion nueva de Oscar (AC-05)."
+  },
+  "previousValidation": {
+    "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
+    "note": "Las observaciones previas conservan su procedencia historica. Esta actualizacion revalida la version integrada sin cambiar codigo ni pruebas."
   }
 }
