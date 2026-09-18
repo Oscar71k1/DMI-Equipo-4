@@ -305,6 +305,35 @@ describe('arquitectura: limites entre capas', () => {
 
     expect(violations).toEqual([]);
   });
+
+  test('las dependencias internas reales coinciden con las flechas del diagrama', () => {
+    const diagram = fs.readFileSync(path.join(PROJECT_ROOT, 'docs/architecture.mmd'), 'utf8');
+    // Convencion de este diagrama: nodos con ruta y flechas continuas para imports.
+    // Las flechas punteadas describen perfiles y capacidades futuras, no codigo.
+    const nodes = new Map<string, string>();
+    for (const match of diagram.matchAll(/^\s*(\w+)\["([^"]+)"\]/gm)) {
+      const file = match[2]?.match(/(?:src\/[\w/.]+\.tsx?|App\.tsx)/)?.[0];
+      if (file && match[1]) {
+        expect(fs.existsSync(path.join(PROJECT_ROOT, file))).toBe(true);
+        nodes.set(match[1], file);
+      }
+    }
+    const declared = new Set<string>();
+    for (const match of diagram.matchAll(/^\s*(\w+)\s+-->(?:\|[^|]+\|)?\s+(\w+)\s*$/gm)) {
+      const from = nodes.get(match[1] ?? '');
+      const to = nodes.get(match[2] ?? '');
+      expect(from).toBeDefined();
+      expect(to).toBeDefined();
+      declared.add(`${from} -> ${to}`);
+    }
+    const actual = new Set(
+      scanArchitecture(PROJECT_ROOT).edges
+        .filter((edge) => edge.toLayer !== 'external')
+        .map((edge) => `${edge.from} -> ${edge.to}`),
+    );
+    expect(actual.size).toBeGreaterThan(0);
+    expect([...declared].sort()).toEqual([...actual].sort());
+  });
 });
 
 export { scanArchitecture, classifyLayer, PROJECT_ROOT };
