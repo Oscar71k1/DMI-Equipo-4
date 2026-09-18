@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
-  "generatedAt": "2026-09-18T02:54:39.955Z",
+  "commitSha": "b739c98f3410391721ce0a0b30d7ac0cea04d66e",
+  "generatedAt": "2026-09-18T20:30:27.422Z",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -62,8 +62,7 @@
     }
   ],
   "previousValidation": {
-    "commitSha": "82eb7ee5b817be0ebaac427c374cfffe316043ef",
-    "generatedAt": "2026-09-09T20:12:22-06:00",
-    "note": "Las observaciones previas conservan su procedencia historica. Esta actualizacion revalida la version integrada sin cambiar codigo ni pruebas."
+    "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
+    "note": "Revalidacion tras publicar las guias de Semana 03; codigo, pruebas y workflows sin cambios."
   }
 }

@@ -1,9 +1,10 @@
+python tools/course_public_evaluator.py --week 01 --mode public --execute-toolchain
 {
   "schemaVersion": 1,
-  "week": 2,
+  "week": 1,
   "mode": "public",
   "commitSha": "b739c98f3410391721ce0a0b30d7ac0cea04d66e",
-  "evaluatedAt": "2026-09-18T20:33:54.972478+00:00",
+  "evaluatedAt": "2026-09-18T20:33:21.351903+00:00",
   "status": "pass",
   "checks": [
     {
@@ -37,17 +38,17 @@
       "detail": "missing/empty=[]"
     },
     {
-      "id": "schema:reports/week-02/dependencies.json",
+      "id": "schema:reports/week-01/baseline.json",
       "status": "pass",
-      "detail": "6 checks indexed, 3 boundary/failure; report evaluates HEAD"
+      "detail": "8 checks indexed, 1 boundary/failure; report evaluates HEAD"
     },
     {
-      "id": "schema:evidence/week-02/engineering.json",
+      "id": "schema:evidence/week-01/engineering.json",
       "status": "pass",
       "detail": "decision evidence is substantive and reproducible; report evaluates HEAD"
     },
     {
-      "id": "schema:evidence/week-02/individual.json",
+      "id": "schema:evidence/week-01/individual.json",
       "status": "pass",
       "detail": "three individual evidence records found"
     },
@@ -69,7 +70,8 @@
     {
       "id": "toolchain_4",
       "status": "pass",
-      "detail": "npm test -- --ci --runInBand course-tests/public/week-02.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-02.test.ts\n\n\nPASS course-tests/public/week-02.test.ts\n  √ architecture exposes boundaries and no direct UI-to-infrastructure edge (6 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        1.642 s, estimated 2 s\nRan all test suites matching /course-tests\\\\public\\\\week-02.test.ts/i."
+      "detail": "npm test -- --ci --runInBand course-tests/public/week-01.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-01.test.ts\n\n\nPASS course-tests/public/week-01.test.ts (5.153 s)\n  √ baseline preserves the reproduced failure and its verified correction (7 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        10.517 s\nRan all test suites matching /course-tests\\\\public\\\\week-01.test.ts/i."
     }
   ]
 }
+EXIT_CODE=0

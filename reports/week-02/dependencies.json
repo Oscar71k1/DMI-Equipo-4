@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
-  "generatedAt": "2026-09-18T02:54:39.961Z",
+  "commitSha": "b739c98f3410391721ce0a0b30d7ac0cea04d66e",
+  "generatedAt": "2026-09-18T20:30:27.427Z",
   "checks": [
     {
       "id": "arch-before-app-courseBackend",
@@ -75,8 +75,7 @@
     "historicalBaseline": "b9ee826 identifica el codigo previo; el detector se incorpora en e5e15dd. Las observaciones historicas no son ejecuciones nuevas del SHA integrado."
   },
   "previousValidation": {
-    "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
-    "generatedAt": "2026-09-18T02:40:18.760Z",
-    "note": "Las observaciones previas conservan su procedencia historica. Esta actualizacion revalida la version integrada sin cambiar codigo ni pruebas."
+    "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
+    "note": "Revalidacion tras publicar las guias de Semana 03; codigo, pruebas y workflows sin cambios."
   }
 }

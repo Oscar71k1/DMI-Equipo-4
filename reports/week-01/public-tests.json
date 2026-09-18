@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "week": 1,
   "mode": "public",
-  "commitSha": "fe7dd634d692c59a59eed02ef0d1d0807680a5b7",
-  "evaluatedAt": "2026-09-18T02:52:54.598577+00:00",
+  "commitSha": "b739c98f3410391721ce0a0b30d7ac0cea04d66e",
+  "evaluatedAt": "2026-09-18T20:33:21.351903+00:00",
   "status": "pass",
   "checks": [
     {
@@ -39,7 +39,7 @@
     {
       "id": "schema:reports/week-01/baseline.json",
       "status": "pass",
-      "detail": "7 checks indexed, 1 boundary/failure; report evaluates HEAD"
+      "detail": "8 checks indexed, 1 boundary/failure; report evaluates HEAD"
     },
     {
       "id": "schema:evidence/week-01/engineering.json",
@@ -69,7 +69,7 @@
     {
       "id": "toolchain_4",
       "status": "pass",
-      "detail": "npm test -- --ci --runInBand course-tests/public/week-01.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-01.test.ts\n\n\nPASS course-tests/public/week-01.test.ts\n  √ baseline preserves the reproduced failure and its verified correction (6 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        1.755 s\nRan all test suites matching /course-tests\\\\public\\\\week-01.test.ts/i."
+      "detail": "npm test -- --ci --runInBand course-tests/public/week-01.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-01.test.ts\n\n\nPASS course-tests/public/week-01.test.ts (5.153 s)\n  √ baseline preserves the reproduced failure and its verified correction (7 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        10.517 s\nRan all test suites matching /course-tests\\\\public\\\\week-01.test.ts/i."
     }
   ]
 }
