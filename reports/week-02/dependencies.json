@@ -1,15 +1,16 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "8913a40b3604fdeb85552c2eaa80ed2059d67501",
-  "generatedAt": "2026-09-15T05:13:16.1887031Z",
+  "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
+  "generatedAt": "2026-09-18T02:40:18.760Z",
   "checks": [
     {
       "id": "arch-before-app-courseBackend",
       "status": "fail",
       "scenarioType": "failure",
       "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts",
-      "evidence": {
+      "evidence": "priorCommitSha: b9ee82610f958e33477d37a47f42d14058c4b1a4; logPath: reports/week-02/logs/jarumi-arquitectura-antes.txt; exitCode: 1; violation: App.tsx -> src/api/courseBackend.ts; rule: UI no debe depender de infrastructure directamente (debe pasar por application).; cause: App.tsx (UI) importaba directamente el cliente de infraestructura src/api/courseBackend.ts en vez de pasar por un puerto de application/domain.; effect: Acopla la pantalla al proveedor concreto del backend heredado, dificultando su sustitucion y prueba aislada.; prediction: Se predijo en reports/week-02/logs/jarumi-prediccion.txt que la prueba detectaria el import prohibido y terminaria con codigo distinto de 0. El resultado observado coincidio con la prediccion.",
+      "details": {
         "priorCommitSha": "b9ee82610f958e33477d37a47f42d14058c4b1a4",
         "logPath": "reports/week-02/logs/jarumi-arquitectura-antes.txt",
         "exitCode": 1,
@@ -25,7 +26,8 @@
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts",
-      "evidence": {
+      "evidence": "commitSha: 8913a40b3604fdeb85552c2eaa80ed2059d67501; logPath: reports/week-02/logs/jarumi-arquitectura-despues.txt; exitCode: 0; fix: Fer separo App.tsx del cliente de infraestructura: introdujo el puerto BackendHealthPort en domain, el caso de uso createHealthQuery en application, el adaptador CourseBackendHealthAdapter en infrastructure, y la composicion createCampusOps.ts que ensambla las piezas e inyecta el resultado ya armado a App.tsx.; verifiedBy: Se integro la rama origin/codex/semana-02-fernanda mediante git merge (fast-forward, commit 8913a40) y se volvio a ejecutar el mismo detector sobre el codigo fusionado; ambas pruebas (fixture temporal y codigo real) pasaron.",
+      "details": {
         "commitSha": "8913a40b3604fdeb85552c2eaa80ed2059d67501",
         "logPath": "reports/week-02/logs/jarumi-arquitectura-despues.txt",
         "exitCode": 0,
@@ -38,11 +40,31 @@
       "status": "pass",
       "scenarioType": "boundary",
       "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts",
-      "evidence": {
+      "evidence": "description: El detector se probo contra un fixture temporal creado en un directorio aparte, con una violacion fabricada (UI importando directamente infrastructure), para confirmar que una dependencia prohibida no pasa inadvertida.; result: El detector reconocio la violacion fabricada y reporto la regla 'UI no debe depender de infrastructure' antes de eliminar el fixture temporal (el propio test la borra al finalizar).; logPath: reports/week-02/logs/jarumi-arquitectura-despues.txt",
+      "details": {
         "description": "El detector se probo contra un fixture temporal creado en un directorio aparte, con una violacion fabricada (UI importando directamente infrastructure), para confirmar que una dependencia prohibida no pasa inadvertida.",
         "result": "El detector reconocio la violacion fabricada y reporto la regla 'UI no debe depender de infrastructure' antes de eliminar el fixture temporal (el propio test la borra al finalizar).",
         "logPath": "reports/week-02/logs/jarumi-arquitectura-despues.txt"
       }
+    },
+    {
+      "id": "arch-integrated-final",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts",
+      "evidence": "Sesion de Oscar asistida por Codex: 18/18 pruebas y 5/5 suites aprobadas, codigo 0. Incluye 4 pruebas de arquitectura y la comparacion exacta entre flechas del diagrama e imports internos. Log: reports/week-02/logs/oscar-integracion-pruebas.txt."
+    },
+    {
+      "id": "integrated-provider-boundaries",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts",
+      "evidence": "11 pruebas de incidencias aprobadas: proveedor independiente sustituible, lista vacia, identificador inexistente, fallos de lista/detalle, salud offline, consultas cambiadas y copias defensivas. Log: reports/week-02/logs/oscar-integracion-pruebas.txt. La primera ejecucion tuvo 17 aprobadas y un timeout; se conserva en oscar-integracion-pruebas-inicial.txt. La repeticion uso el mismo comando y limite, sin modificar el codigo."
     }
-  ]
+  ],
+  "integrationReview": {
+    "author": "Oscar (3523110017), sesion asistida por Codex",
+    "schemaEvidence": "reports/week-02/logs/oscar-jarumi-schema.txt: el validador original rechaza evidence como objeto y acepta texto. Se conservaron los objetos historicos en details.",
+    "historicalBaseline": "b9ee826 identifica el codigo previo; el detector se incorpora en e5e15dd. Las observaciones historicas no son ejecuciones nuevas del SHA integrado."
+  }
 }

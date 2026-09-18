@@ -35,19 +35,36 @@
       "explanation": "Causa: App.tsx importaba directamente el cliente concreto de infraestructura en vez de depender de un puerto de dominio. Efecto: acoplaba la pantalla al proveedor especifico, dificultando su sustitucion y prueba aislada. Correccion: Fer introdujo un puerto en domain, un caso de uso en application, un adaptador en infrastructure y una raiz de composicion que ensambla todo e inyecta el resultado ya armado a App.tsx. El detector confirma la ausencia de imports prohibidos en el codigo analizado, pero no demuestra que toda regla de negocio futura o cada nuevo proveedor funcionen correctamente; eso requeriria pruebas adicionales especificas para cada caso."
     },
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_2",
+      "studentId": "3523110017",
       "commitShas": [
-        "REEMPLAZAR_CON_SHA_COMPLETO"
+        "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
+        "8673096f8460408165c8875914bf23236deed54d"
       ],
       "files": [
-        "REEMPLAZAR_CON_ARCHIVO_TRABAJADO"
+        "tests/architecture.test.ts",
+        "docs/oscar-integracion-semana-02.md",
+        "reports/week-02/dependencies.json",
+        "evidence/week-02/engineering.json",
+        ".github/workflows/starter-feedback.yml",
+        ".github/workflows/week-03-ci-amenazas-feedback.yml"
       ],
-      "tests": [],
-      "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "tests": [
+        "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts: 18/18 pruebas, 5/5 suites, codigo 0. Log: reports/week-02/logs/oscar-integracion-pruebas.txt.",
+        "Validador original validate_report: rechaza el esquema de Jarumi con evidence como objeto y acepta la correccion a texto; se mantuvo el mismo SHA en copias temporales para aislar el error. Log: reports/week-02/logs/oscar-jarumi-schema.txt.",
+        "make feedback: codigo 0; typecheck, lint, smoke y exportacion Android (590 modulos) aprobados. Auditoria con 2 vulnerabilidades altas dentro del umbral critical original. Log: reports/week-02/logs/oscar-integracion-feedback.txt.",
+        "make verify-week-02: pass, 9 controles aprobados, codigo 0. Log: reports/week-02/logs/oscar-integracion-verify.txt.",
+        "make public-test-week-02: pass, 13 controles aprobados, codigo 0. Log: reports/week-02/logs/oscar-integracion-public.txt."
+      ],
+      "reviews": [
+        "Sesion de Oscar asistida por Codex: integracion de origin/codex/semana-02-jarumi sobre main, que ya contenia la correccion de Fernanda. Se conservaron commits y autoria de ambas.",
+        "Revision de la ruta App -> CampusOpsScreen -> createIncidentQueries -> IncidentRepository -> fake. Sustituir el proveedor requiere cambiar composicion y el adaptador, no la UI ni los casos de uso.",
+        "Ampliacion de tests/architecture.test.ts para comparar las aristas continuas de docs/architecture.mmd con los imports internos reales; los perfiles y funciones futuras siguen siendo conceptuales.",
+        "Correccion de checks[].evidence a texto, preservando los objetos en details y los resultados historicos; se preciso que el smoke comprueba titulo/salud, no navegacion."
+      ],
+      "prediction": "Antes de ejecutar esperaba que la integracion mantuviera lista/detalle, sustitucion, casos de error y smoke; el diagrama debia coincidir con los imports. El esquema corregido debia ser aceptado por el evaluador original. Prediccion previa: reports/week-02/logs/oscar-integracion-prediccion.txt.",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts",
+      "observedResult": "Sesion asistida por Codex: instalacion npm ci codigo 0. Primera ejecucion: 17 aprobadas, 1 timeout de 5000 ms en la primera prueba de pantalla. Repeticion sin cambios ni aumento de timeout: 18 aprobadas en 5 suites, codigo 0. El validador original rechazo el reporte de Jarumi por evidence no textual y acepto la correccion. Logs en reports/week-02/logs/oscar-integracion-*.txt y oscar-jarumi-schema.txt. make feedback termino con codigo 0, incluida exportacion Android de 590 modulos; la auditoria informo 2 vulnerabilidades altas y paso con el umbral original critical. make verify-week-02: pass, 9 controles aprobados, codigo 0. make public-test-week-02: pass, 13 controles aprobados, codigo 0.",
+      "explanation": "La contribucion integra evidencias conservando su procedencia y comprueba automaticamente que el diagrama describe los imports del codigo. El puerto evita que la UI conozca el proveedor; la prueba de sustitucion verifica una implementacion independiente. Los resultados proceden de comandos ejecutados por Codex en la sesion de Oscar; no se presentan como pruebas manuales en Android ni como ejecuciones personales nuevas de Jarumi o Fernanda."
     },
     {
       "studentId": "a3523110496",

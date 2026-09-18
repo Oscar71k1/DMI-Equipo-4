@@ -1,14 +1,20 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "8913a40b3604fdeb85552c2eaa80ed2059d67501",
+  "commitSha": "f66d267f49f63a12eb4fedb60a43807d7030b4b8",
   "decision": "Para CampusOps se organizo el codigo en cuatro capas globales (ui, application, domain, infrastructure) en vez de organizar por funcionalidad, porque el tamano actual del proyecto (una lista y un detalle de incidencias con datos ficticios) no justifica el costo adicional de decidir carpetas y contratos compartidos entre funcionalidades. La composicion conecta los adaptadores concretos con los casos de uso a traves de un contrato de dominio, y las pantallas ya no llaman directamente al cliente del servidor heredado.",
   "alternatives": [
     "Capas globales (ui, application, domain, infrastructure): estructura pequena y facil de explicar entre los tres integrantes; el costo es que revisar una funcion completa (como consultar una incidencia) requiere abrir archivos en varias carpetas.",
     "Organizacion por funcionalidad con capas internas (una carpeta por funcion, por ejemplo incidencias o sesion, cada una con sus propias subcapas): agrupa el codigo de una funcion en un solo lugar y permite que cada integrante trabaje en una parte, pero anade decisiones sobre donde vive el codigo compartido entre funciones (por ejemplo, el usuario actual y sus permisos) y resulta mas complejo para el alcance actual de solo lista y detalle."
   ],
   "tradeoff": "El beneficio principal es la testabilidad: las pantallas se pueden probar con datos ficticios inyectando un adaptador distinto sin encender un servidor real, y sustituir el proveedor de datos solo implica reemplazar el adaptador y ajustar la composicion si el contrato de dominio se mantiene compatible. El costo aceptado es tener mas archivos que si todo estuviera en una sola pantalla, y que cambiar de proveedor sigue exigiendo adaptar datos, manejar errores y probar el nuevo adaptador; no es gratis, solo mas localizado.",
-  "requirementIds": ["AC-01", "AC-02", "AC-03", "AC-04"],
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04",
+    "AC-05"
+  ],
   "verification": [
     {
       "command": "npm test -- --runInBand --runTestsByPath tests/architecture.test.ts (antes de la correccion, commit b9ee82610f958e33477d37a47f42d14058c4b1a4)",
@@ -23,12 +29,37 @@
     {
       "command": "npm run test:smoke (despues del merge, con cache de Jest limpia: npx jest --clearCache)",
       "result": "pass",
-      "evidence": "El smoke test heredado (course-tests/smoke.test.tsx) confirmo que la lista y el detalle de incidencias de Fer siguen funcionando y que el indicador de salud llega a 'available' con el mock configurado."
+      "evidence": "Registro historico de Jarumi: smoke heredado aprobado tras limpiar la cache. course-tests/smoke.test.tsx comprueba el titulo CampusOps y el indicador de salud available; no prueba la navegacion lista/detalle, cubierta por tests/incidents.test.tsx."
+    },
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts",
+      "result": "pass, 18/18 pruebas, 5 suites, EXIT_CODE=0",
+      "evidence": "reports/week-02/logs/oscar-integracion-pruebas.txt. Reproduccion de Oscar con asistencia de Codex; comprueba lista/detalle, sustitucion real del proveedor y correspondencia entre diagrama e imports. La primera ejecucion con un timeout se conserva en oscar-integracion-pruebas-inicial.txt."
+    },
+    {
+      "command": "make feedback",
+      "result": "pass, EXIT_CODE=0",
+      "evidence": "reports/week-02/logs/oscar-integracion-feedback.txt. Typecheck, lint, smoke y exportacion Android de Expo aprobados (590 modulos). Auditoria: 2 vulnerabilidades altas heredadas; umbral original critical aprobado, sin cambiar dependencias ni umbrales. La exportacion no es un APK ni una prueba en dispositivo."
+    },
+    {
+      "command": "make verify-week-02",
+      "result": "make verify-week-02: pass, 9 controles aprobados, codigo 0",
+      "evidence": "reports/week-02/verify.json; reports/week-02/logs/oscar-integracion-verify.txt. Ejecucion con toolchain y evaluador originales en la sesion de Oscar asistida por Codex."
+    },
+    {
+      "command": "make public-test-week-02",
+      "result": "make public-test-week-02: pass, 13 controles aprobados, codigo 0",
+      "evidence": "reports/week-02/public-tests.json; reports/week-02/logs/oscar-integracion-public.txt. Ejecucion con toolchain y evaluador originales en la sesion de Oscar asistida por Codex."
     }
   ],
   "aiAssistance": {
     "used": true,
     "description": "Se uso asistencia de IA para redactar y depurar la prueba de arquitectura (tests/architecture.test.ts), diagnosticar el timeout del smoke test tras el merge, y para redactar este documento a partir de las decisiones y resultados reales del equipo.",
     "verification": "Jarumi ejecuto personalmente cada comando propuesto, reviso las salidas reales antes de registrarlas, y confirmo con Fer las correcciones de codigo antes de integrarlas."
+  },
+  "integrationReview": {
+    "author": "Oscar (3523110017)",
+    "aiAssistance": "Codex integro la rama de Jarumi, corrigio el esquema, amplio la prueba de arquitectura y ejecuto los comandos de esta sesion. No se atribuyen estas ejecuciones a las companeras ni se afirma una revision personal posterior del estudiante.",
+    "individualEvidence": "evidence/week-02/individual.json conserva tres registros, sus SHA de autoria y la contribucion nueva de Oscar (AC-05)."
   }
 }
