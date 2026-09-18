@@ -19,23 +19,15 @@ Esta guía organiza trabajo pendiente; no certifica que las pruebas o la activid
 
 Lean también [CampusOps](CAMPUSOPS.md), [su contrato API](CAMPUSOPS_API.md) y [el formato de evidencias](EVIDENCE_CONTRACT.md). La existencia de archivos no demuestra que estén completos ni publicados.
 
-### Requisitos adicionales de las capturas compartidas por Oscar
-
-Las dos capturas nuevas piden registro de Service Worker, precache, runtime cache donde aplique, fallback offline, actualización segura e invalidación controlada. También enumeran `public/sw.js`, `src/lib/pwa/register-service-worker.ts`, `docs/cache-strategy.md`, `tests/service-worker.spec.ts`, `tests/offline.spec.ts` y README con reporte de CI. Estos requisitos no aparecen en el paquete local de CI/amenazas ni en `course-contracts.json`: se registran como alcance adicional aportado en las capturas, sin reemplazar los cinco entregables del paquete.
-
-Un Service Worker corresponde a la versión web. La [documentación de Expo sobre PWA](https://docs.expo.dev/guides/progressive-web-apps/) describe ese soporte para sitios Expo. El proyecto actual exporta Android, no tiene configurada ni comprobada una entrega web/PWA y no contiene los archivos de las capturas. No se puede demostrar un Service Worker ejecutando solamente el bundle Android.
-
-Antes de implementar esa ampliación, hay que resolver si las capturas corresponden a esta misma entrega y cuál será el destino web. La [guía de Oscar](GUIA_OSCAR_SEMANA_03.md) conserva la matriz completa y un reparto propuesto para ese caso. Mientras se aclara, se puede avanzar en CI, modelo de amenazas y controles de seguridad del paquete. No crear archivos vacíos para aparentar cumplimiento.
-
 Al preparar estas guías faltaban `docs/threat-model.md`, `reports/week-03/security.json` y las evidencias de Semana 03. Se incorporó el avance remoto de Semana 02: ya existen las capas de dominio, aplicación, infraestructura, composición y UI, además de `tests/architecture.test.ts` y `tests/incidents.test.tsx`. Partan de ese trabajo y conserven sus comprobaciones; su presencia no acredita todavía los controles de Semana 03.
 
 ## 2. Reparto propuesto
 
 | Persona | Trabajo principal | Qué entrega al equipo |
 |---|---|---|
-| Jarumi | Modelo de amenazas y justificación de prioridades. | `docs/threat-model.md`, `engineering.json` y revisión técnica; estrategia y riesgos de caché si aplica el alcance web. |
-| Fernanda | Pruebas de seguridad y demostración de fallo/corrección. | Controles y pruebas, logs y `reports/week-03/security.json`; pruebas de SW/offline si aplica el alcance web. |
-| Óscar | Responsable de editar/integrar el workflow, revisar artefactos y preservar regresiones. | Revisión técnica propia, ejecución final y registro individual; implementación/registro del SW y ejecución web si aplica ese alcance. |
+| Jarumi | Modelo de amenazas y justificación de prioridades. | `docs/threat-model.md`, `engineering.json` y revisión técnica. |
+| Fernanda | Pruebas de seguridad y demostración de fallo/corrección. | Controles y pruebas, logs y `reports/week-03/security.json`. |
+| Óscar | Responsable de editar/integrar el workflow, revisar artefactos y preservar regresiones. | Revisión técnica propia, ejecución final y registro individual. |
 
 Cada persona completa su propio registro en **un único** `evidence/week-03/individual.json`. Acuerden turnos para editarlo y no sobrescribir aportaciones.
 
@@ -43,7 +35,7 @@ Cada persona completa su propio registro en **un único** `evidence/week-03/indi
 - [Guía de Fernanda](GUIA_FERNANDA_SEMANA_03.md)
 - [Guía de Oscar](GUIA_OSCAR_SEMANA_03.md)
 
-Fernanda indica los comandos de sus pruebas y revisa CI con Oscar; Oscar edita el YAML para evitar cambios simultáneos. Jarumi redacta la estrategia antes de implementar caché; las tres partes acuerdan las mismas rutas y criterios.
+Fernanda indica los comandos de sus pruebas y revisa CI con Oscar; Oscar edita el YAML para evitar cambios simultáneos. Jarumi acuerda con ambas personas los riesgos, controles y criterios que se documentarán.
 
 ## 3. Preparar la copia
 

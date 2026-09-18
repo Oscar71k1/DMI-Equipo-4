@@ -40,12 +40,6 @@ npm test -- --ci --runInBand --runTestsByPath tests/security.test.ts
 
 El nombre de archivo es una propuesta. Si lo cambian, actualicen comandos y documentos. Entrega a Oscar el comando exacto para incorporarlo como paso obligatorio al workflow; él edita el YAML y tú compruebas su ejecución. El evaluador no descubre automáticamente sus pruebas propias al seleccionar las públicas. Conserven también las pruebas propias de arquitectura/incidencias de Semana 02.
 
-### Si las capturas de PWA aplican al proyecto
-
-Tu aporte adicional son `tests/service-worker.spec.ts` y `tests/offline.spec.ts`, acordados con la implementación de Oscar y la estrategia de Jarumi. Verifica registro y alcance del SW, recursos esenciales disponibles offline tras una primera carga correcta, exclusión de respuestas privadas, fallback legible, actualización entre dos versiones e invalidación limitada a cachés de CampusOps. Comprueba que una instalación incompleta no reemplace la versión utilizable.
-
-Las pruebas deben ejercitar el worker/registro reales. Los dobles sirven para lógica aislada, pero no demuestran navegación offline ni control de páginas: esos casos necesitan un navegador real sobre la exportación web. Acuerden primero el runner y su comando; la extensión `.spec.ts` por sí sola no configura Playwright ni convierte Jest en un navegador. Si agregan pruebas de navegador, sepárenlas de Jest y ejecuten ambas suites en CI. No declaren cumplimiento PWA a partir de la exportación Android.
-
 ## 3. Demostrar un fallo sin esconderlo
 
 Hagan el experimento en tu rama `codex/semana-03-fernanda`, partiendo de un estado conocido. Una opción sencilla es introducir **temporalmente un error de tipos** en un archivo TypeScript real incluido por el proyecto, por ejemplo asignar un número a una variable declarada como texto. No cambies una prueba para hacerla fallar artificialmente ni uses credenciales reales.

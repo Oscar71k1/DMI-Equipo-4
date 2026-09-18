@@ -31,14 +31,6 @@ Estas filas son ejemplos para discutir, no resultados ya comprobados:
 
 Decide cuál atienden primero según **impacto y probabilidad en el estado actual**. No pongas todas como altas sin establecer un orden y justificarlo. Ajusta las propuestas al contrato CampusOps y al alcance acordado.
 
-### Si las capturas de PWA aplican al proyecto
-
-Prepara también `docs/cache-strategy.md`, coordinado con el SW que implementará Oscar y las pruebas de Fernanda. Define recursos esenciales, reglas de precache/runtime, fallback, política de actualización, nombres/versiones de caché y condiciones de invalidación. Incluye una matriz de ruta/tipo de recurso, estrategia, motivo, exclusiones y prueba asociada. No describas una caché inexistente como implementada.
-
-Añade al modelo las amenazas de datos privados conservados en caché, respuestas de otro usuario, contenido obsoleto y una actualización incompleta. Propón cachear únicamente recursos públicos explícitamente permitidos; tokens, respuestas autenticadas, fotografías privadas, ubicaciones y operaciones de escritura quedan fuera de esa política inicial. Explica que un fallback offline no confirma que una escritura llegó al servidor. La limpieza debe limitarse a las cachés propias de la aplicación, sin borrar las de otras aplicaciones del mismo origen.
-
-La estrategia debe incluir el riesgo residual y qué prueba verifica cada decisión. Consulta la matriz de [la guía de Oscar](GUIA_OSCAR_SEMANA_03.md). La consigna CI/amenazas y las capturas web se mantienen identificadas como fuentes distintas mientras se resuelve su aplicación conjunta.
-
 ## 3. Hacer una revisión técnica propia
 
 El test público sólo busca ciertos conceptos en el texto y revisa parte del workflow; no demuestra que todos los controles funcionen. Tu aporte debe ir más allá de escribir la tabla:

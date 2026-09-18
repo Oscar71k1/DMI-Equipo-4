@@ -20,25 +20,85 @@ jobs:
     timeout-minutes: 25
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 2
-      - name: Use Node.js 22
+      - name: Use Node.js 22.22.0
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.22.0'
           cache: npm
       - name: Reproducible setup
+        id: setup
         run: make setup
       - name: Public Expo Android build
-        run: npm run bundle:release
+        id: build
+        shell: bash
+        run: |
+          mkdir -p reports/week-03/logs
+          npm run bundle:release 2>&1 | tee reports/week-03/logs/ci-android-build.txt
       - name: AC-01 — reproducibility
-        run: make verify-week-03
+        id: verify
+        shell: bash
+        run: |
+          make verify-week-03 2>&1 | tee reports/week-03/logs/ci-verify.txt
+      - name: Architecture and incident regression tests
+        id: regressions
+        shell: bash
+        run: |
+          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx 2>&1 | tee reports/week-03/logs/ci-regressions.txt
+      - name: Secret scanner positive and negative controls
+        id: scanner
+        shell: bash
+        run: |
+          python3 tests/secret_scanner_test.py 2>&1 | tee reports/week-03/logs/ci-secret-scanner.txt
       - name: AC-02 — public behavior
-        run: make public-test-week-03
+        id: public
+        shell: bash
+        run: |
+          make public-test-week-03 2>&1 | tee reports/week-03/logs/ci-public.txt
+      - name: Fetch and verify final evidence tag
+        id: final_tag
+        if: github.ref == 'refs/tags/week-03-final'
+        shell: bash
+        run: |
+          git fetch --no-tags --depth=2 origin refs/tags/week-03-final:refs/tags/week-03-final
+          test "$(git rev-list -n 1 refs/tags/week-03-final)" = "$(git rev-parse HEAD)"
       - name: AC-03 — declared failure evidence
+        id: evidence
+        if: github.ref == 'refs/tags/week-03-final'
         run: make evidence-week-03
+      - name: Record CI execution
+        if: always()
+        env:
+          CI_JOB_STATUS: ${{ job.status }}
+          CI_EVALUATED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_STEP_RESULTS: ${{ toJSON(steps) }}
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+
+          steps = json.loads(os.environ['CI_STEP_RESULTS'])
+          report = {
+              'schemaVersion': 1,
+              'week': 3,
+              'commitSha': os.environ['CI_EVALUATED_SHA'],
+              'generatedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'jobStatusBeforeUpload': os.environ['CI_JOB_STATUS'],
+              'event': os.environ['GITHUB_EVENT_NAME'],
+              'ref': os.environ['GITHUB_REF'],
+              'runUrl': f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+              'steps': {name: {'outcome': value['outcome'], 'conclusion': value['conclusion']} for name, value in steps.items()},
+          }
+          target = Path('reports/week-03/ci-execution.json')
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          PY
       - name: Upload academic evidence
         if: always()
         uses: actions/upload-artifact@v4
