@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "commitSha": "2575b480500e9abfd1990fb7fff5c666682a6cb6",
+  "generatedAt": "2026-09-19T22:00:00-06:00",
+  "checks": [
+    {
+      "id": "R-01-consulta-ajena-denegada",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
+      "evidence": "Prueba 'consulta propia permitida y consulta ajena denegada, sin filtrar datos' en tests/security.test.ts: technicianOne consulta su propia incidencia sec-1 (obtiene datos), consulta sec-2 ajena (obtiene null) y un ID inexistente (obtiene null) — el mismo resultado null para ajena e inexistente, sin filtrar la existencia de la incidencia. 3/3 tests de tests/security.test.ts pasando localmente."
+    },
+    {
+      "id": "R-02-asignacion-no-autorizada-rechazada",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
+      "evidence": "Prueba 'asignación autorizada permitida y modificación por actor no autorizado rechazada' en tests/security.test.ts: el coordinador reasigna sec-1 exitosamente (kind: 'assigned'), y tech-01 intentando modificar sec-2 (ajena) es rechazado (kind: 'denied') sin alterar el registro. Corresponde al riesgo priorizado más alto (R-02) por Jarumi en docs/threat-model.md."
+    },
+    {
+      "id": "R-03-logs-sin-datos-sensibles",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
+      "evidence": "Prueba 'los logs conservan el rol y el resultado, sin identificador personal del actor' en tests/security.test.ts: cada entrada de SecurityLogEntry conserva actorRole y granted, se confirma explícitamente que 'actorId' no está entre las claves y que el ID personal 'tech-01' no aparece en el JSON serializado del log."
+    },
+    {
+      "id": "R-04-secret-scan-antes",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "python tools/course_public_evaluator.py --week 03 --mode verify",
+      "evidence": "Se creó un marcador sintético temporal (variable EXPO_PUBLIC_TEST_SECRET) en src/temp-secret-check.ts; el detector lo identificó con hits=['src/temp-secret-check.ts:public_secret_name'] y status fail. Log: reports/week-03/logs/fernanda-secret-scan-antes.txt. Archivo retirado inmediatamente después, nunca comiteado."
+    },
+    {
+      "id": "R-04-secret-scan-despues",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python tools/course_public_evaluator.py --week 03 --mode verify",
+      "evidence": "Tras retirar el marcador sintético, el mismo detector corrió limpio con hits=[]. Log: reports/week-03/logs/fernanda-secret-scan-despues.txt."
+    },
+    {
+      "id": "pipeline-falla-tipos-antes",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "npm run typecheck",
+      "evidence": "Error de tipos real y temporal introducido en src/domain/Actor.ts (id: string -> number), rompiendo comparaciones en src/domain/incidentAuthorization.ts y tests/security.test.ts. Local: exit code 2, 4 errores TS2367/TS2322. Confirmado también en GitHub Actions con el mismo resultado: https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35469806961 (commit d74b738, exit code 2, artefacto subido pese al fallo por if: always())."
+    },
+    {
+      "id": "pipeline-falla-tipos-despues",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm run typecheck",
+      "evidence": "Corrección aplicada (id: string restaurado). Local: exit code 0, sin errores. Commit real: 2575b480500e9abfd1990fb7fff5c666682a6cb6."
+    }
+  ]
+}

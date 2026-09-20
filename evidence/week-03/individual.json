@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "teamId": "REEMPLAZAR_CON_ID_DEL_EQUIPO",
+  "members": [
+    {
+      "studentId": "REEMPLAZAR_INTEGRANTE_1",
+      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
+      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "tests": [],
+      "reviews": [],
+      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
+      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
+      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
+      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+    },
+    {
+      "studentId": "REEMPLAZAR_INTEGRANTE_2",
+      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
+      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "tests": [],
+      "reviews": [],
+      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
+      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
+      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
+      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+    },
+    {
+      "studentId": "a3523110496",
+      "commitShas": ["2575b480500e9abfd1990fb7fff5c666682a6cb6", "d74b738"],
+      "files": [
+        "src/domain/Actor.ts",
+        "src/domain/incidentAuthorization.ts",
+        "src/domain/SecurityLogger.ts",
+        "src/domain/IncidentAssignmentPort.ts",
+        "src/application/createAuthorizedIncidentQueries.ts",
+        "src/application/createAssignIncidentUseCase.ts",
+        "src/infrastructure/InMemorySecurityLogger.ts",
+        "src/infrastructure/InMemoryIncidentAssignmentPort.ts",
+        "tests/security.test.ts",
+        "reports/week-03/security.json"
+      ],
+      "tests": [
+        "npm test -- --runInBand --runTestsByPath tests/security.test.ts: PASS, 3/3 (consulta propia/ajena sin filtrar datos, asignación autorizada/no autorizada rechazada, logs sin identificador personal), exit code 0",
+        "python tools/course_public_evaluator.py --week 03 --mode verify (escaneo de secretos): antes con marcador sintético EXPO_PUBLIC_TEST_SECRET detectado (fail, hits=['...public_secret_name']); después sin el marcador (pass, hits=[])",
+        "npm run typecheck (experimento de fallo obligatorio): antes con error de tipos real en Actor.ts, exit code 2, 4 errores TS2367/TS2322; después corregido, exit code 0. Confirmado también en GitHub Actions (commit d74b738): https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35469806961"
+      ],
+      "reviews": [
+        "Revisé docs/threat-model.md de Jarumi para ligar mis controles a los riesgos oficiales R-01 (consulta ajena) y R-02 (asignación no autorizada, priorizado como el más alto por comprometer integridad, no solo confidencialidad); mis pruebas ya cubrían ambos casos antes de leer el modelo formal, y coinciden con el control propuesto (validar rol y asignación vigente antes de modificar)."
+      ],
+      "prediction": "Esperaba que canViewIncident y canModifyIncident, al validar el rol del actor y assignedTechnicianId, rechazaran correctamente el acceso/modificación de un actor no autorizado sin revelar si la incidencia ajena existe (mismo resultado null que un ID inexistente). También esperaba que un error de tipos real en un archivo de dominio hiciera fallar typecheck localmente y en GitHub Actions con código distinto de 0, y que la corrección lo restaurara a 0 sin debilitar ninguna prueba.",
+      "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts && npm run typecheck",
+      "observedResult": "3/3 pruebas de seguridad pasaron; el escaneo de secretos detectó correctamente el marcador sintético y quedó limpio al retirarlo; el experimento de fallo de tipos falló con exit code 2 (4 errores reales) tanto local como en Actions, y pasó con exit code 0 tras la corrección.",
+      "explanation": "La política de autorización pura (sin React, HTTP ni almacenamiento) permite probar R-01 y R-02 con datos ficticios y demuestra que un actor no autorizado no puede ver ni modificar una incidencia ajena, sin filtrar su existencia. El SecurityLogger cubre R-03 al conservar solo el rol del actor, no su identificador. El escaneo de secretos cubre R-04. Ninguna de estas pruebas demuestra la seguridad de un servidor real desplegado, ya que no existe sesión ni autenticación real todavía — esto está documentado como límite en docs/threat-model.md."
+    }
+  ]
+}
