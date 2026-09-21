@@ -2,7 +2,7 @@
 
 ## Alcance actual
 
-Esta versión de CampusOps tiene implementadas las capas de dominio, aplicación, infraestructura, composición y UI para listar y consultar incidencias con datos ficticios en memoria (Semana 02). No existe todavía sesión, autenticación ni persistencia de usuarios reales — los perfiles (`reporter`, `technician`, `coordinator`) están definidos en el vocabulario de dominio (`CampusRole`), pero el control de acceso real está en desarrollo esta semana (R-01 y R-02).
+Esta versión de CampusOps tiene implementadas las capas de dominio, aplicación, infraestructura, composición y UI para listar y consultar incidencias con datos ficticios en memoria (Semana 02). No existe todavía sesión, autenticación ni persistencia de usuarios reales — los perfiles (`reporter`, `technician`, `coordinator`) están definidos en el vocabulario de dominio (`CampusRole`), y existen controles locales para R-01 y R-02 ejercitados con actores ficticios. No están conectados a sesión autenticada ni a las pantallas; no se presenta la app como protegida en producción.
 
 Está previsto para hitos posteriores: almacenamiento persistente, sincronización con detección de conflictos, geolocalización con proveedor externo, y notificaciones.
 
@@ -50,3 +50,16 @@ Atenderíamos primero R-02 (alterar asignaciones) porque compromete la integrida
 ## Límites
 
 Las pruebas de esta semana comprueban la lógica de autorización dentro de la aplicación (con datos ficticios en memoria), no un servidor real: no existe todavía sesión, autenticación ni persistencia real, así que no se puede demostrar que estas reglas resistirían un ataque contra un backend en producción. La comprobación de R-03 y R-04 se limita a los patrones y campos que el equipo decidió sanitizar/vigilar; no garantiza que un formato de secreto no contemplado, o un nuevo punto de registro agregado después, quede cubierto automáticamente. Los riesgos relacionados con sincronización, conflictos de concurrencia y almacenamiento persistente permanecen fuera del alcance de esta semana y se abordarán en hitos posteriores.
+
+## Controles locales comprobables tras la revisión de integración
+
+| Riesgo | Implementación | Verificación concreta | Límite |
+|---|---|---|---|
+| R-01 | `canViewIncident` compara `reporterId` para reportantes y la asignación almacenada para técnicos; `createAuthorizedIncidentQueries` lee del repositorio. | En `tests/security.test.ts`: consulta propia, ajena e inexistente para reportante y técnico; pérdida de lectura tras reasignar. | Actor ficticio suministrado por el test; la UI pública de Semana 02 no tiene sesión ni usa estos casos de uso. |
+| R-02 | `canAssignIncident` permite únicamente coordinadores. `createAssignIncidentUseCase` recibe un ID y el puerto actualiza el registro almacenado; no autoriza usando copias aportadas por el llamador. | Reportante, técnico asignado y técnico ajeno rechazados sin invocar escritura; coordinador aceptado; ID ausente; copia antigua y mutaciones externas no recuperan acceso. | `canModifyIncident` es una política de progreso separada, no permiso de reasignación. No se implementa todavía una operación de progreso ni concurrencia distribuida. |
+| R-03 | `InMemorySecurityLogger` copia sólo event, incidentId, actorRole y granted, y devuelve copias del historial. | El test aporta token, ubicación y fotos ficticias como campos extra: no se almacenan. Cambiar la entrada o la respuesta no altera el historial. | Lista de campos del logger local; no sanitizador universal de strings ni de errores/red de la app. |
+| R-04 | Detector original del curso, conservado sin cambios. | `python tests/secret_scanner_test.py`: configuración pública, marcador sintético detectado/retirado y exclusión documentada de dependencias. | Patrones y rutas limitados, sin revisión completa del historial. |
+
+La revisión inicial de R-02 no ejercitaba al técnico asignado que intenta reasignar ni la reutilización de una copia vieja; ambas regresiones se añadieron en la sesión de Oscar con asistencia de Codex. Los resultados históricos de 3 pruebas se conservan como tales, no como prueba de esas garantías nuevas.
+
+El YAML queda sin cambios por indicación expresa de Oscar. Su lista actual de regresiones no incluye `tests/security.test.ts`; estas pruebas se ejecutaron explícitamente en la revisión y deben incorporarse a CI cuando se autorice editar el workflow. No se declara que ya se ejecutan automáticamente.

@@ -32,15 +32,15 @@ Con Node 22.22.0, npm y Python disponibles:
 
 ```sh
 python3 tests/secret_scanner_test.py
-npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx
+npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx tests/security.test.ts
 make verify-week-03
 make public-test-week-03
 ```
 
 En Windows se utiliza el entorno descrito en [entorno-windows.md](entorno-windows.md), con `PYTHON=python` cuando sea necesario. La prueba Python también se ejecuta con `python tests/secret_scanner_test.py`. La exportación Android de Expo no constituye una instalación de APK.
 
-## Integración pendiente
+## Revisión de integración del 21 de septiembre
 
-Al comenzar esta aportación no existían ramas remotas de Semana 03 de Jarumi o Fernanda. Quedan a cargo del reparto acordado el modelo de amenazas y `engineering.json` de Jarumi, y los demás controles de seguridad, sus pruebas y `security.json` de Fernanda. Oscar incorporará sus comandos reales al workflow cuando estén disponibles. No se añaden pruebas inexistentes ni se simulan respuestas para aprobar.
+Se integraron las ramas de Jarumi y Fernanda conservando sus commits. Se corrigieron la consulta indiscriminada de reportantes, el permiso indebido del técnico para reasignar, la confianza en objetos viejos y el diagrama incompleto. La autoría de las ejecuciones nuevas corresponde a la sesión asistida de Oscar. Sus resultados se añaden en `reports/week-03/security.json` y los logs `oscar-correcciones-*`, separados de los registros originales.
 
-`evidence/week-03/individual.json` contiene sólo el aporte de Oscar mientras falten los registros reales de sus compañeras. Es evidencia parcial, no el archivo final de tres integrantes que exige el evaluador. No se crea `week-03-final` hasta integrar y validar el trabajo completo. Las etiquetas de las semanas anteriores permanecen intactas.
+Por instrucción del usuario no se modifica ningún YAML, prueba pública ni evaluador. Los hashes de esos archivos se comparan antes/después. El workflow actual todavía no selecciona `tests/security.test.ts`: falta autorizar su incorporación a CI. Hasta entonces los resultados de seguridad nuevos se acreditan con el comando explícito local, sin simular su ejecución remota. No se mueve ni crea una etiqueta final durante esta corrección.

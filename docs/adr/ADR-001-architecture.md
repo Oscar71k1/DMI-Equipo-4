@@ -52,6 +52,7 @@ Antes de dividir el trabajo, acordaremos qué datos devuelve una lista, qué dev
 ```typescript
 type Incident = Readonly<{
   id: string;
+  reporterId: string;
   category: IncidentCategory;
   description: string;
   location: IncidentLocation;
@@ -110,3 +111,7 @@ Las comprobaciones de cada aportación se conservan con su procedencia en las ev
 ## Asistencia utilizada
 
 Se usó IA para ayudar a redactar este documento a partir del proyecto. El equipo todavía debe revisarlo y comprobar que el código cumpla lo acordado.
+
+## Ampliación de Semana 03: controles locales
+
+La incidencia identifica a su reportante mediante `reporterId`. Las consultas autorizadas usan `createAuthorizedIncidentQueries`; la reasignación usa `createAssignIncidentUseCase` con un ID, no con un objeto de incidencia enviado por el llamador. `canAssignIncident` permite reasignar sólo al coordinador. `IncidentAssignmentPort` también implementa lectura para que una consulta posterior observe la asignación vigente. El fake copia entradas y salidas; el logger almacena únicamente campos técnicos permitidos. Estos casos de uso se ejercitan en pruebas con actores ficticios y todavía no están conectados a sesión autenticada ni a la UI.

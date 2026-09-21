@@ -8,6 +8,7 @@ import { createInMemorySecurityLogger } from '../src/infrastructure/InMemorySecu
 
 const ownedIncident: Incident = {
   id: 'sec-1',
+  reporterId: 'reporter-1',
   category: 'electrical',
   description: 'Incidencia asignada a tech-01',
   location: { source: 'manual', label: 'Lab A' },
@@ -17,6 +18,7 @@ const ownedIncident: Incident = {
 
 const foreignIncident: Incident = {
   id: 'sec-2',
+  reporterId: 'reporter-2',
   category: 'water',
   description: 'Incidencia asignada a tech-02',
   location: { source: 'manual', label: 'Lab B' },
@@ -53,13 +55,13 @@ describe('controles de seguridad — autorización y logs', () => {
     const logger = createInMemorySecurityLogger();
     const useCase = createAssignIncidentUseCase(port, logger);
 
-    const authorizedResult = await useCase.assign(coordinator, ownedIncident, 'tech-02');
+    const authorizedResult = await useCase.assign(coordinator, ownedIncident.id, 'tech-02');
     expect(authorizedResult.kind).toBe('assigned');
     if (authorizedResult.kind === 'assigned') {
       expect(authorizedResult.incident.work.assignedTechnicianId).toBe('tech-02');
     }
 
-    const deniedResult = await useCase.assign(technicianOne, foreignIncident, 'tech-01');
+    const deniedResult = await useCase.assign(technicianOne, foreignIncident.id, 'tech-01');
     expect(deniedResult.kind).toBe('denied');
   });
 
@@ -91,5 +93,79 @@ describe('controles de seguridad — autorización y logs', () => {
       expect(Object.keys(entry)).not.toContain('actorId');
       expect(JSON.stringify(entry)).not.toContain('tech-01');
     }
+  });
+
+  test('un reportante consulta lo propio pero no lo ajeno ni un ID inexistente', async () => {
+    const queries = createAuthorizedIncidentQueries(
+      createInMemoryIncidentRepository([ownedIncident, foreignIncident]),
+      createInMemorySecurityLogger(),
+    );
+    const reporter: Actor = { id: 'reporter-1', role: 'reporter' };
+    expect((await queries.getIncidentDetail(reporter, ownedIncident.id))?.id).toBe(ownedIncident.id);
+    expect(await queries.getIncidentDetail(reporter, foreignIncident.id)).toBeNull();
+    expect(await queries.getIncidentDetail(reporter, 'ausente')).toBeNull();
+  });
+
+  test.each<Actor>([
+    { id: 'reporter-1', role: 'reporter' },
+    technicianOne,
+    { id: 'tech-02', role: 'technician' },
+  ])('el actor $id no puede reasignar ni invocar el puerto de escritura', async (actor) => {
+    const port = createInMemoryIncidentAssignmentPort([ownedIncident]);
+    const write = jest.spyOn(port, 'assign');
+    const useCase = createAssignIncidentUseCase(port, createInMemorySecurityLogger());
+    expect(await useCase.assign(actor, ownedIncident.id, actor.id)).toEqual({ kind: 'denied' });
+    expect(write).not.toHaveBeenCalled();
+    expect((await port.getById(ownedIncident.id))?.work.assignedTechnicianId).toBe('tech-01');
+  });
+
+  test('una reasignación revoca la consulta anterior y una copia vieja no recupera el permiso', async () => {
+    const port = createInMemoryIncidentAssignmentPort([ownedIncident]);
+    const logger = createInMemorySecurityLogger();
+    const queries = createAuthorizedIncidentQueries(port, logger);
+    const useCase = createAssignIncidentUseCase(port, logger);
+    const old = await queries.getIncidentDetail(technicianOne, ownedIncident.id);
+    expect(old).not.toBeNull();
+    expect((await useCase.assign(coordinator, ownedIncident.id, 'tech-02')).kind).toBe('assigned');
+    expect(await queries.getIncidentDetail(technicianOne, ownedIncident.id)).toBeNull();
+    expect((await queries.getIncidentDetail({ id: 'tech-02', role: 'technician' }, ownedIncident.id))?.id)
+      .toBe(ownedIncident.id);
+    expect(await useCase.assign(technicianOne, old!.id, 'tech-01')).toEqual({ kind: 'denied' });
+    // Alterar una respuesta vieja tampoco cambia los permisos del almacén.
+    Object.assign(old!.work, { assignedTechnicianId: 'tech-01' });
+    expect((await port.getById(ownedIncident.id))?.work.assignedTechnicianId).toBe('tech-02');
+  });
+
+  test('una asignación de coordinador sobre un ID inexistente no inventa datos', async () => {
+    const useCase = createAssignIncidentUseCase(
+      createInMemoryIncidentAssignmentPort([]), createInMemorySecurityLogger(),
+    );
+    expect(await useCase.assign(coordinator, 'ausente', 'tech-02')).toEqual({ kind: 'not-found' });
+  });
+
+  test('el almacén no comparte referencias de entrada ni de sus respuestas', async () => {
+    const seed = { ...ownedIncident, work: { ...ownedIncident.work } };
+    const port = createInMemoryIncidentAssignmentPort([seed]);
+    seed.work.assignedTechnicianId = 'intruso';
+    const changed = await port.assign(ownedIncident.id, 'tech-02');
+    Object.assign(changed!.work, { assignedTechnicianId: 'intruso' });
+    const list = await port.list();
+    Object.assign(list[0]!.location, { label: 'Cambio externo' });
+    expect((await port.getById(ownedIncident.id))?.work.assignedTechnicianId).toBe('tech-02');
+    expect((await port.getById(ownedIncident.id))?.location.label).toBe(ownedIncident.location.label);
+  });
+
+  test('el logger descarta campos sensibles adicionales y protege su historial', () => {
+    const logger = createInMemorySecurityLogger();
+    const entry = {
+      event: 'incident.view', incidentId: 'sec-1', actorRole: 'reporter', granted: false,
+      token: 'valor-ficticio-privado', location: 'ubicacion ficticia', photos: ['foto ficticia'],
+    };
+    logger.log(entry);
+    entry.granted = true;
+    Object.assign(logger.entries()[0]!, { granted: true });
+    expect(logger.entries()).toEqual([
+      { event: 'incident.view', incidentId: 'sec-1', actorRole: 'reporter', granted: false },
+    ]);
   });
 });

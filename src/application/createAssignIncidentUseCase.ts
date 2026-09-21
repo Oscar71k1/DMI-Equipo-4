@@ -1,5 +1,5 @@
 import type { Actor } from '../domain/Actor';
-import { canModifyIncident } from '../domain/incidentAuthorization';
+import { canAssignIncident } from '../domain/incidentAuthorization';
 import type { Incident } from '../domain/Incident';
 import type { IncidentAssignmentPort } from '../domain/IncidentAssignmentPort';
 import type { SecurityLogger } from '../domain/SecurityLogger';
@@ -10,7 +10,7 @@ export type AssignIncidentResult =
   | { kind: 'assigned'; incident: Incident };
 
 export type AssignIncidentUseCase = Readonly<{
-  assign: (actor: Actor, incident: Incident, technicianId: string) => Promise<AssignIncidentResult>;
+  assign: (actor: Actor, incidentId: string, technicianId: string) => Promise<AssignIncidentResult>;
 }>;
 
 export function createAssignIncidentUseCase(
@@ -18,11 +18,11 @@ export function createAssignIncidentUseCase(
   logger: SecurityLogger,
 ): AssignIncidentUseCase {
   return {
-    assign: async (actor, incident, technicianId) => {
-      const granted = canModifyIncident(actor, incident);
-      logger.log({ event: 'incident.assign', incidentId: incident.id, actorRole: actor.role, granted });
+    assign: async (actor, incidentId, technicianId) => {
+      const granted = canAssignIncident(actor);
+      logger.log({ event: 'incident.assign', incidentId, actorRole: actor.role, granted });
       if (!granted) return { kind: 'denied' };
-      const updated = await port.assign(incident.id, technicianId);
+      const updated = await port.assign(incidentId, technicianId);
       return updated === null ? { kind: 'not-found' } : { kind: 'assigned', incident: updated };
     },
   };

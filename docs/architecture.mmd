@@ -12,6 +12,8 @@ flowchart TD
     Actions["Contrato de acciones: src/application/CampusOpsActions.ts"]
     Queries["Lista y detalle: src/application/createIncidentQueries.ts"]
     HealthQuery["Salud: src/application/createHealthQuery.ts"]
+    AuthorizedQueries["Consulta autorizada local: src/application/createAuthorizedIncidentQueries.ts"]
+    AssignCase["Reasignación local: src/application/createAssignIncidentUseCase.ts"]
   end
 
   subgraph DOM["domain - modelo y puertos"]
@@ -19,12 +21,18 @@ flowchart TD
     Vocabulary["Tipos y perfiles: src/campusops/contracts.ts"]
     IncidentPort["Puerto: src/domain/IncidentRepository.ts"]
     HealthPort["Puerto: src/domain/BackendHealthPort.ts"]
+    Actor["Actor ficticio: src/domain/Actor.ts"]
+    Authorization["Políticas por operación: src/domain/incidentAuthorization.ts"]
+    AssignPort["Puerto compartido: src/domain/IncidentAssignmentPort.ts"]
+    SecurityLog["Contrato de log: src/domain/SecurityLogger.ts"]
   end
 
   subgraph INFRA["infrastructure - adaptadores"]
     Fake["Fake en memoria: src/infrastructure/InMemoryIncidentRepository.ts"]
     HealthAdapter["Adaptador: src/infrastructure/CourseBackendHealthAdapter.ts"]
     Client["Cliente heredado: src/api/courseBackend.ts"]
+    AssignmentStore["Almacén local: src/infrastructure/InMemoryIncidentAssignmentPort.ts"]
+    SecurityLogStore["Log con campos permitidos: src/infrastructure/InMemorySecurityLogger.ts"]
   end
 
   subgraph COMP["composition - construcción e inyección"]
@@ -57,6 +65,24 @@ flowchart TD
   Factory --> HealthQuery
   Factory --> Fake
   Factory --> HealthAdapter
+  Actor --> Vocabulary
+  Authorization --> Actor
+  Authorization --> Incident
+  AssignPort --> Incident
+  AssignPort --> IncidentPort
+  AuthorizedQueries --> Actor
+  AuthorizedQueries --> Authorization
+  AuthorizedQueries --> Incident
+  AuthorizedQueries --> IncidentPort
+  AuthorizedQueries --> SecurityLog
+  AssignCase --> Actor
+  AssignCase --> Authorization
+  AssignCase --> Incident
+  AssignCase --> AssignPort
+  AssignCase --> SecurityLog
+  AssignmentStore --> Incident
+  AssignmentStore --> AssignPort
+  SecurityLogStore --> SecurityLog
 
   Reporter(["Reportante - reporter"]) -. usa .-> Campus
   Technician(["Técnico - technician"]) -. usa .-> Campus

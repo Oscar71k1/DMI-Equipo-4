@@ -7,6 +7,7 @@ import type {
 
 export type Incident = Readonly<{
   id: string;
+  reporterId: string;
   category: IncidentCategory;
   description: string;
   location: IncidentLocation;

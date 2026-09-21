@@ -2,16 +2,25 @@ import type { Incident } from '../domain/Incident';
 import type { IncidentAssignmentPort } from '../domain/IncidentAssignmentPort';
 
 /**
- * Fake aislado para probar la política de autorización de asignación.
- * No está conectado al repositorio real de lectura ni a un servidor:
- * demuestra la regla de autorización, no una integración desplegada.
+ * Almacén compartido de lectura y asignación para probar las políticas locales.
+ * No es un servidor ni una integración de autenticación desplegada.
  */
 export function createInMemoryIncidentAssignmentPort(
   initialIncidents: readonly Incident[],
 ): IncidentAssignmentPort {
-  const incidents = [...initialIncidents];
+  const copy = (incident: Incident): Incident => ({
+    ...incident,
+    location: { ...incident.location },
+    work: { ...incident.work },
+  });
+  const incidents = initialIncidents.map(copy);
 
   return {
+    list: async () => incidents.map(copy),
+    getById: async (id) => {
+      const found = incidents.find((incident) => incident.id === id);
+      return found === undefined ? null : copy(found);
+    },
     assign: async (incidentId, technicianId) => {
       const index = incidents.findIndex((incident) => incident.id === incidentId);
       if (index === -1) return null;
@@ -22,7 +31,7 @@ export function createInMemoryIncidentAssignmentPort(
         work: { assignedTechnicianId: technicianId, status: current.work.status },
       };
       incidents[index] = updated;
-      return updated;
+      return copy(updated);
     },
   };
 }

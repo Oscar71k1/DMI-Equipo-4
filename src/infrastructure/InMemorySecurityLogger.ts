@@ -6,8 +6,9 @@ export function createInMemorySecurityLogger(): SecurityLogger & {
   const entries: SecurityLogEntry[] = [];
   return {
     log(entry) {
-      entries.push(entry);
+      const { event, incidentId, actorRole, granted } = entry;
+      entries.push({ event, incidentId, actorRole, granted });
     },
-    entries: () => entries,
+    entries: () => entries.map((entry) => ({ ...entry })),
   };
 }

@@ -12,6 +12,7 @@ import { IncidentListScreen } from '../src/ui/IncidentListScreen';
 const sampleIncidents: readonly Incident[] = [
   {
     id: 'a1',
+    reporterId: 'reporter-1',
     category: 'electrical',
     description: 'Primera incidencia de prueba',
     location: { source: 'manual', label: 'Lab A' },
@@ -20,6 +21,7 @@ const sampleIncidents: readonly Incident[] = [
   },
   {
     id: 'a2',
+    reporterId: 'reporter-2',
     category: 'water',
     description: 'Segunda incidencia de prueba',
     location: { source: 'manual', label: 'Lab B' },
@@ -117,6 +119,7 @@ describe('esqueleto de lista/detalle de incidencias', () => {
     const substituteIncidents: readonly Incident[] = [
       {
         id: 'b1',
+        reporterId: 'reporter-3',
         category: 'safety',
         description: 'Incidencia del proveedor sustituto',
         location: { source: 'manual', label: 'Lab C' },

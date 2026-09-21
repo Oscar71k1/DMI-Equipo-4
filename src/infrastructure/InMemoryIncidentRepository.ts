@@ -4,6 +4,7 @@ import type { IncidentRepository } from '../domain/IncidentRepository';
 const defaultIncidents: readonly Incident[] = [
   {
     id: 'inc-001',
+    reporterId: 'reporter-1',
     category: 'electrical',
     description: 'Apagón intermitente en el laboratorio de Redes.',
     location: { source: 'manual', label: 'Edificio B, Laboratorio de Redes' },
@@ -12,6 +13,7 @@ const defaultIncidents: readonly Incident[] = [
   },
   {
     id: 'inc-002',
+    reporterId: 'reporter-2',
     category: 'water',
     description: 'Fuga de agua cerca de los servidores del laboratorio de Software.',
     location: {
@@ -23,6 +25,7 @@ const defaultIncidents: readonly Incident[] = [
   },
   {
     id: 'inc-003',
+    reporterId: 'reporter-3',
     category: 'equipment',
     description: 'Proyector del laboratorio de Electrónica no enciende.',
     location: {
