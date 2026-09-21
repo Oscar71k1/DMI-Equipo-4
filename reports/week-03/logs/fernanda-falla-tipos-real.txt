@@ -1,0 +1,9 @@
+
+> dmi-react-native-starter@1.0.0 typecheck
+> tsc --noEmit
+
+src/domain/incidentAuthorization.ts(12,43): error TS2367: This comparison appears to be unintentional because the types 'string | null' and 'number' have no overlap.
+src/domain/incidentAuthorization.ts(18,43): error TS2367: This comparison appears to be unintentional because the types 'string | null' and 'number' have no overlap.
+tests/security.test.ts(27,32): error TS2322: Type 'string' is not assignable to type 'number'.
+tests/security.test.ts(28,30): error TS2322: Type 'string' is not assignable to type 'number'.
+EXIT_CODE=2
