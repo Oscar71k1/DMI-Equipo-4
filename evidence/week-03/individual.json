@@ -14,16 +14,24 @@
       "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
       "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
     },
-    {
-      "studentId": "REEMPLAZAR_INTEGRANTE_2",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
-      "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+        {
+      "studentId": "3523110055",
+      "commitShas": ["eabddffb2f8cc9b91ceddcb307ece604b8ee4773"],
+      "files": [
+        "docs/threat-model.md",
+        "evidence/week-03/engineering.json",
+        "reports/week-03/logs/jarumi-revision-r02.txt"
+      ],
+      "tests": [
+        "npm test -- --runInBand --runTestsByPath tests/security.test.ts: PASS, 3/3 (incluye 'asignación autorizada permitida y modificación por actor no autorizado rechazada' para R-02), exit code 0"
+      ],
+      "reviews": [
+        "Revisé el código real de autorización de Fernanda (src/domain/incidentAuthorization.ts y src/application/createAssignIncidentUseCase.ts) para el riesgo R-02, priorizado como el más alto en docs/threat-model.md porque compromete la integridad del sistema (el estado puede 'mentir' sobre si una falla real ya fue atendida), no solo la confidencialidad. Confirmé que canModifyIncident compara la asignación vigente (assignedTechnicianId) contra el actor en cada llamada, por lo que un técnico pierde el permiso automáticamente al ser reasignado, y que createAssignIncidentUseCase detiene la operación (kind: 'denied') sin llegar a modificar nada cuando el permiso es denegado."
+      ],
+      "prediction": "Antes de ejecutar, esperaba que un actor sin el rol de coordinador (por ejemplo, un reportante) no pudiera reasignar una incidencia, y que un coordinador sí pudiera hacerlo. También esperaba confirmar que la política no rechaza siempre a todos, ya que eso rompería la funcionalidad completa del sistema sin aportar seguridad real distinguible.",
+      "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
+      "observedResult": "3/3 pruebas pasaron, incluyendo la de R-02 (asignación autorizada permitida y modificación por actor no autorizado rechazada). EXIT_CODE=0. Resultado guardado en reports/week-03/logs/jarumi-revision-r02.txt.",
+      "explanation": "El resultado coincidió con mi predicción. La función canModifyIncident distingue correctamente entre coordinador (siempre autorizado), técnico (autorizado solo si la incidencia le pertenece actualmente) y reportante (nunca autorizado para modificar), evitando tanto el riesgo de R-02 como el problema de una política que rechace todo indiscriminadamente. Esta prueba no demuestra la seguridad de un servidor real, ya que el proyecto todavía no tiene sesión ni autenticación real implementada — límite documentado en docs/threat-model.md."
     },
     {
       "studentId": "a3523110496",
