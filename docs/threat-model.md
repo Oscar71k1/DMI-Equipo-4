@@ -62,4 +62,4 @@ Las pruebas de esta semana comprueban la lógica de autorización dentro de la a
 
 La revisión inicial de R-02 no ejercitaba al técnico asignado que intenta reasignar ni la reutilización de una copia vieja; ambas regresiones se añadieron en la sesión de Oscar con asistencia de Codex. Los resultados históricos de 3 pruebas se conservan como tales, no como prueba de esas garantías nuevas.
 
-El YAML queda sin cambios por indicación expresa de Oscar. Su lista actual de regresiones no incluye `tests/security.test.ts`; estas pruebas se ejecutaron explícitamente en la revisión y deben incorporarse a CI cuando se autorice editar el workflow. No se declara que ya se ejecutan automáticamente.
+Oscar autorizó incorporar `tests/security.test.ts` al comando de regresiones existente del workflow. Las pruebas de autorización y logs se ejecutan ahora junto con arquitectura e incidencias; un fallo conserva el código de error mediante bash/pipefail. Los evaluadores y las pruebas públicas permanecen intactos. El resultado remoto del cierre se consulta en Actions para el SHA entregado.

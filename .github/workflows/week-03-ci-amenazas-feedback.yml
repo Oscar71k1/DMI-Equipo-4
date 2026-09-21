@@ -48,7 +48,7 @@ jobs:
         id: regressions
         shell: bash
         run: |
-          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx 2>&1 | tee reports/week-03/logs/ci-regressions.txt
+          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx tests/security.test.ts 2>&1 | tee reports/week-03/logs/ci-regressions.txt
       - name: Secret scanner positive and negative controls
         id: scanner
         shell: bash
