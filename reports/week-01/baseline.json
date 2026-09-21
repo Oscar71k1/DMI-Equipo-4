@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
-  "generatedAt": "2026-09-21T22:55:44.729495+00:00",
+  "commitSha": "df96dbdb00cd98cc8816879a9b25829ea55062ca",
+  "generatedAt": "2026-09-21T22:59:50.334255+00:00",
   "checks": [
     {
       "id": "backend-exitoso-mostrado-offline",
@@ -69,7 +69,7 @@
     }
   ],
   "previousValidation": {
-    "commitSha": "b739c98f3410391721ce0a0b30d7ac0cea04d66e",
-    "note": "Historico anterior a la integracion de semana 03; se conservan las observaciones previas."
+    "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+    "note": "Resultados historicos conservados; cambio actual limitado a seleccionar pruebas en CI y documentarlo."
   }
 }

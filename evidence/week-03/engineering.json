@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 3,
-  "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+  "commitSha": "df96dbdb00cd98cc8816879a9b25829ea55062ca",
   "decision": "Priorizar R-02: solo coordinacion puede reasignar (canAssignIncident). La operacion recibe un ID y actualiza el almacen compartido con consultas. R-01 compara reporterId o el tecnico actualmente asignado; las copias externas no cambian el estado. La politica canModifyIncident queda separada para progreso futuro, sin usarse como permiso de reasignacion.",
   "alternatives": [
     "Restriccion solo visual: ocultar el boton de reasignar en la interfaz para quien no sea coordinador. Es insuficiente como seguridad real porque no impide que alguien llame directamente a la operacion subyacente (por ejemplo, editando la peticion o usando otra via de acceso); solo oculta el atajo en la pantalla, sin comprobar el permiso en el servicio.",
@@ -34,5 +34,9 @@
       "result": "13 controles aprobados, incluidas 2 pruebas publicas; audit aprobado con umbral critico original, 2 vulnerabilidades altas reportadas. Exportacion Android independiente aprobada.",
       "evidence": "reports/week-03/public-tests.json; reports/week-03/logs/oscar-correcciones-bundle.txt"
     }
-  ]
+  ],
+  "previousValidation": {
+    "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+    "note": "Resultados historicos conservados; cambio actual limitado a seleccionar pruebas en CI y documentarlo."
+  }
 }

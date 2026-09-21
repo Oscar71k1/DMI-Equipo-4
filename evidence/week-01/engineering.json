@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+  "commitSha": "df96dbdb00cd98cc8816879a9b25829ea55062ca",
   "decision": "Para el diagnostico de semana 1 se elige conservar la prueba smoke existente con su doble determinista de backend y comprobar la transicion de respuesta exitosa a available. El alcance de esta semana es verificar el starter: una regresion reversible de esa transicion aborda el riesgo 3 del registro y el criterio 9 de la definicion del problema sin implementar los flujos futuros. La preparacion y la integracion fueron asistidas. La revision y repeticion independiente de Fernanda respaldan esta eleccion y sus limites; su analisis esta en docs/fernanda-diagnostico.md.",
   "alternatives": [
     "Usar la prueba smoke existente, cuyo doble resuelve getBackendHealth(), alterar temporalmente la rama de exito y comprobar tanto el fallo como la correccion de la transicion a available.",
@@ -46,7 +46,7 @@
     }
   ],
   "previousValidation": {
-    "commitSha": "b739c98f3410391721ce0a0b30d7ac0cea04d66e",
-    "note": "Historico anterior a la integracion de semana 03; se conservan las observaciones previas."
+    "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+    "note": "Resultados historicos conservados; cambio actual limitado a seleccionar pruebas en CI y documentarlo."
   }
 }

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 3,
-  "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
-  "generatedAt": "2026-09-21T22:53:34.689399+00:00",
+  "commitSha": "df96dbdb00cd98cc8816879a9b25829ea55062ca",
+  "generatedAt": "2026-09-21T22:59:50.336547+00:00",
   "checks": [
     {
       "id": "R-01-consulta-ajena-denegada",
@@ -103,5 +103,9 @@
       "evidence": "Exportacion de 590 modulos completada, no instalacion de APK. reports/week-03/logs/oscar-correcciones-bundle.txt."
     }
   ],
-  "historicalCommitSha": "2575b480500e9abfd1990fb7fff5c666682a6cb6"
+  "historicalCommitSha": "2575b480500e9abfd1990fb7fff5c666682a6cb6",
+  "previousValidation": {
+    "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+    "note": "Resultados historicos conservados; cambio actual limitado a seleccionar pruebas en CI y documentarlo."
+  }
 }
