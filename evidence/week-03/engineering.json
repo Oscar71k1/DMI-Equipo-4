@@ -1,19 +1,38 @@
 {
   "schemaVersion": 1,
   "week": 3,
-  "commitSha": "060ada8d0f7929cee8b366adf359631e658cee46",
-  "decision": "El equipo prioriza el riesgo R-02 (alterar asignaciones sin autorizacion) y lo mitiga validando el rol del actor y la asignacion vigente en el servicio (funcion canModifyIncident), antes de permitir que un caso de uso modifique una incidencia. Un coordinador puede reasignar cualquier incidencia; un tecnico solo puede modificar la incidencia que tiene asignada actualmente; un reportante no puede modificar ninguna.",
+  "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+  "decision": "Priorizar R-02: solo coordinacion puede reasignar (canAssignIncident). La operacion recibe un ID y actualiza el almacen compartido con consultas. R-01 compara reporterId o el tecnico actualmente asignado; las copias externas no cambian el estado. La politica canModifyIncident queda separada para progreso futuro, sin usarse como permiso de reasignacion.",
   "alternatives": [
     "Restriccion solo visual: ocultar el boton de reasignar en la interfaz para quien no sea coordinador. Es insuficiente como seguridad real porque no impide que alguien llame directamente a la operacion subyacente (por ejemplo, editando la peticion o usando otra via de acceso); solo oculta el atajo en la pantalla, sin comprobar el permiso en el servicio.",
     "Restriccion fija por rol, sin revisar la asignacion vigente: permitir que cualquier tecnico modifique cualquier incidencia, sin comparar el assignedTechnicianId. Esto es insuficiente porque un tecnico que ya perdio la asignacion (tras una reasignacion de coordinacion) seguiria pudiendo modificar el caso, lo cual es exactamente el escenario de riesgo que describe R-02."
   ],
-  "tradeoff": "El beneficio es que el sistema comprueba explicitamente quien tiene autoridad vigente sobre cada incidencia, evitando que el estado del sistema 'mienta' sobre si una falla real ya fue atendida. El costo es que cada operacion de modificacion requiere una comprobacion adicional (rol + asignacion) antes de ejecutarse, y que un cambio de asignacion debe reflejarse de inmediato para que la comprobacion siga siendo correcta; si la asignacion vigente no esta disponible o esta desactualizada, el control podria rechazar una operacion legitima o, en el peor caso, permitir una que ya no corresponde.",
-  "requirementIds": ["AC-02", "AC-03", "AC-04"],
+  "tradeoff": "Los controles locales son comprobables sin React ni servidor; exigen un almacen compartido y copias defensivas. El actor sigue siendo ficticio: no se acredita autenticacion, proteccion de UI ni concurrencia de un servidor real.",
+  "requirementIds": [
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
   "verification": [
     {
       "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
-      "result": "PASS. Test Suites: 1 passed, 1 total; Tests: 3 passed, 3 total, incluyendo 'asignacion autorizada permitida y modificacion por actor no autorizado rechazada'. EXIT_CODE=0.",
+      "result": "Historico de Jarumi: 3/3. No cubria reportante ajeno, tecnico asignado que reasigna ni copia obsoleta; no demuestra esas garantias.",
       "evidence": "reports/week-03/logs/jarumi-revision-r02.txt"
+    },
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/security.test.ts tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx",
+      "result": "Revision asistida de Oscar: seguridad y arquitectura aprobadas; 26/27 total, un timeout de interfaz pendiente. Ver logs, sin modificar limites.",
+      "evidence": "reports/week-03/logs/oscar-correcciones-pruebas.txt"
+    },
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/incidents.test.tsx",
+      "result": "11/11 aprobadas sin cambios de timeout; los dos fallos previos de la ejecucion conjunta quedan registrados.",
+      "evidence": "reports/week-03/logs/oscar-correcciones-interfaz-aislada.txt"
+    },
+    {
+      "command": "make public-test-week-03 PYTHON=python",
+      "result": "13 controles aprobados, incluidas 2 pruebas publicas; audit aprobado con umbral critico original, 2 vulnerabilidades altas reportadas. Exportacion Android independiente aprobada.",
+      "evidence": "reports/week-03/public-tests.json; reports/week-03/logs/oscar-correcciones-bundle.txt"
     }
   ]
 }

@@ -1,0 +1,23 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/incidents.test.tsx
+
+PASS tests/incidents.test.tsx (12.024 s)
+  esqueleto de lista/detalle de incidencias
+    √ lista, selecciona una incidencia, muestra su detalle y permite regresar (702 ms)
+    √ seleccionar una incidencia distinta muestra datos distintos, no siempre el primero (18 ms)
+    √ lista vacía muestra el mensaje acordado, sin cerrarse (3 ms)
+    √ un identificador inexistente devuelve null y la UI muestra "no encontrada" (4 ms)
+    √ sustituir el repositorio cambia los datos observados sin tocar UI ni application (13 ms)
+    √ un proveedor que rechaza la consulta muestra un mensaje de error controlado (5 ms)
+    √ un error del detalle conserva la opcion de regresar a la lista (16 ms)
+    √ la lista ficticia funciona cuando el puerto de salud falla (10 ms)
+    √ al cambiar de identificador se oculta el detalle anterior mientras llega el nuevo (8 ms)
+    √ al sustituir la consulta de lista se ocultan los datos del proveedor anterior (8 ms)
+    √ el fake conserva sus datos aunque se modifiquen los datos iniciales o una respuesta (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        12.508 s, estimated 21 s
+Ran all test suites within paths "tests/incidents.test.tsx".

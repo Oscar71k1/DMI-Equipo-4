@@ -7,28 +7,35 @@
       "studentId": "3523110017",
       "commitShas": [
         "98972edffea67af98d4534d32e33442a71fa0c3d",
-        "3c5042e26850ae87e236c79ec9c675f5ff1ddd6a"
+        "3c5042e26850ae87e236c79ec9c675f5ff1ddd6a",
+        "de287da84151a3d36b8f44e080a669bcecf5004a"
       ],
       "files": [
         ".github/workflows/week-03-ci-amenazas-feedback.yml",
         "tests/secret_scanner_test.py",
-        "docs/oscar-integracion-semana-03.md"
+        "docs/oscar-integracion-semana-03.md",
+        "tests/security.test.ts",
+        "src/domain/incidentAuthorization.ts",
+        "src/application/createAssignIncidentUseCase.ts",
+        "docs/architecture.mmd"
       ],
       "tests": [
         "python tests/secret_scanner_test.py: 3 pruebas aprobadas localmente; su equivalente python3 paso tambien en Actions.",
         "Regresiones locales de arquitectura/incidencias/smoke: 16 pruebas aprobadas en 3 suites. Primera ejecucion con un timeout conservada y repeticion sin cambiar limites.",
         "make verify-week-03: 9 controles locales aprobados; el mismo paso remoto fallo con TS2322 y paso al retirar el error.",
-        "Pipeline bash con tee: el error no se oculto y se subieron artefactos del job fallido."
+        "Pipeline bash con tee: el error no se oculto y se subieron artefactos del job fallido.",
+        "Correccion de integracion: 11 pruebas de seguridad, 4 de arquitectura y smoke aprobadas; suite de interfaz 11/11 aislada. Dos ejecuciones conjuntas dieron 26/27 por timeout de la primera prueba de interfaz; no se alteraron limites. Typecheck, lint y 3 pruebas del escaner aprobados. Logs oscar-correcciones-*."
       ],
       "reviews": [
         "Revision del detector original scan_secrets: patrones, archivo temporal, diagnostico sin el marcador y exclusion de node_modules. No se modifico tools/course_public_evaluator.py.",
         "Revision de minimos privilegios, SHA del PR, profundidad 2, recuperacion/verificacion del tag final y distincion entre validacion publica obligatoria y cierre etiquetado.",
-        "Inspeccion de artefactos reales de Actions antes y despues del error de tipos. Los controles propios pasan tras corregirlo, pero el job completo sigue fallando por entregables pendientes."
+        "Inspeccion de artefactos reales de Actions antes y despues del error de tipos. Los controles propios pasan tras corregirlo, pero el job completo sigue fallando por entregables pendientes.",
+        "Revision de Jarumi/Fernanda: el baseline b1bd66d permitia acceso de reportantes ajenos y reasignaciones de tecnicos, incluso con copias obsoletas; ademas faltaban dependencias en Mermaid. Diagnostico conservado en oscar-correcciones-antes.txt."
       ],
       "prediction": "Antes de ejecutar: el error number -> string debe causar TS2322 y detener AC-01; el reporte y los artefactos deben conservarse. Retirar el archivo debe restaurar el paso y las regresiones. Prediccion previa: reports/week-03/logs/oscar-prediccion.txt.",
       "command": "make verify-week-03; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx; python tests/secret_scanner_test.py",
-      "observedResult": "Sesion asistida por Codex. https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35392957334: AC-01 y job fallidos por TS2322, artefactos subidos. https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863: build, AC-01, regresiones y escaner aprobados; public falla por entregables pendientes. Localmente 16 pruebas Jest y 3 del escaner aprobadas, make verify-week-03 codigo 0. Evidencia: reports/week-03/oscar-ci.json.",
-      "explanation": "La contribucion conserva errores como errores y permite inspeccionar el diagnostico aunque el job falle. La prueba del escaner verifica un control real del curso y explicita sus limites; no acredita permisos de incidencias ni un modelo de amenazas completo. Codex realizo implementacion y ejecuciones en esta sesion de Oscar; no se atribuyen resultados a sus companeras. Este archivo parcial debe recibir los otros dos registros reales antes del cierre."
+      "observedResult": "Sesion asistida por Codex. https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35392957334: AC-01 y job fallidos por TS2322, artefactos subidos. https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35393105863: build, AC-01, regresiones y escaner aprobados; public falla por entregables pendientes. Localmente 16 pruebas Jest y 3 del escaner aprobadas, make verify-week-03 codigo 0. Evidencia: reports/week-03/oscar-ci.json. Revision posterior: se corrigieron las regresiones detectadas en las ramas de Jarumi y Fernanda; resultados y fallos de tiempo constan en security.json. Los 17 archivos protegidos conservan sus hashes anteriores a esta correccion (protected-files.json).",
+      "explanation": "La contribucion conserva errores como errores y permite inspeccionar el diagnostico aunque el job falle. La prueba del escaner verifica un control real del curso y explicita sus limites; no acredita permisos de incidencias ni un modelo de amenazas completo. Codex realizo implementacion y ejecuciones en esta sesion de Oscar; no se atribuyen resultados a sus companeras. Este archivo parcial debe recibir los otros dos registros reales antes del cierre. Integracion posterior: se incorporaron los otros dos registros reales. Oscar, con asistencia de Codex, corrigio los permisos, copias del almacen y logger y agrego regresiones. Las ejecuciones nuevas no se atribuyen a sus companeras."
     },
     {
       "studentId": "3523110055",
@@ -44,12 +51,12 @@
         "npm test -- --runInBand --runTestsByPath tests/security.test.ts: PASS, 3/3 (incluye 'asignación autorizada permitida y modificación por actor no autorizado rechazada' para R-02), exit code 0"
       ],
       "reviews": [
-        "Revisé el código real de autorización de Fernanda (src/domain/incidentAuthorization.ts y src/application/createAssignIncidentUseCase.ts) para el riesgo R-02, priorizado como el más alto en docs/threat-model.md porque compromete la integridad del sistema (el estado puede 'mentir' sobre si una falla real ya fue atendida), no solo la confidencialidad. Confirmé que canModifyIncident compara la asignación vigente (assignedTechnicianId) contra el actor en cada llamada, por lo que un técnico pierde el permiso automáticamente al ser reasignado, y que createAssignIncidentUseCase detiene la operación (kind: 'denied') sin llegar a modificar nada cuando el permiso es denegado."
+        "Revision original de R-02 conservada en el historial y log de 3 pruebas. Correccion editorial de Oscar: canModifyIncident comparaba la copia entregada por el llamador, no necesariamente la asignacion vigente del almacen; la prueba original no demostraba revocacion ni impedia reasignar al tecnico asignado. La implementacion corregida usa canAssignIncident, exclusiva de coordinacion."
       ],
       "prediction": "Antes de ejecutar, esperaba que un actor sin el rol de coordinador (por ejemplo, un reportante) no pudiera reasignar una incidencia, y que un coordinador sí pudiera hacerlo. También esperaba confirmar que la política no rechaza siempre a todos, ya que eso rompería la funcionalidad completa del sistema sin aportar seguridad real distinguible.",
       "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
       "observedResult": "3/3 pruebas pasaron, incluyendo la de R-02 (asignación autorizada permitida y modificación por actor no autorizado rechazada). EXIT_CODE=0. Resultado guardado en reports/week-03/logs/jarumi-revision-r02.txt.",
-      "explanation": "El resultado coincidió con mi predicción. La función canModifyIncident distingue correctamente entre coordinador (siempre autorizado), técnico (autorizado solo si la incidencia le pertenece actualmente) y reportante (nunca autorizado para modificar), evitando tanto el riesgo de R-02 como el problema de una política que rechace todo indiscriminadamente. Esta prueba no demuestra la seguridad de un servidor real, ya que el proyecto todavía no tiene sesión ni autenticación real implementada — límite documentado en docs/threat-model.md."
+      "explanation": "Registro historico de Jarumi: 3 pruebas aprobadas. Correccion de alcance por Oscar: esos casos no demostraban todas las garantias de R-02; las regresiones y correcciones posteriores corresponden a Oscar. No acredita un servidor real ni autenticacion."
     },
     {
       "studentId": "a3523110496",
@@ -80,7 +87,7 @@
       "prediction": "Esperaba que canViewIncident y canModifyIncident, al validar el rol del actor y assignedTechnicianId, rechazaran correctamente el acceso/modificación de un actor no autorizado sin revelar si la incidencia ajena existe (mismo resultado null que un ID inexistente). También esperaba que un error de tipos real en un archivo de dominio hiciera fallar typecheck localmente y en GitHub Actions con código distinto de 0, y que la corrección lo restaurara a 0 sin debilitar ninguna prueba.",
       "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts && npm run typecheck",
       "observedResult": "3/3 pruebas de seguridad pasaron; el escaneo de secretos detectó correctamente el marcador sintético y quedó limpio al retirarlo; el experimento de fallo de tipos falló con exit code 2 (4 errores reales) tanto local como en Actions, y pasó con exit code 0 tras la corrección.",
-      "explanation": "La política de autorización pura (sin React, HTTP ni almacenamiento) permite probar R-01 y R-02 con datos ficticios y demuestra que un actor no autorizado no puede ver ni modificar una incidencia ajena, sin filtrar su existencia. El SecurityLogger cubre R-03 al conservar solo el rol del actor, no su identificador. El escaneo de secretos cubre R-04. Ninguna de estas pruebas demuestra la seguridad de un servidor real desplegado, ya que no existe sesión ni autenticación real todavía — esto está documentado como límite en docs/threat-model.md."
+      "explanation": "La política de autorización pura (sin React, HTTP ni almacenamiento) permite probar R-01 y R-02 con datos ficticios y demuestra que un actor no autorizado no puede ver ni modificar una incidencia ajena, sin filtrar su existencia. El SecurityLogger cubre R-03 al conservar solo el rol del actor, no su identificador. El escaneo de secretos cubre R-04. Ninguna de estas pruebas demuestra la seguridad de un servidor real desplegado, ya que no existe sesión ni autenticación real todavía — esto está documentado como límite en docs/threat-model.md. Correccion editorial de Oscar: las 3 pruebas originales solo acreditaban sus casos concretos, no acceso de reportantes ajenos ni reasignacion del tecnico asignado/copia vieja. La revision posterior encontro y corrigio esos fallos; no se atribuye esta ejecucion nueva a Fernanda."
     }
   ]
 }

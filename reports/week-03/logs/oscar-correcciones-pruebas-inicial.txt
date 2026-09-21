@@ -1,0 +1,31 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/security.test.ts tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx
+
+PASS tests/security.test.ts
+FAIL tests/incidents.test.tsx (12.024 s)
+  ● esqueleto de lista/detalle de incidencias › lista, selecciona una incidencia, muestra su detalle y permite regresar
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      43 |
+      44 | describe('esqueleto de lista/detalle de incidencias', () => {
+    > 45 |   test('lista, selecciona una incidencia, muestra su detalle y permite regresar', async () => {
+         |   ^
+      46 |     // Predicción: al tocar la primera incidencia, se mostrará su descripción y ubicación;
+      47 |     // al presionar "volver", la lista se muestra de nuevo.
+      48 |     const repository = createInMemoryIncidentRepository(sampleIncidents);
+
+      at test (tests/incidents.test.tsx:45:3)
+      at Object.describe (tests/incidents.test.tsx:44:1)
+
+PASS course-tests/smoke.test.tsx
+PASS tests/architecture.test.ts
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 26 passed, 27 total
+Snapshots:   0 total
+Time:        18.589 s
+Ran all test suites within paths "tests/security.test.ts", "tests/architecture.test.ts", "tests/incidents.test.tsx", "course-tests/smoke.test.tsx".
+EXIT_CODE=1

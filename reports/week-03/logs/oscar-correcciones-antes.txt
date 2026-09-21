@@ -1,0 +1,167 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/security.test.ts tests/architecture.test.ts tests/review-security.test.ts
+
+FAIL tests/architecture.test.ts (7.384 s)
+  ● arquitectura: limites entre capas › las dependencias internas reales coinciden con las flechas del diagrama
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 17
+    + Received  +  0
+
+    @@ -1,41 +1,24 @@
+      Array [
+        "App.tsx -> src/composition/createCampusOps.ts",
+        "App.tsx -> src/ui/CampusOpsScreen.tsx",
+        "src/application/CampusOpsActions.ts -> src/application/createHealthQuery.ts",
+        "src/application/CampusOpsActions.ts -> src/domain/Incident.ts",
+    -   "src/application/createAssignIncidentUseCase.ts -> src/domain/Actor.ts",
+    -   "src/application/createAssignIncidentUseCase.ts -> src/domain/Incident.ts",
+    -   "src/application/createAssignIncidentUseCase.ts -> src/domain/IncidentAssignmentPort.ts",
+    -   "src/application/createAssignIncidentUseCase.ts -> src/domain/SecurityLogger.ts",
+    -   "src/application/createAssignIncidentUseCase.ts -> src/domain/incidentAuthorization.ts",
+    -   "src/application/createAuthorizedIncidentQueries.ts -> src/domain/Actor.ts",
+    -   "src/application/createAuthorizedIncidentQueries.ts -> src/domain/Incident.ts",
+    -   "src/application/createAuthorizedIncidentQueries.ts -> src/domain/IncidentRepository.ts",
+    -   "src/application/createAuthorizedIncidentQueries.ts -> src/domain/SecurityLogger.ts",
+    -   "src/application/createAuthorizedIncidentQueries.ts -> src/domain/incidentAuthorization.ts",
+        "src/application/createHealthQuery.ts -> src/domain/BackendHealthPort.ts",
+        "src/application/createIncidentQueries.ts -> src/domain/Incident.ts",
+        "src/application/createIncidentQueries.ts -> src/domain/IncidentRepository.ts",
+        "src/composition/createCampusOps.ts -> src/application/CampusOpsActions.ts",
+        "src/composition/createCampusOps.ts -> src/application/createHealthQuery.ts",
+        "src/composition/createCampusOps.ts -> src/application/createIncidentQueries.ts",
+        "src/composition/createCampusOps.ts -> src/infrastructure/CourseBackendHealthAdapter.ts",
+        "src/composition/createCampusOps.ts -> src/infrastructure/InMemoryIncidentRepository.ts",
+    -   "src/domain/Actor.ts -> src/campusops/contracts.ts",
+        "src/domain/Incident.ts -> src/campusops/contracts.ts",
+    -   "src/domain/IncidentAssignmentPort.ts -> src/domain/Incident.ts",
+        "src/domain/IncidentRepository.ts -> src/domain/Incident.ts",
+    -   "src/domain/incidentAuthorization.ts -> src/domain/Actor.ts",
+    -   "src/domain/incidentAuthorization.ts -> src/domain/Incident.ts",
+        "src/infrastructure/CourseBackendHealthAdapter.ts -> src/api/courseBackend.ts",
+        "src/infrastructure/CourseBackendHealthAdapter.ts -> src/domain/BackendHealthPort.ts",
+    -   "src/infrastructure/InMemoryIncidentAssignmentPort.ts -> src/domain/Incident.ts",
+    -   "src/infrastructure/InMemoryIncidentAssignmentPort.ts -> src/domain/IncidentAssignmentPort.ts",
+        "src/infrastructure/InMemoryIncidentRepository.ts -> src/domain/Incident.ts",
+        "src/infrastructure/InMemoryIncidentRepository.ts -> src/domain/IncidentRepository.ts",
+    -   "src/infrastructure/InMemorySecurityLogger.ts -> src/domain/SecurityLogger.ts",
+        "src/ui/CampusOpsScreen.tsx -> src/application/CampusOpsActions.ts",
+        "src/ui/CampusOpsScreen.tsx -> src/ui/IncidentDetailScreen.tsx",
+        "src/ui/CampusOpsScreen.tsx -> src/ui/IncidentListScreen.tsx",
+        "src/ui/IncidentDetailScreen.tsx -> src/domain/Incident.ts",
+        "src/ui/IncidentDetailScreen.tsx -> src/ui/incidentLabels.ts",
+
+      333 |     );
+      334 |     expect(actual.size).toBeGreaterThan(0);
+    > 335 |     expect([...declared].sort()).toEqual([...actual].sort());
+          |                                  ^
+      336 |   });
+      337 | });
+      338 |
+
+      at Object.toEqual (tests/architecture.test.ts:335:34)
+
+PASS tests/security.test.ts
+FAIL tests/review-security.test.ts
+  ● R-01: un reportante no puede consultar el reporte de otro
+
+    expect(received).toBeNull()
+
+    Received: {"category": "water", "description": "Datos ficticios de otra persona", "id": "review-1", "location": {"label": "Sitio ficticio", "source": "manual"}, "reporterId": "reporter-1", "status": "assigned", "work": {"assignedTechnicianId": "tech-1", "status": "assigned"}}
+
+      17 |     createInMemoryIncidentRepository([incident]), createInMemorySecurityLogger(),
+      18 |   );
+    > 19 |   expect(await queries.getIncidentDetail({ id: 'reporter-2', role: 'reporter' }, incident.id)).toBeNull();
+         |                                                                                                ^
+      20 | });
+      21 |
+      22 | test('R-02: el tecnico asignado no puede reasignar como coordinador', async () => {
+
+      at Object.toBeNull (tests/review-security.test.ts:19:96)
+      at asyncGeneratorStep (../../../../Desktop/trabajos/pacheco/DMI-Equipo-4/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../Desktop/trabajos/pacheco/DMI-Equipo-4/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● R-02: el tecnico asignado no puede reasignar como coordinador
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 16
+
+      Object {
+    -   "kind": "denied",
+    +   "incident": Object {
+    +     "category": "water",
+    +     "description": "Datos ficticios de otra persona",
+    +     "id": "review-1",
+    +     "location": Object {
+    +       "label": "Sitio ficticio",
+    +       "source": "manual",
+    +     },
+    +     "reporterId": "reporter-1",
+    +     "status": "assigned",
+    +     "work": Object {
+    +       "assignedTechnicianId": "tech-3",
+    +       "status": "assigned",
+    +     },
+    +   },
+    +   "kind": "assigned",
+      }
+
+      25 |   );
+      26 |   expect(await assign.assign({ id: 'tech-1', role: 'technician' }, incident, 'tech-3'))
+    > 27 |     .toEqual({ kind: 'denied' });
+         |      ^
+      28 | });
+      29 |
+      30 | test('R-02: despues de la reasignacion el tecnico anterior pierde acceso incluso con una copia vieja', async () => {
+
+      at Object.toEqual (tests/review-security.test.ts:27:6)
+      at asyncGeneratorStep (../../../../Desktop/trabajos/pacheco/DMI-Equipo-4/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../Desktop/trabajos/pacheco/DMI-Equipo-4/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● R-02: despues de la reasignacion el tecnico anterior pierde acceso incluso con una copia vieja
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 16
+
+      Object {
+    -   "kind": "denied",
+    +   "incident": Object {
+    +     "category": "water",
+    +     "description": "Datos ficticios de otra persona",
+    +     "id": "review-1",
+    +     "location": Object {
+    +       "label": "Sitio ficticio",
+    +       "source": "manual",
+    +     },
+    +     "reporterId": "reporter-1",
+    +     "status": "assigned",
+    +     "work": Object {
+    +       "assignedTechnicianId": "tech-1",
+    +       "status": "assigned",
+    +     },
+    +   },
+    +   "kind": "assigned",
+      }
+
+      35 |     .toBe('assigned');
+      36 |   expect(await assign.assign({ id: 'tech-1', role: 'technician' }, incident, 'tech-1'))
+    > 37 |     .toEqual({ kind: 'denied' });
+         |      ^
+      38 | });
+      39 |
+
+      at Object.toEqual (tests/review-security.test.ts:37:6)
+      at asyncGeneratorStep (../../../../Desktop/trabajos/pacheco/DMI-Equipo-4/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../Desktop/trabajos/pacheco/DMI-Equipo-4/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       4 failed, 6 passed, 10 total
+Snapshots:   0 total
+Time:        23.599 s
+Ran all test suites within paths "tests/security.test.ts", "tests/architecture.test.ts", "tests/review-security.test.ts".

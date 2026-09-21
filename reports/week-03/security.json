@@ -1,57 +1,107 @@
 {
   "schemaVersion": 1,
   "week": 3,
-  "commitSha": "2575b480500e9abfd1990fb7fff5c666682a6cb6",
-  "generatedAt": "2026-09-19T22:00:00-06:00",
+  "commitSha": "de287da84151a3d36b8f44e080a669bcecf5004a",
+  "generatedAt": "2026-09-21T22:53:34.689399+00:00",
   "checks": [
     {
       "id": "R-01-consulta-ajena-denegada",
       "status": "pass",
       "scenarioType": "boundary",
       "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
-      "evidence": "Prueba 'consulta propia permitida y consulta ajena denegada, sin filtrar datos' en tests/security.test.ts: technicianOne consulta su propia incidencia sec-1 (obtiene datos), consulta sec-2 ajena (obtiene null) y un ID inexistente (obtiene null) — el mismo resultado null para ajena e inexistente, sin filtrar la existencia de la incidencia. 3/3 tests de tests/security.test.ts pasando localmente."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Prueba 'consulta propia permitida y consulta ajena denegada, sin filtrar datos' en tests/security.test.ts: technicianOne consulta su propia incidencia sec-1 (obtiene datos), consulta sec-2 ajena (obtiene null) y un ID inexistente (obtiene null) — el mismo resultado null para ajena e inexistente, sin filtrar la existencia de la incidencia. 3/3 tests de tests/security.test.ts pasando localmente."
     },
     {
       "id": "R-02-asignacion-no-autorizada-rechazada",
       "status": "pass",
       "scenarioType": "boundary",
       "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
-      "evidence": "Prueba 'asignación autorizada permitida y modificación por actor no autorizado rechazada' en tests/security.test.ts: el coordinador reasigna sec-1 exitosamente (kind: 'assigned'), y tech-01 intentando modificar sec-2 (ajena) es rechazado (kind: 'denied') sin alterar el registro. Corresponde al riesgo priorizado más alto (R-02) por Jarumi en docs/threat-model.md."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Prueba 'asignación autorizada permitida y modificación por actor no autorizado rechazada' en tests/security.test.ts: el coordinador reasigna sec-1 exitosamente (kind: 'assigned'), y tech-01 intentando modificar sec-2 (ajena) es rechazado (kind: 'denied') sin alterar el registro. Corresponde al riesgo priorizado más alto (R-02) por Jarumi en docs/threat-model.md."
     },
     {
       "id": "R-03-logs-sin-datos-sensibles",
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npm test -- --runInBand --runTestsByPath tests/security.test.ts",
-      "evidence": "Prueba 'los logs conservan el rol y el resultado, sin identificador personal del actor' en tests/security.test.ts: cada entrada de SecurityLogEntry conserva actorRole y granted, se confirma explícitamente que 'actorId' no está entre las claves y que el ID personal 'tech-01' no aparece en el JSON serializado del log."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Prueba 'los logs conservan el rol y el resultado, sin identificador personal del actor' en tests/security.test.ts: cada entrada de SecurityLogEntry conserva actorRole y granted, se confirma explícitamente que 'actorId' no está entre las claves y que el ID personal 'tech-01' no aparece en el JSON serializado del log."
     },
     {
       "id": "R-04-secret-scan-antes",
       "status": "fail",
       "scenarioType": "failure",
       "command": "python tools/course_public_evaluator.py --week 03 --mode verify",
-      "evidence": "Se creó un marcador sintético temporal (variable EXPO_PUBLIC_TEST_SECRET) en src/temp-secret-check.ts; el detector lo identificó con hits=['src/temp-secret-check.ts:public_secret_name'] y status fail. Log: reports/week-03/logs/fernanda-secret-scan-antes.txt. Archivo retirado inmediatamente después, nunca comiteado."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Se creó un marcador sintético temporal (variable EXPO_PUBLIC_TEST_SECRET) en src/temp-secret-check.ts; el detector lo identificó con hits=['src/temp-secret-check.ts:public_secret_name'] y status fail. Log: reports/week-03/logs/fernanda-secret-scan-antes.txt. Archivo retirado inmediatamente después, nunca comiteado."
     },
     {
       "id": "R-04-secret-scan-despues",
       "status": "pass",
       "scenarioType": "nominal",
       "command": "python tools/course_public_evaluator.py --week 03 --mode verify",
-      "evidence": "Tras retirar el marcador sintético, el mismo detector corrió limpio con hits=[]. Log: reports/week-03/logs/fernanda-secret-scan-despues.txt."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Tras retirar el marcador sintético, el mismo detector corrió limpio con hits=[]. Log: reports/week-03/logs/fernanda-secret-scan-despues.txt."
     },
     {
       "id": "pipeline-falla-tipos-antes",
       "status": "fail",
       "scenarioType": "failure",
       "command": "npm run typecheck",
-      "evidence": "Error de tipos real y temporal introducido en src/domain/Actor.ts (id: string -> number), rompiendo comparaciones en src/domain/incidentAuthorization.ts y tests/security.test.ts. Local: exit code 2, 4 errores TS2367/TS2322. Confirmado también en GitHub Actions con el mismo resultado: https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35469806961 (commit d74b738, exit code 2, artefacto subido pese al fallo por if: always())."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Error de tipos real y temporal introducido en src/domain/Actor.ts (id: string -> number), rompiendo comparaciones en src/domain/incidentAuthorization.ts y tests/security.test.ts. Local: exit code 2, 4 errores TS2367/TS2322. Confirmado también en GitHub Actions con el mismo resultado: https://github.com/Oscar71k1/DMI-Equipo-4/actions/runs/35469806961 (commit d74b738, exit code 2, artefacto subido pese al fallo por if: always())."
     },
     {
       "id": "pipeline-falla-tipos-despues",
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npm run typecheck",
-      "evidence": "Corrección aplicada (id: string restaurado). Local: exit code 0, sin errores. Commit real: 2575b480500e9abfd1990fb7fff5c666682a6cb6."
+      "evidence": "Registro historico de Fernanda (no una ejecucion nueva): Corrección aplicada (id: string restaurado). Local: exit code 0, sin errores. Commit real: 2575b480500e9abfd1990fb7fff5c666682a6cb6."
+    },
+    {
+      "id": "revision-regresiones-antes",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/review-security.test.ts tests/security.test.ts tests/architecture.test.ts",
+      "evidence": "Oscar/Codex en worktree b1bd66db9f3a7802ac3d11011725cd558696e860: 4 fallos y 6 aprobadas. Tres fallos de seguridad (reportante ajeno, tecnico reasignando, copia obsoleta) y diagrama incompleto. Log: reports/week-03/logs/oscar-correcciones-antes.txt. Fuente de reproduccion conservada como oscar-correcciones-reproduccion-antes.txt; usa la API historica."
+    },
+    {
+      "id": "revision-controles-despues",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/security.test.ts tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx",
+      "evidence": "Oscar/Codex: 11 pruebas de seguridad y 4 de arquitectura aprobadas. Total 26/27; la prueba de interfaz inicial agoto 5s. Este pass acredita solo seguridad y arquitectura. Logs: reports/week-03/logs/oscar-correcciones-pruebas.txt y oscar-correcciones-pruebas-inicial.txt."
+    },
+    {
+      "id": "revision-interfaz-timeout",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/security.test.ts tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx",
+      "evidence": "Una prueba de navegacion lista/detalle agoto 5000ms en dos ejecuciones; 26/27 aprobadas. Log oscar-correcciones-pruebas.txt. No se debilito el limite."
+    },
+    {
+      "id": "revision-interfaz-aislada",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/incidents.test.tsx",
+      "evidence": "Oscar/Codex: 11/11 aprobadas al ejecutar la suite aislada, sin cambiar timeout ni logica de pruebas. Log: reports/week-03/logs/oscar-correcciones-interfaz-aislada.txt. Los dos timeouts previos del conjunto permanecen registrados; no se afirma estabilidad total."
+    },
+    {
+      "id": "revision-secret-scanner",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "python -B tests/secret_scanner_test.py",
+      "evidence": "3/3 aprobadas. Log: reports/week-03/logs/oscar-correcciones-secret-scanner.txt."
+    },
+    {
+      "id": "publico-semana03",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "make public-test-week-03 PYTHON=python",
+      "evidence": "13 controles aprobados, incluidas 2 pruebas publicas. reports/week-03/public-tests.json y logs/oscar-correcciones-public.txt. Auditoria pasa al umbral critico original; informa 2 vulnerabilidades altas, no se declara libre de vulnerabilidades."
+    },
+    {
+      "id": "exportacion-android",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm run bundle:release",
+      "evidence": "Exportacion de 590 modulos completada, no instalacion de APK. reports/week-03/logs/oscar-correcciones-bundle.txt."
     }
-  ]
+  ],
+  "historicalCommitSha": "2575b480500e9abfd1990fb7fff5c666682a6cb6"
 }

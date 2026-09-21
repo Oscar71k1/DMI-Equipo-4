@@ -1,0 +1,38 @@
+import { createAssignIncidentUseCase } from '../src/application/createAssignIncidentUseCase';
+import { createAuthorizedIncidentQueries } from '../src/application/createAuthorizedIncidentQueries';
+import type { Incident } from '../src/domain/Incident';
+import { createInMemoryIncidentAssignmentPort } from '../src/infrastructure/InMemoryIncidentAssignmentPort';
+import { createInMemoryIncidentRepository } from '../src/infrastructure/InMemoryIncidentRepository';
+import { createInMemorySecurityLogger } from '../src/infrastructure/InMemorySecurityLogger';
+
+const incident: Incident & { reporterId: string } = {
+  id: 'review-1', reporterId: 'reporter-1', category: 'water',
+  description: 'Datos ficticios de otra persona',
+  location: { source: 'manual', label: 'Sitio ficticio' },
+  status: 'assigned', work: { assignedTechnicianId: 'tech-1', status: 'assigned' },
+};
+
+test('R-01: un reportante no puede consultar el reporte de otro', async () => {
+  const queries = createAuthorizedIncidentQueries(
+    createInMemoryIncidentRepository([incident]), createInMemorySecurityLogger(),
+  );
+  expect(await queries.getIncidentDetail({ id: 'reporter-2', role: 'reporter' }, incident.id)).toBeNull();
+});
+
+test('R-02: el tecnico asignado no puede reasignar como coordinador', async () => {
+  const assign = createAssignIncidentUseCase(
+    createInMemoryIncidentAssignmentPort([incident]), createInMemorySecurityLogger(),
+  );
+  expect(await assign.assign({ id: 'tech-1', role: 'technician' }, incident, 'tech-3'))
+    .toEqual({ kind: 'denied' });
+});
+
+test('R-02: despues de la reasignacion el tecnico anterior pierde acceso incluso con una copia vieja', async () => {
+  const assign = createAssignIncidentUseCase(
+    createInMemoryIncidentAssignmentPort([incident]), createInMemorySecurityLogger(),
+  );
+  expect((await assign.assign({ id: 'coord-1', role: 'coordinator' }, incident, 'tech-2')).kind)
+    .toBe('assigned');
+  expect(await assign.assign({ id: 'tech-1', role: 'technician' }, incident, 'tech-1'))
+    .toEqual({ kind: 'denied' });
+});
