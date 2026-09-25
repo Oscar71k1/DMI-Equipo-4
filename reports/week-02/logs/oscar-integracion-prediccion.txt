@@ -1,5 +1,0 @@
-Prediccion previa a la ejecucion: 2026-09-18T02:28:46.998Z
-Sesion de Oscar asistida por Codex.
-Al integrar los reportes de Jarumi sobre la correccion de Fernanda, espero que pasen arquitectura, lista/detalle, sustitucion del proveedor y smoke heredado. El evaluador debe aceptar checks[].evidence como texto, tres aportes con SHA existentes y reportes del SHA tecnico integrado.
-Espero conservar el fallo historico App.tsx -> src/api/courseBackend.ts como observacion anterior, sin introducir esa dependencia en el estado final.
-Comandos previstos: make setup; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts; make feedback; make verify-week-02; make public-test-week-02; make evidence-week-02.

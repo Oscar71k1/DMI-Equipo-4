@@ -299,8 +299,7 @@ describe('arquitectura: limites entre capas', () => {
 
     if (violations.length > 0) {
       const detail = violations.map((v) => `  - ${v.from} -> ${v.to} [${v.rule}]`).join('\n');
-      console.log(`Dependencias inspeccionadas: ${edges.length}`);
-      console.log(`Violaciones encontradas:\n${detail}`);
+            throw new Error(`Violaciones de arquitectura encontradas:\n${detail}`);
     }
 
     expect(violations).toEqual([]);
@@ -337,3 +336,4 @@ describe('arquitectura: limites entre capas', () => {
 });
 
 export { scanArchitecture, classifyLayer, PROJECT_ROOT };
+

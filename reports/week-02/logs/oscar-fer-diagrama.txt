@@ -1,2 +1,0 @@
-PASS: 16 archivos y 26 imports internos coinciden con el diagrama.
-EXIT_CODE=0

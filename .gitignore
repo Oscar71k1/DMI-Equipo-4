@@ -11,3 +11,5 @@ dist/
 *.p8
 *.p12
 reports/**/generated-*
+
+reports/**/logs/

@@ -1,5 +1,0 @@
-Sesion de Oscar asistida por Codex.
-Se normaliza commitSha en ambas copias temporales para aislar la comprobacion del formato evidence.
-original: passed=False; check id, command and evidence must be non-empty strings
-corregido: passed=True; 3 checks indexed, 2 boundary/failure; report evaluates HEAD
-EXIT_CODE=0 (rechazo original y aceptacion corregida comprobados)

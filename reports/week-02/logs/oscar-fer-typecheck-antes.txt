@@ -1,9 +1,0 @@
-Comando: npm run typecheck
-Origen: 8913a40b3604fdeb85552c2eaa80ed2059d67501
-tests/architecture.test.ts(103,26): error TS2345: Argument of type 'Expression | undefined' is not assignable to parameter of type 'Node'.
-  Type 'undefined' is not assignable to type 'Node'.
-tests/architecture.test.ts(111,26): error TS2345: Argument of type 'Expression | undefined' is not assignable to parameter of type 'Node'.
-  Type 'undefined' is not assignable to type 'Node'.
-tests/architecture.test.ts(249,12): error TS2532: Object is possibly 'undefined'.
-
-EXIT_CODE=1
