@@ -1,5 +1,11 @@
 # CampusOps — starter público de Desarrollo Móvil Integral
 
+## Actividad individual — Semana 4
+
+**Oscar Flores Cerqueda** · rama `week4/security-audit-Oscar-Flores-Cerqueda`.
+
+Esta rama conserva la auditoría individual y **no debe integrarse a `main`**. El [informe de seguridad](docs/security-audit.md) documenta tres hallazgos corregidos, las pruebas de antes y después y sus [evidencias](docs/evidence). Parte de `origin/main` en `6f16715`, la versión más reciente del equipo al preparar la actividad.
+
 ## Entrega de semana 1 — equipo 4
 
 La entrega de esta semana contiene la definición del caso, tres riesgos priorizados, el diagnóstico de una falla reversible y las aportaciones de Oscar, Jarumi y Fernanda. La aplicación conserva el alcance de línea base; los flujos de negocio se desarrollan en semanas posteriores.

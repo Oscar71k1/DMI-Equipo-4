@@ -1,19 +1,25 @@
 import type { CampusOpsActions } from '../application/CampusOpsActions';
+import { createAuthorizedIncidentQueries } from '../application/createAuthorizedIncidentQueries';
 import { createHealthQuery } from '../application/createHealthQuery';
-import { createIncidentQueries } from '../application/createIncidentQueries';
+import type { Actor } from '../domain/Actor';
 import { createCourseBackendHealthAdapter } from '../infrastructure/CourseBackendHealthAdapter';
 import { createInMemoryIncidentRepository } from '../infrastructure/InMemoryIncidentRepository';
+import { createInMemorySecurityLogger } from '../infrastructure/InMemorySecurityLogger';
 
 export function createCampusOps(): CampusOpsActions {
   const incidentRepository = createInMemoryIncidentRepository();
   const healthPort = createCourseBackendHealthAdapter();
 
-  const incidentQueries = createIncidentQueries(incidentRepository);
+  // Identidad de demostración local. No constituye una sesión autenticada.
+  const actor: Actor = { id: 'reporter-1', role: 'reporter' };
+  const incidentQueries = createAuthorizedIncidentQueries(
+    incidentRepository, createInMemorySecurityLogger(),
+  );
   const healthQuery = createHealthQuery(healthPort);
 
   return {
-    listIncidents: incidentQueries.listIncidents,
-    getIncidentDetail: incidentQueries.getIncidentDetail,
+    listIncidents: () => incidentQueries.listIncidents(actor),
+    getIncidentDetail: (id) => incidentQueries.getIncidentDetail(actor, id),
     checkHealth: healthQuery.checkHealth,
   };
 }

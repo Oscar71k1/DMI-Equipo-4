@@ -1,0 +1,6 @@
+
+> dmi-react-native-starter@1.0.0 typecheck
+> tsc --noEmit
+
+
+Exit code: 0

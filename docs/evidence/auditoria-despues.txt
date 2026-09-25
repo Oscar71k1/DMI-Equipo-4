@@ -1,0 +1,30 @@
+PASS tests/security-audit.test.ts
+  Hallazgo 1 — archivos de entorno
+    √ .env queda ignorado aunque todavía no exista (56 ms)
+    √ .env.local queda ignorado aunque todavía no exista (52 ms)
+    √ .env.development queda ignorado aunque todavía no exista (61 ms)
+    √ .env.production queda ignorado aunque todavía no exista (53 ms)
+    √ src/.env.local queda ignorado aunque todavía no exista (53 ms)
+    √ la plantilla pública se puede versionar y no hay archivos privados rastreados (105 ms)
+  Hallazgo 2 — minimización de datos en memoria
+    √ lectura descarta datos privados adicionales de todos los niveles (1 ms)
+    √ asignación descarta datos privados adicionales de todos los niveles (1 ms)
+    √ reasignar no vuelve a exponer campos privados del registro inicial (1 ms)
+    √ una ubicación manual sin coordenadas conserva su contrato (1 ms)
+  Hallazgo 3 — autorización conectada a la app
+    √ la composición muestra solamente los reportes del actor ficticio activo (1 ms)
+    √ la composición no permite abrir un reporte ajeno conociendo su ID (1 ms)
+    √ la lista respeta el rol y propiedad de $id (1 ms)
+    √ la lista respeta el rol y propiedad de $id
+    √ la lista respeta el rol y propiedad de $id (1 ms)
+    √ la lista respeta el rol y propiedad de $id (1 ms)
+    √ la lista respeta el rol y propiedad de $id
+    √ la lista respeta el rol y propiedad de $id (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       18 passed, 18 total
+Snapshots:   0 total
+Time:        3.131 s, estimated 7 s
+Ran all test suites within paths "tests/security-audit.test.ts".
+
+Exit code: 0

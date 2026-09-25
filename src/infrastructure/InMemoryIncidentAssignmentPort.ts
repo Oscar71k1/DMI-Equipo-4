@@ -1,5 +1,6 @@
 import type { Incident } from '../domain/Incident';
 import type { IncidentAssignmentPort } from '../domain/IncidentAssignmentPort';
+import { copyIncident } from './copyIncident';
 
 /**
  * Almacén compartido de lectura y asignación para probar las políticas locales.
@@ -8,18 +9,13 @@ import type { IncidentAssignmentPort } from '../domain/IncidentAssignmentPort';
 export function createInMemoryIncidentAssignmentPort(
   initialIncidents: readonly Incident[],
 ): IncidentAssignmentPort {
-  const copy = (incident: Incident): Incident => ({
-    ...incident,
-    location: { ...incident.location },
-    work: { ...incident.work },
-  });
-  const incidents = initialIncidents.map(copy);
+  const incidents = initialIncidents.map(copyIncident);
 
   return {
-    list: async () => incidents.map(copy),
+    list: async () => incidents.map(copyIncident),
     getById: async (id) => {
       const found = incidents.find((incident) => incident.id === id);
-      return found === undefined ? null : copy(found);
+      return found === undefined ? null : copyIncident(found);
     },
     assign: async (incidentId, technicianId) => {
       const index = incidents.findIndex((incident) => incident.id === incidentId);
@@ -31,7 +27,7 @@ export function createInMemoryIncidentAssignmentPort(
         work: { assignedTechnicianId: technicianId, status: current.work.status },
       };
       incidents[index] = updated;
-      return copy(updated);
+      return copyIncident(updated);
     },
   };
 }

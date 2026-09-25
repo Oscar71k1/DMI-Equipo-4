@@ -1,0 +1,13 @@
+PASS tests/incidents.test.tsx (15.302 s)
+PASS tests/architecture.test.ts
+PASS course-tests/smoke.test.tsx
+PASS tests/security-audit.test.ts
+PASS tests/security.test.ts
+
+Test Suites: 5 passed, 5 total
+Tests:       45 passed, 45 total
+Snapshots:   0 total
+Time:        24.242 s
+Ran all test suites within paths "tests/architecture.test.ts", "tests/incidents.test.tsx", "tests/security.test.ts", "tests/security-audit.test.ts", "course-tests/smoke.test.tsx".
+
+Exit code: 0

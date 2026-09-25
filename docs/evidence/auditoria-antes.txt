@@ -1,0 +1,375 @@
+FAIL tests/security-audit.test.ts (6.952 s)
+  Hallazgo 1 — archivos de entorno
+    √ .env queda ignorado aunque todavía no exista (57 ms)
+    × .env.local queda ignorado aunque todavía no exista (54 ms)
+    × .env.development queda ignorado aunque todavía no exista (52 ms)
+    × .env.production queda ignorado aunque todavía no exista (54 ms)
+    × src/.env.local queda ignorado aunque todavía no exista (54 ms)
+    √ la plantilla pública se puede versionar y no hay archivos privados rastreados (114 ms)
+  Hallazgo 2 — minimización de datos en memoria
+    × lectura descarta datos privados adicionales de todos los niveles (6 ms)
+    × asignación descarta datos privados adicionales de todos los niveles (2 ms)
+    × reasignar no vuelve a exponer campos privados del registro inicial (2 ms)
+    √ una ubicación manual sin coordenadas conserva su contrato (1 ms)
+  Hallazgo 3 — autorización conectada a la app
+    × la composición muestra solamente los reportes del actor ficticio activo (1 ms)
+    × la composición no permite abrir un reporte ajeno conociendo su ID (1 ms)
+    × la lista respeta el rol y propiedad de $id (23 ms)
+    × la lista respeta el rol y propiedad de $id (1 ms)
+    × la lista respeta el rol y propiedad de $id
+    × la lista respeta el rol y propiedad de $id
+    × la lista respeta el rol y propiedad de $id
+    × la lista respeta el rol y propiedad de $id
+
+  ● Hallazgo 1 — archivos de entorno › .env.local queda ignorado aunque todavía no exista
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      26 |       const result = spawnSync('git', ['check-ignore', '--no-index', '-q', file], { cwd: root });
+      27 |       expect(result.error).toBeUndefined();
+    > 28 |       expect(result.status).toBe(0);
+         |                             ^
+      29 |     },
+      30 |   );
+      31 |
+
+      at toBe (tests/security-audit.test.ts:28:29)
+
+  ● Hallazgo 1 — archivos de entorno › .env.development queda ignorado aunque todavía no exista
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      26 |       const result = spawnSync('git', ['check-ignore', '--no-index', '-q', file], { cwd: root });
+      27 |       expect(result.error).toBeUndefined();
+    > 28 |       expect(result.status).toBe(0);
+         |                             ^
+      29 |     },
+      30 |   );
+      31 |
+
+      at toBe (tests/security-audit.test.ts:28:29)
+
+  ● Hallazgo 1 — archivos de entorno › .env.production queda ignorado aunque todavía no exista
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      26 |       const result = spawnSync('git', ['check-ignore', '--no-index', '-q', file], { cwd: root });
+      27 |       expect(result.error).toBeUndefined();
+    > 28 |       expect(result.status).toBe(0);
+         |                             ^
+      29 |     },
+      30 |   );
+      31 |
+
+      at toBe (tests/security-audit.test.ts:28:29)
+
+  ● Hallazgo 1 — archivos de entorno › src/.env.local queda ignorado aunque todavía no exista
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      26 |       const result = spawnSync('git', ['check-ignore', '--no-index', '-q', file], { cwd: root });
+      27 |       expect(result.error).toBeUndefined();
+    > 28 |       expect(result.status).toBe(0);
+         |                             ^
+      29 |     },
+      30 |   );
+      31 |
+
+      at toBe (tests/security-audit.test.ts:28:29)
+
+  ● Hallazgo 2 — minimización de datos en memoria › lectura descarta datos privados adicionales de todos los niveles
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 5
+
+      Array [
+        Object {
+          "category": "water",
+          "description": "Incidencia ficticia de auditoría",
+    +     "email": "persona@example.invalid",
+          "id": "audit-1",
+          "location": Object {
+    +       "contactPhone": "telefono-ficticio",
+            "label": "Campus ficticio",
+            "latitude": 0,
+            "longitude": 0,
+            "source": "provider",
+          },
+    +     "password": "clave-ficticia-de-auditoria",
+          "reporterId": "reporter-1",
+          "status": "assigned",
+    +     "token": "token-ficticio-de-auditoria",
+          "work": Object {
+            "assignedTechnicianId": "tech-01",
+            "status": "assigned",
+    +       "technicianEmail": "tecnico@example.invalid",
+          },
+        },
+      ]
+
+      59 |     };
+      60 |     const repository = create([enriched]);
+    > 61 |     expect(await repository.list()).toEqual([incident]);
+         |                                     ^
+      62 |     expect(await repository.getById(incident.id)).toEqual(incident);
+      63 |   });
+      64 |
+
+      at toEqual (tests/security-audit.test.ts:61:37)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Hallazgo 2 — minimización de datos en memoria › asignación descarta datos privados adicionales de todos los niveles
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 5
+
+      Array [
+        Object {
+          "category": "water",
+          "description": "Incidencia ficticia de auditoría",
+    +     "email": "persona@example.invalid",
+          "id": "audit-1",
+          "location": Object {
+    +       "contactPhone": "telefono-ficticio",
+            "label": "Campus ficticio",
+            "latitude": 0,
+            "longitude": 0,
+            "source": "provider",
+          },
+    +     "password": "clave-ficticia-de-auditoria",
+          "reporterId": "reporter-1",
+          "status": "assigned",
+    +     "token": "token-ficticio-de-auditoria",
+          "work": Object {
+            "assignedTechnicianId": "tech-01",
+            "status": "assigned",
+    +       "technicianEmail": "tecnico@example.invalid",
+          },
+        },
+      ]
+
+      59 |     };
+      60 |     const repository = create([enriched]);
+    > 61 |     expect(await repository.list()).toEqual([incident]);
+         |                                     ^
+      62 |     expect(await repository.getById(incident.id)).toEqual(incident);
+      63 |   });
+      64 |
+
+      at toEqual (tests/security-audit.test.ts:61:37)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Hallazgo 2 — minimización de datos en memoria › reasignar no vuelve a exponer campos privados del registro inicial
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+    @@ -8,10 +8,11 @@
+          "longitude": 0,
+          "source": "provider",
+        },
+        "reporterId": "reporter-1",
+        "status": "assigned",
+    +   "token": "dato-ficticio",
+        "work": Object {
+          "assignedTechnicianId": "tech-02",
+          "status": "assigned",
+        },
+      }
+
+      65 |   test('reasignar no vuelve a exponer campos privados del registro inicial', async () => {
+      66 |     const port = createInMemoryIncidentAssignmentPort([{ ...incident, token: 'dato-ficticio' } as Incident]);
+    > 67 |     expect(await port.assign(incident.id, 'tech-02')).toEqual({
+         |                                                       ^
+      68 |       ...incident, work: { assignedTechnicianId: 'tech-02', status: 'assigned' },
+      69 |     });
+      70 |   });
+
+      at Object.toEqual (tests/security-audit.test.ts:67:55)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Hallazgo 3 — autorización conectada a la app › la composición muestra solamente los reportes del actor ficticio activo
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+      Array [
+        "inc-001",
+    +   "inc-002",
+    +   "inc-003",
+      ]
+
+      80 |     const actions = createCampusOps();
+      81 |     const visible = await actions.listIncidents();
+    > 82 |     expect(visible.map((item) => item.id)).toEqual(['inc-001']);
+         |                                            ^
+      83 |     expect(visible.every((item) => item.reporterId === 'reporter-1')).toBe(true);
+      84 |   });
+      85 |
+
+      at Object.toEqual (tests/security-audit.test.ts:82:44)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Hallazgo 3 — autorización conectada a la app › la composición no permite abrir un reporte ajeno conociendo su ID
+
+    expect(received).toBeNull()
+
+    Received: {"category": "water", "description": "Fuga de agua cerca de los servidores del laboratorio de Software.", "id": "inc-002", "location": {"label": "Edificio C, Laboratorio de Software", "source": "manual"}, "reporterId": "reporter-2", "status": "assigned", "work": {"assignedTechnicianId": "tech-07", "status": "assigned"}}
+
+      87 |     const actions = createCampusOps();
+      88 |     expect((await actions.getIncidentDetail('inc-001'))?.reporterId).toBe('reporter-1');
+    > 89 |     expect(await actions.getIncidentDetail('inc-002')).toBeNull();
+         |                                                        ^
+      90 |     expect(await actions.getIncidentDetail('no-existe')).toBeNull();
+      91 |   });
+      92 |
+
+      at Object.toBeNull (tests/security-audit.test.ts:89:56)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Hallazgo 3 — autorización conectada a la app › la lista respeta el rol y propiedad de $id
+
+    TypeError: queries.listIncidents is not a function
+
+      107 |       createInMemoryIncidentRepository([incident, foreign]), logger,
+      108 |     );
+    > 109 |     expect((await queries.listIncidents(actor)).map((item) => item.id)).toEqual(expected);
+          |                           ^
+      110 |     expect(logger.entries()).toHaveLength(2);
+      111 |     expect(logger.entries().every((entry) => entry.event === 'incident.list')).toBe(true);
+      112 |     expect(logger.entries().filter((entry) => entry.granted).map((entry) => entry.incidentId))
+
+      at listIncidents (tests/security-audit.test.ts:109:27)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (tests/security-audit.test.ts:114:4)
+
+  ● Hallazgo 3 — autorización conectada a la app › la lista respeta el rol y propiedad de $id
+
+    TypeError: queries.listIncidents is not a function
+
+      107 |       createInMemoryIncidentRepository([incident, foreign]), logger,
+      108 |     );
+    > 109 |     expect((await queries.listIncidents(actor)).map((item) => item.id)).toEqual(expected);
+          |                           ^
+      110 |     expect(logger.entries()).toHaveLength(2);
+      111 |     expect(logger.entries().every((entry) => entry.event === 'incident.list')).toBe(true);
+      112 |     expect(logger.entries().filter((entry) => entry.granted).map((entry) => entry.incidentId))
+
+      at listIncidents (tests/security-audit.test.ts:109:27)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (tests/security-audit.test.ts:114:4)
+
+  ● Hallazgo 3 — autorización conectada a la app › la lista respeta el rol y propiedad de $id
+
+    TypeError: queries.listIncidents is not a function
+
+      107 |       createInMemoryIncidentRepository([incident, foreign]), logger,
+      108 |     );
+    > 109 |     expect((await queries.listIncidents(actor)).map((item) => item.id)).toEqual(expected);
+          |                           ^
+      110 |     expect(logger.entries()).toHaveLength(2);
+      111 |     expect(logger.entries().every((entry) => entry.event === 'incident.list')).toBe(true);
+      112 |     expect(logger.entries().filter((entry) => entry.granted).map((entry) => entry.incidentId))
+
+      at listIncidents (tests/security-audit.test.ts:109:27)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (tests/security-audit.test.ts:114:4)
+
+  ● Hallazgo 3 — autorización conectada a la app › la lista respeta el rol y propiedad de $id
+
+    TypeError: queries.listIncidents is not a function
+
+      107 |       createInMemoryIncidentRepository([incident, foreign]), logger,
+      108 |     );
+    > 109 |     expect((await queries.listIncidents(actor)).map((item) => item.id)).toEqual(expected);
+          |                           ^
+      110 |     expect(logger.entries()).toHaveLength(2);
+      111 |     expect(logger.entries().every((entry) => entry.event === 'incident.list')).toBe(true);
+      112 |     expect(logger.entries().filter((entry) => entry.granted).map((entry) => entry.incidentId))
+
+      at listIncidents (tests/security-audit.test.ts:109:27)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (tests/security-audit.test.ts:114:4)
+
+  ● Hallazgo 3 — autorización conectada a la app › la lista respeta el rol y propiedad de $id
+
+    TypeError: queries.listIncidents is not a function
+
+      107 |       createInMemoryIncidentRepository([incident, foreign]), logger,
+      108 |     );
+    > 109 |     expect((await queries.listIncidents(actor)).map((item) => item.id)).toEqual(expected);
+          |                           ^
+      110 |     expect(logger.entries()).toHaveLength(2);
+      111 |     expect(logger.entries().every((entry) => entry.event === 'incident.list')).toBe(true);
+      112 |     expect(logger.entries().filter((entry) => entry.granted).map((entry) => entry.incidentId))
+
+      at listIncidents (tests/security-audit.test.ts:109:27)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (tests/security-audit.test.ts:114:4)
+
+  ● Hallazgo 3 — autorización conectada a la app › la lista respeta el rol y propiedad de $id
+
+    TypeError: queries.listIncidents is not a function
+
+      107 |       createInMemoryIncidentRepository([incident, foreign]), logger,
+      108 |     );
+    > 109 |     expect((await queries.listIncidents(actor)).map((item) => item.id)).toEqual(expected);
+          |                           ^
+      110 |     expect(logger.entries()).toHaveLength(2);
+      111 |     expect(logger.entries().every((entry) => entry.event === 'incident.list')).toBe(true);
+      112 |     expect(logger.entries().filter((entry) => entry.granted).map((entry) => entry.incidentId))
+
+      at listIncidents (tests/security-audit.test.ts:109:27)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (tests/security-audit.test.ts:114:4)
+
+Test Suites: 1 failed, 1 total
+Tests:       15 failed, 3 passed, 18 total
+Snapshots:   0 total
+Time:        23.677 s
+Ran all test suites within paths "tests/security-audit.test.ts".
+
+Exit code: 1

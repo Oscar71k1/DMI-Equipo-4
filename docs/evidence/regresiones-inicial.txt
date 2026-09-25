@@ -1,0 +1,82 @@
+FAIL tests/incidents.test.tsx (18.452 s)
+  ● esqueleto de lista/detalle de incidencias › lista, selecciona una incidencia, muestra su detalle y permite regresar
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      41 |
+      42 | describe('esqueleto de lista/detalle de incidencias', () => {
+    > 43 |   test('lista, selecciona una incidencia, muestra su detalle y permite regresar', async () => {
+         |   ^
+      44 |     // Predicción: al tocar la primera incidencia, se mostrará su descripción y ubicación;
+      45 |     // al presionar "volver", la lista se muestra de nuevo.
+      46 |     const repository = createInMemoryIncidentRepository(sampleIncidents);
+
+      at test (tests/incidents.test.tsx:43:3)
+      at Object.describe (tests/incidents.test.tsx:42:1)
+
+PASS tests/security-audit.test.ts
+FAIL tests/architecture.test.ts
+  ● arquitectura: limites entre capas › las dependencias internas reales coinciden con las flechas del diagrama
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    @@ -15,16 +15,14 @@
+        "src/application/createAuthorizedIncidentQueries.ts -> src/domain/incidentAuthorization.ts",
+        "src/application/createHealthQuery.ts -> src/domain/BackendHealthPort.ts",
+        "src/application/createIncidentQueries.ts -> src/domain/Incident.ts",
+        "src/application/createIncidentQueries.ts -> src/domain/IncidentRepository.ts",
+        "src/composition/createCampusOps.ts -> src/application/CampusOpsActions.ts",
+    -   "src/composition/createCampusOps.ts -> src/application/createAuthorizedIncidentQueries.ts",
+        "src/composition/createCampusOps.ts -> src/application/createHealthQuery.ts",
+    -   "src/composition/createCampusOps.ts -> src/domain/Actor.ts",
+    +   "src/composition/createCampusOps.ts -> src/application/createIncidentQueries.ts",
+        "src/composition/createCampusOps.ts -> src/infrastructure/CourseBackendHealthAdapter.ts",
+        "src/composition/createCampusOps.ts -> src/infrastructure/InMemoryIncidentRepository.ts",
+    -   "src/composition/createCampusOps.ts -> src/infrastructure/InMemorySecurityLogger.ts",
+        "src/domain/Actor.ts -> src/campusops/contracts.ts",
+        "src/domain/Incident.ts -> src/campusops/contracts.ts",
+        "src/domain/IncidentAssignmentPort.ts -> src/domain/Incident.ts",
+        "src/domain/IncidentAssignmentPort.ts -> src/domain/IncidentRepository.ts",
+        "src/domain/IncidentRepository.ts -> src/domain/Incident.ts",
+    @@ -32,16 +30,13 @@
+        "src/domain/incidentAuthorization.ts -> src/domain/Incident.ts",
+        "src/infrastructure/CourseBackendHealthAdapter.ts -> src/api/courseBackend.ts",
+        "src/infrastructure/CourseBackendHealthAdapter.ts -> src/domain/BackendHealthPort.ts",
+        "src/infrastructure/InMemoryIncidentAssignmentPort.ts -> src/domain/Incident.ts",
+        "src/infrastructure/InMemoryIncidentAssignmentPort.ts -> src/domain/IncidentAssignmentPort.ts",
+    -   "src/infrastructure/InMemoryIncidentAssignmentPort.ts -> src/infrastructure/copyIncident.ts",
+        "src/infrastructure/InMemoryIncidentRepository.ts -> src/domain/Incident.ts",
+        "src/infrastructure/InMemoryIncidentRepository.ts -> src/domain/IncidentRepository.ts",
+    -   "src/infrastructure/InMemoryIncidentRepository.ts -> src/infrastructure/copyIncident.ts",
+        "src/infrastructure/InMemorySecurityLogger.ts -> src/domain/SecurityLogger.ts",
+    -   "src/infrastructure/copyIncident.ts -> src/domain/Incident.ts",
+        "src/ui/CampusOpsScreen.tsx -> src/application/CampusOpsActions.ts",
+        "src/ui/CampusOpsScreen.tsx -> src/ui/IncidentDetailScreen.tsx",
+        "src/ui/CampusOpsScreen.tsx -> src/ui/IncidentListScreen.tsx",
+        "src/ui/IncidentDetailScreen.tsx -> src/domain/Incident.ts",
+        "src/ui/IncidentDetailScreen.tsx -> src/ui/incidentLabels.ts",
+
+      333 |     );
+      334 |     expect(actual.size).toBeGreaterThan(0);
+    > 335 |     expect([...declared].sort()).toEqual([...actual].sort());
+          |                                  ^
+      336 |   });
+      337 | });
+      338 |
+
+      at Object.toEqual (tests/architecture.test.ts:335:34)
+
+PASS course-tests/smoke.test.tsx
+PASS tests/security.test.ts
+
+Test Suites: 2 failed, 3 passed, 5 total
+Tests:       2 failed, 43 passed, 45 total
+Snapshots:   0 total
+Time:        22.893 s
+Ran all test suites within paths "tests/architecture.test.ts", "tests/incidents.test.tsx", "tests/security.test.ts", "tests/security-audit.test.ts", "course-tests/smoke.test.tsx".
+
+Exit code: 1

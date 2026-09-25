@@ -1,5 +1,6 @@
 import type { Incident } from '../domain/Incident';
 import type { IncidentRepository } from '../domain/IncidentRepository';
+import { copyIncident } from './copyIncident';
 
 const defaultIncidents: readonly Incident[] = [
   {
@@ -40,11 +41,6 @@ const defaultIncidents: readonly Incident[] = [
 export function createInMemoryIncidentRepository(
   initialIncidents: readonly Incident[] = defaultIncidents,
 ): IncidentRepository {
-  const copyIncident = (incident: Incident): Incident => ({
-    ...incident,
-    location: { ...incident.location },
-    work: { ...incident.work },
-  });
   const incidents = initialIncidents.map(copyIncident);
 
   return {

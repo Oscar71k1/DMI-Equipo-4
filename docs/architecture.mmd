@@ -33,6 +33,7 @@ flowchart TD
     Client["Cliente heredado: src/api/courseBackend.ts"]
     AssignmentStore["Almacén local: src/infrastructure/InMemoryIncidentAssignmentPort.ts"]
     SecurityLogStore["Log con campos permitidos: src/infrastructure/InMemorySecurityLogger.ts"]
+    IncidentCopy["Copia con campos permitidos: src/infrastructure/copyIncident.ts"]
   end
 
   subgraph COMP["composition - construcción e inyección"]
@@ -58,10 +59,13 @@ flowchart TD
   Incident --> Vocabulary
   Fake --> Incident
   Fake -->|implementa| IncidentPort
+  Fake --> IncidentCopy
   HealthAdapter -->|implementa| HealthPort
   HealthAdapter --> Client
   Factory --> Actions
-  Factory --> Queries
+  Factory --> AuthorizedQueries
+  Factory --> Actor
+  Factory --> SecurityLogStore
   Factory --> HealthQuery
   Factory --> Fake
   Factory --> HealthAdapter
@@ -82,6 +86,8 @@ flowchart TD
   AssignCase --> SecurityLog
   AssignmentStore --> Incident
   AssignmentStore --> AssignPort
+  AssignmentStore --> IncidentCopy
+  IncidentCopy --> Incident
   SecurityLogStore --> SecurityLog
 
   Reporter(["Reportante - reporter"]) -. usa .-> Campus
@@ -96,4 +102,4 @@ flowchart TD
   Persistence -. adaptadores futuros .-> INFRA
   Location -. adaptadores futuros .-> INFRA
 
-  Legend["Continua: dependencia interna de código, incluidos tipos. Punteada: uso conceptual o límite futuro, no import implementado. Los perfiles no implican login ni permisos implementados. En ejecución, UI llama a las acciones inyectadas; application usa los puertos. Infraestructura devuelve datos sin invertir las dependencias. React, React Native y Expo se omiten de este mapa interno."]
+  Legend["Continua: dependencia interna de código, incluidos tipos. Punteada: uso conceptual o límite futuro, no import implementado. Semana 4: lista y detalle aplican permisos locales al reportante ficticio fijo; no hay login. En ejecución, UI llama a las acciones inyectadas; application usa los puertos. Infraestructura devuelve datos sin invertir las dependencias. React, React Native y Expo se omiten de este mapa interno."]

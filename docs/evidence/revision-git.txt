@@ -1,0 +1,41 @@
+Revision del indice antes del commit. No se crean ni se leen archivos .env privados.
+
+$ git branch --show-current
+week4/security-audit-Oscar-Flores-Cerqueda
+
+$ git check-ignore -v --no-index .env .env.local .env.production src/.env.local
+.gitignore:8:.env	.env
+.gitignore:9:.env.*	.env.local
+.gitignore:9:.env.*	.env.production
+.gitignore:9:.env.*	src/.env.local
+
+$ git ls-files -- .env .env.local .env.production .env.example
+.env.example
+
+$ git diff --cached --check
+Exit code: 0
+
+$ git status --short
+M  .gitignore
+M  README.md
+M  docs/architecture.mmd
+A  docs/evidence/auditoria-antes.txt
+A  docs/evidence/auditoria-despues.txt
+A  docs/evidence/consultas-autorizadas.png
+A  docs/evidence/datos-minimos.png
+A  docs/evidence/gitignore-env.png
+A  docs/evidence/lint.txt
+A  docs/evidence/regresiones-inicial.txt
+A  docs/evidence/regresiones.txt
+A  docs/evidence/revision-secretos.txt
+A  docs/evidence/typecheck.txt
+A  docs/security-audit.md
+M  src/application/createAuthorizedIncidentQueries.ts
+M  src/composition/createCampusOps.ts
+M  src/infrastructure/InMemoryIncidentAssignmentPort.ts
+M  src/infrastructure/InMemoryIncidentRepository.ts
+A  src/infrastructure/copyIncident.ts
+A  tests/security-audit.test.ts
+A  tools/render_security_evidence.py
+?? reports/week-02/failure.json
+?? reports/week-03/failure.json
