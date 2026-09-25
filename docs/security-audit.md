@@ -26,9 +26,9 @@ Todos los datos agregados para reproducir los problemas son ficticios: IDs de de
 
 | # | Hallazgo | Riesgo | Solución aplicada | Evidencia |
 |---|---|---|---|---|
-| 1 | `.gitignore` solo ignoraba `.env`; variantes como `.env.local` y `.env.production` quedaban fuera. | Una configuración privada podría agregarse accidentalmente al repositorio. | Agregar `.env.*` y conservar la excepción `!.env.example`. | [Antes/después](evidence/gitignore-env.png); [salida completa](evidence/auditoria-despues.txt). |
-| 2 | Ambos repositorios en memoria copiaban todos los campos recibidos mediante propagación de objetos. | Propiedades adicionales con datos privados podían conservarse y devolverse en consultas o asignaciones. | Copiar únicamente los campos del contrato, incluidos los objetos `location` y `work`. | [Antes/después](evidence/datos-minimos.png); [pruebas](../tests/security-audit.test.ts). |
-| 3 | `createCampusOps` conectaba la UI con consultas sin autorización, aunque existía una política de permisos. | Un actor de la app podía recibir el listado completo y abrir reportes ajenos mediante su ID. | Conectar lista y detalle con consultas autorizadas y un reportante ficticio fijo para esta demostración. | [Antes/después](evidence/consultas-autorizadas.png); [composición corregida](../src/composition/createCampusOps.ts). |
+| 1 | `.gitignore` solo ignoraba `.env`; variantes como `.env.local` y `.env.production` quedaban fuera. | Una configuración privada podría agregarse accidentalmente al repositorio. | Agregar `.env.*` y conservar la excepción `!.env.example`. | [Captura de terminal](evidence/hallazgo-1.png); [salida completa](evidence/auditoria-despues.txt). |
+| 2 | Ambos repositorios en memoria copiaban todos los campos recibidos mediante propagación de objetos. | Propiedades adicionales con datos privados podían conservarse y devolverse en consultas o asignaciones. | Copiar únicamente los campos del contrato, incluidos los objetos `location` y `work`. | [Captura de terminal](evidence/hallazgo-2.png); [pruebas](../tests/security-audit.test.ts). |
+| 3 | `createCampusOps` conectaba la UI con consultas sin autorización, aunque existía una política de permisos. | Un actor de la app podía recibir el listado completo y abrir reportes ajenos mediante su ID. | Conectar lista y detalle con consultas autorizadas y un reportante ficticio fijo para esta demostración. | [Captura de terminal](evidence/hallazgo-3.png); [composición corregida](../src/composition/createCampusOps.ts). |
 
 Los tres hallazgos quedaron corregidos dentro del alcance local descrito. No se atribuye al proyecto una filtración real: las pruebas demuestran los comportamientos con información sintética.
 
@@ -64,7 +64,7 @@ Se ampliaron las reglas y se dejó versionable `.env.example`. La plantilla exis
 
 Las cuatro variantes fallaban en la prueba inicial; después, las cinco rutas privadas quedaron ignoradas. La plantilla sigue fuera de las exclusiones. Una prueba adicional inspecciona `git ls-files -z` y verifica que no haya archivos `.env` privados rastreados: ignorar un archivo ya versionado no lo elimina del índice.
 
-![Resultado de las pruebas del archivo gitignore](evidence/gitignore-env.png)
+![Captura real de VS Code: pruebas del archivo gitignore aprobadas](evidence/hallazgo-1.png)
 
 ## Hallazgo 2 — Conservación de campos privados innecesarios
 
@@ -122,7 +122,7 @@ Tres pruebas fallaban antes: ambos repositorios y la reasignación conservaban c
 
 La corrección minimiza campos; no detecta información personal escrita dentro de una descripción o etiqueta permitida ni sustituye la validación de datos de una futura API.
 
-![Resultado de las pruebas de minimización](evidence/datos-minimos.png)
+![Captura real de VS Code: cuatro pruebas de minimización aprobadas](evidence/hallazgo-2.png)
 
 ## Hallazgo 3 — Consultas de la app sin aplicar los permisos existentes
 
@@ -165,7 +165,7 @@ Sobre la base, la composición devolvía las tres incidencias y permitía obtene
 
 El alcance es una demostración local de autorización. El actor fijo **no es un inicio de sesión** y los permisos del cliente no sustituyen autenticación ni autorización en un servidor. El backend académico y sus credenciales ficticias de contrato no se modificaron.
 
-![Resultado de las pruebas de autorización](evidence/consultas-autorizadas.png)
+![Captura real de VS Code: ocho pruebas de autorización aprobadas](evidence/hallazgo-3.png)
 
 ## Estructura de evidencias — punto 7
 
@@ -173,9 +173,9 @@ El alcance es una demostración local de autorización. El actor fijo **no es un
 docs/
 ├── security-audit.md
 └── evidence/
-    ├── gitignore-env.png
-    ├── datos-minimos.png
-    ├── consultas-autorizadas.png
+    ├── hallazgo-1.png
+    ├── hallazgo-2.png
+    ├── hallazgo-3.png
     ├── auditoria-antes.txt
     ├── auditoria-despues.txt
     ├── regresiones-inicial.txt
@@ -186,7 +186,19 @@ docs/
     └── revision-git.txt
 ```
 
-Las tres imágenes representan extractos de resultados reales de Jest. No son capturas de una terminal: el pie de cada imagen lo aclara. Se conservaron también las salidas íntegras, incluidas las diferencias que provocaron los fallos iniciales. El script [`tools/render_security_evidence.py`](../tools/render_security_evidence.py) genera las imágenes desde esos archivos de texto; requiere Python y Pillow.
+Las tres imágenes son capturas reales de la terminal integrada de Visual Studio Code, tomadas y aportadas por Oscar Flores Cerqueda. Muestran la ejecución de las pruebas después de las correcciones, con el comando utilizado y el resultado `PASS`. Se conservaron sin editar su contenido; únicamente se normalizaron sus nombres a `hallazgo-1.png`, `hallazgo-2.png` y `hallazgo-3.png`.
+
+Cada ejecución selecciona un hallazgo con `--testNamePattern`: el primero tiene seis pruebas aprobadas, el segundo cuatro y el tercero ocho. Los casos de otros hallazgos aparecen como `skipped` porque no corresponden al filtro de ese comando. No son pruebas fallidas.
+
+Las capturas reemplazan los resúmenes gráficos generados anteriormente. Se retiraron esos gráficos y su script de generación. Las salidas íntegras de antes y después siguen disponibles en `auditoria-antes.txt` y `auditoria-despues.txt`, incluidas las diferencias que provocaron los fallos iniciales. `revision-git.txt` conserva la revisión histórica previa al commit técnico `38102fa`, por lo que muestra los nombres de los gráficos de aquel momento.
+
+Comandos ejecutados por Oscar para las capturas, desde la raíz del proyecto en PowerShell:
+
+```powershell
+npm.cmd test -- --ci --runInBand --runTestsByPath tests/security-audit.test.ts --testNamePattern "Hallazgo 1" --verbose
+npm.cmd test -- --ci --runInBand --runTestsByPath tests/security-audit.test.ts --testNamePattern "Hallazgo 2" --verbose
+npm.cmd test -- --ci --runInBand --runTestsByPath tests/security-audit.test.ts --testNamePattern "Hallazgo 3" --verbose
+```
 
 ## Verificación reproducible
 
