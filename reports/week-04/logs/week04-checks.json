@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "161523d750dc597206defa55c51b1651f48d6ef8",
+  "generatedAt": "2026-09-28T21:44:11.756109+00:00",
+  "jestCommand": "node node_modules/jest/bin/jest.js --ci --runInBand --no-watchman --cacheDirectory .jest-cache --json --outputFile <archivo-temporal> --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx course-tests/public/week-04.test.ts",
+  "exitCode": 0,
+  "passed": 14,
+  "failed": 0,
+  "scannerTestCommand": "python -B tests/secret_scanner_test.py",
+  "scannerTestExitCode": 0,
+  "scannerTestOutput": "test_accepts_public_configuration (__main__.SecretScannerTest.test_accepts_public_configuration) ... ok\r\ntest_detects_synthetic_marker_and_accepts_its_removal (__main__.SecretScannerTest.test_detects_synthetic_marker_and_accepts_its_removal) ... ok\r\ntest_documents_dependency_directory_exclusion (__main__.SecretScannerTest.test_documents_dependency_directory_exclusion) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 3 tests in 0.054s\r\n\r\nOK\r\n",
+  "cases": [
+    {
+      "file": "tests/session-integration.test.tsx",
+      "test": "R-05: UI consumes composition and native adapter, restores after remount and deletes",
+      "status": "passed"
+    },
+    {
+      "file": "tests/session-integration.test.tsx",
+      "test": "R-05: native delete failure is visible and never claims deletion",
+      "status": "passed"
+    },
+    {
+      "file": "tests/session-integration.test.tsx",
+      "test": "R-05: pending save completes before deletion, logger failure cannot expose native error",
+      "status": "passed"
+    },
+    {
+      "file": "tests/session-integration.test.tsx",
+      "test": "R-03: covers every contracted field, cycles, errors and prototype keys without mutation",
+      "status": "passed"
+    },
+    {
+      "file": "course-tests/public/week-04.test.ts",
+      "test": "CampusOps redacts personal and incident-sensitive data while preserving technical context",
+      "status": "passed"
+    },
+    {
+      "file": "tests/telemetry.test.ts",
+      "test": "redactForTelemetry — sanitización para telemetría (R-03) TEL-01 nominal: campos sensibles completos se vuelven [REDACTED], contexto técnico se conserva",
+      "status": "passed"
+    },
+    {
+      "file": "tests/telemetry.test.ts",
+      "test": "redactForTelemetry — sanitización para telemetría (R-03) TEL-02 límite: objetos anidados, listas, y claves con mayúsculas/_/- se normalizan",
+      "status": "passed"
+    },
+    {
+      "file": "tests/telemetry.test.ts",
+      "test": "redactForTelemetry — sanitización para telemetría (R-03) TEL-03 límite: no muta la entrada; primitivas, null y listas vacías funcionan",
+      "status": "passed"
+    },
+    {
+      "file": "tests/telemetry.test.ts",
+      "test": "redactForTelemetry — sanitización para telemetría (R-03) TEL-04 falla: un error real de un puerto no debe llegar con mensaje, stack ni cuerpo de respuesta sin filtrar",
+      "status": "passed"
+    },
+    {
+      "file": "tests/secure-storage.test.ts",
+      "test": "almacenamiento seguro del token de sesión (STO / EXP) STO-01 nominal: guarda, lee y borra por el puerto seguro sin tocar preferencias ordinarias",
+      "status": "passed"
+    },
+    {
+      "file": "tests/secure-storage.test.ts",
+      "test": "almacenamiento seguro del token de sesión (STO / EXP) STO-02 falla en save: estado controlado, sin respaldo en texto plano ni éxito falso",
+      "status": "passed"
+    },
+    {
+      "file": "tests/secure-storage.test.ts",
+      "test": "almacenamiento seguro del token de sesión (STO / EXP) STO-02 falla en read: estado controlado, sin respaldo en texto plano ni éxito falso",
+      "status": "passed"
+    },
+    {
+      "file": "tests/secure-storage.test.ts",
+      "test": "almacenamiento seguro del token de sesión (STO / EXP) STO-02 falla en clear: estado controlado, sin respaldo en texto plano ni éxito falso",
+      "status": "passed"
+    },
+    {
+      "file": "tests/secure-storage.test.ts",
+      "test": "almacenamiento seguro del token de sesión (STO / EXP) EXP-01 falla: con el error del almacén, ni logs, consola ni resultados contienen el valor protegido",
+      "status": "passed"
+    }
+  ]
+}

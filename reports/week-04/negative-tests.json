@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "161523d750dc597206defa55c51b1651f48d6ef8",
+  "generatedAt": "2026-09-28T21:44:11.756109+00:00",
+  "checks": [
+    {
+      "id": "JEST-RUN",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "logs/week04-checks.json: exitCode, counts y casos individuales.",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-1",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/session-integration.test.tsx: R-05: UI consumes composition and native adapter, restores after remount and deletes",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-2",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/session-integration.test.tsx: R-05: native delete failure is visible and never claims deletion",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-3",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/session-integration.test.tsx: R-05: pending save completes before deletion, logger failure cannot expose native error",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-4",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/session-integration.test.tsx: R-03: covers every contracted field, cycles, errors and prototype keys without mutation",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-5",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "course-tests/public/week-04.test.ts: CampusOps redacts personal and incident-sensitive data while preserving technical context",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-6",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/telemetry.test.ts: redactForTelemetry — sanitización para telemetría (R-03) TEL-01 nominal: campos sensibles completos se vuelven [REDACTED], contexto técnico se conserva",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-7",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/telemetry.test.ts: redactForTelemetry — sanitización para telemetría (R-03) TEL-02 límite: objetos anidados, listas, y claves con mayúsculas/_/- se normalizan",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-8",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/telemetry.test.ts: redactForTelemetry — sanitización para telemetría (R-03) TEL-03 límite: no muta la entrada; primitivas, null y listas vacías funcionan",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-9",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/telemetry.test.ts: redactForTelemetry — sanitización para telemetría (R-03) TEL-04 falla: un error real de un puerto no debe llegar con mensaje, stack ni cuerpo de respuesta sin filtrar",
+      "threatIds": [
+        "R-03"
+      ]
+    },
+    {
+      "id": "CASE-10",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/secure-storage.test.ts: almacenamiento seguro del token de sesión (STO / EXP) STO-01 nominal: guarda, lee y borra por el puerto seguro sin tocar preferencias ordinarias",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-11",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/secure-storage.test.ts: almacenamiento seguro del token de sesión (STO / EXP) STO-02 falla en save: estado controlado, sin respaldo en texto plano ni éxito falso",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-12",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/secure-storage.test.ts: almacenamiento seguro del token de sesión (STO / EXP) STO-02 falla en read: estado controlado, sin respaldo en texto plano ni éxito falso",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-13",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/secure-storage.test.ts: almacenamiento seguro del token de sesión (STO / EXP) STO-02 falla en clear: estado controlado, sin respaldo en texto plano ni éxito falso",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "CASE-14",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "tests/secure-storage.test.ts: almacenamiento seguro del token de sesión (STO / EXP) EXP-01 falla: con el error del almacén, ni logs, consola ni resultados contienen el valor protegido",
+      "threatIds": [
+        "R-05"
+      ]
+    },
+    {
+      "id": "ARTIFACT-EXPOSURE",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "python -B tools/generate_week04_reports.py",
+      "evidence": "Inspeccionados 8 archivos bajo reports/week-04 y evidence/week-04; 0 archivos con marcadores sintéticos. Búsqueda UTF-8/UTF-16LE sin publicar valores.",
+      "threatIds": [
+        "R-03"
+      ]
+    }
+  ],
+  "limitations": [
+    "SecureStore se sustituye con dobles: no demuestra cifrado nativo. Comprobación en dispositivo pendiente.",
+    "TEL-04 sólo comprueba el tipo de errorMessage; CASE de R-03 en session-integration añade aserciones de redacción.",
+    "Los resultados de error/logs se capturan sin publicar mensajes de fallo crudos de Jest.",
+    "Pruebas originales de Fernanda; esta ejecución y consolidación son de Oscar con asistencia de Codex."
+  ]
+}

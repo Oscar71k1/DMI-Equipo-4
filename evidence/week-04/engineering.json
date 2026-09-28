@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 4,
-  "commitSha": "f47aeafcd4022f6594c3d119f28ef1efd3de11b3",
+  "commitSha": "161523d750dc597206defa55c51b1651f48d6ef8",
   "decision": "Conservar el puerto SecureTokenStorage de Fernanda y usar Expo SecureStore 57.0.4 para el token ficticio. createCampusOps inyecta el adaptador en createSessionStore y la pantalla permite guardar, recuperar y eliminar sin mostrar el valor. La sanitización de dominio se comparte con el adaptador evaluable y el logger. Jarumi documentó la comparación entre memoria, preferencias ordinarias y SecureStore, y declaró una revisión del manejo de fallas en b1d44b4b48867547ca5721cc25c7a69aefb2ca9e. Oscar/Codex integra y corrige esa documentación conforme al código y al contrato de evidencia. No se afirma autenticación real ni una nueva ejecución de pruebas por Jarumi.",
   "alternatives": [
     "Memoria volátil: evita persistir y no requiere módulo nativo, pero pierde la sesión al cerrar el proceso y no satisface recuperación entre ejecuciones.",
@@ -34,6 +34,11 @@
       "command": "npm run bundle:release",
       "result": "Código 0; Expo exportó Android (599 módulos) a dist/export. Esto verifica empaquetado JavaScript, no APK, instalación ni cifrado nativo. Entorno de esta sesión: Windows, Node 24.21.0; no se acredita la reproducción final con Node 22.22.0 de la consigna.",
       "evidence": "reports/week-04/logs/oscar-bundle.txt"
+    },
+    {
+      "command": "python -B tools/generate_week04_reports.py",
+      "result": "Código 0; 14 pruebas aprobadas en cuatro suites de semana 04, 3 pruebas del detector aprobadas, 0 hallazgos del escaneo y 0 artefactos con los marcadores ficticios inspeccionados. Comprobación nativa todavía pendiente.",
+      "evidence": "reports/week-04/secret-scan.json; reports/week-04/negative-tests.json; reports/week-04/logs/week04-checks.json"
     }
   ]
 }

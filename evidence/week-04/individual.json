@@ -9,7 +9,8 @@
       "studentId": "3523110017",
       "commitShas": [
         "411e1ecbb96f571d38ce0f61c3254b162dc4d1ba",
-        "9d8b52447431ea5cc7be208e21cb87249bba5cb0"
+        "9d8b52447431ea5cc7be208e21cb87249bba5cb0",
+        "161523d750dc597206defa55c51b1651f48d6ef8"
       ],
       "files": [
         "src/domain/redactForTelemetry.ts",
@@ -21,11 +22,14 @@
         "src/ui/SessionStoragePanel.tsx",
         "tests/session-integration.test.tsx",
         "docs/security-controls.md",
-        "evidence/week-04/engineering.json"
+        "evidence/week-04/engineering.json",
+        "tools/generate_week04_reports.py",
+        "docs/COMPROBACION_NATIVA_SEMANA_04.md"
       ],
       "tests": [
         "Ejecución de integración asistida por Codex: 63 pruebas aprobadas en 12 suites, incluyendo pruebas de Fernanda, integración UI/almacenamiento, arquitectura, seguridad, smoke y pruebas públicas de semanas 1 a 4. Registro: reports/week-04/logs/oscar-integration-tests.txt.",
-        "TypeScript, ESLint y exportación Android de Expo terminaron con código 0. Registros: reports/week-04/logs/oscar-typecheck.txt, oscar-lint.txt y oscar-bundle.txt."
+        "TypeScript, ESLint y exportación Android de Expo terminaron con código 0. Registros: reports/week-04/logs/oscar-typecheck.txt, oscar-lint.txt y oscar-bundle.txt.",
+        "Nueva ejecución de Oscar/Codex mediante python -B tools/generate_week04_reports.py: 14 pruebas Jest y 3 del detector aprobadas, 0 hallazgos y sin marcadores en artefactos inspeccionados. Dos reportes generados con resultados reales; no atribuidos a Fernanda ni Jarumi."
       ],
       "reviews": [
         "En la sesión de Oscar se revisó el contrato SecureTokenStorage y las pruebas de Fernanda del commit bd5edf89bfa1ded9e599f6683f92f5e652da103a; se implementó el consumidor pendiente manteniendo save/read/clear y sin respaldo en preferencias ordinarias.",
