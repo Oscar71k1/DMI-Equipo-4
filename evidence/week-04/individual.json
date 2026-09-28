@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "teamId": "4",
+  "status": "partial",
+  "notes": "Registro de avance consolidado con asistencia de Codex a partir del historial y evidencia disponible. Identificadores conservados de semana 03. Se incluye la revisión declarada por Jarumi en b1d44b4; sus conclusiones documentales fueron corregidas en la integración. Los resultados de integración de Oscar no se atribuyen a sus compañeras. Pendientes de cierre y confirmación personal de los registros; validación estructural no equivale a aprobación de AC-05.",
+  "members": [
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "411e1ecbb96f571d38ce0f61c3254b162dc4d1ba",
+        "9d8b52447431ea5cc7be208e21cb87249bba5cb0"
+      ],
+      "files": [
+        "src/domain/redactForTelemetry.ts",
+        "src/course-evaluation/index.ts",
+        "src/application/createSessionStore.ts",
+        "src/infrastructure/ExpoSecureTokenStorage.ts",
+        "src/infrastructure/InMemorySecurityLogger.ts",
+        "src/composition/createCampusOps.ts",
+        "src/ui/SessionStoragePanel.tsx",
+        "tests/session-integration.test.tsx",
+        "docs/security-controls.md",
+        "evidence/week-04/engineering.json"
+      ],
+      "tests": [
+        "Ejecución de integración asistida por Codex: 63 pruebas aprobadas en 12 suites, incluyendo pruebas de Fernanda, integración UI/almacenamiento, arquitectura, seguridad, smoke y pruebas públicas de semanas 1 a 4. Registro: reports/week-04/logs/oscar-integration-tests.txt.",
+        "TypeScript, ESLint y exportación Android de Expo terminaron con código 0. Registros: reports/week-04/logs/oscar-typecheck.txt, oscar-lint.txt y oscar-bundle.txt."
+      ],
+      "reviews": [
+        "En la sesión de Oscar se revisó el contrato SecureTokenStorage y las pruebas de Fernanda del commit bd5edf89bfa1ded9e599f6683f92f5e652da103a; se implementó el consumidor pendiente manteniendo save/read/clear y sin respaldo en preferencias ordinarias.",
+        "Revisión asistida del commit 7df961df1aed7d3a2d33cee19a4064c4fb4907e6 de Jarumi: sólo cambia engineering.json; su commitSha tiene 47 caracteres y no resuelve a un objeto Git. No se integró ese cambio."
+      ],
+      "prediction": "Predicción registrada en docs/security-controls.md: fallar el almacén debe devolver un estado seguro sin copiar el marcador ficticio al logger o preferencias; fallar el borrado debe conservar el aviso de falla.",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx tests/architecture.test.ts tests/security.test.ts tests/security-audit.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts",
+      "observedResult": "La ejecución final registrada pasó 63/63 pruebas. La primera ejecución tuvo un timeout en el primer render de una prueba nueva; pasó al repetirla y se amplió a 30 segundos el límite de esa prueba propia para la carga inicial. También se corrigió un error de lint. Los resultados corresponden a Windows con Node 24.21.0 y dobles del módulo nativo; no acreditan cifrado en dispositivo ni el cierre oficial del hito.",
+      "explanation": "Oscar, con asistencia de Codex para implementación y ejecución, integró SecureStore, el flujo de sesión ficticia y la sanitización compartida con el adaptador evaluable y el logger. Los puertos y pruebas originales de Fernanda se reconocen como su aportación. El inventario y la decisión se prepararon como base para revisión de Jarumi, no como trabajo personal de ella. Pendientes: verificación nativa, consolidación de reportes y cierre académico del equipo."
+    },
+    {
+      "studentId": "a3523110496",
+      "commitShas": [
+        "bd5edf89bfa1ded9e599f6683f92f5e652da103a"
+      ],
+      "files": [
+        "src/domain/SecureTokenStorage.ts",
+        "src/domain/PreferencesStorage.ts",
+        "src/application/createSessionStore.ts",
+        "tests/secure-storage.test.ts",
+        "tests/telemetry.test.ts",
+        "reports/week-04/logs/fernanda-almacenamiento-antes.txt",
+        "reports/week-04/logs/fernanda-telemetry-antes.txt"
+      ],
+      "tests": [
+        "Registro en su rama: npm test -- tests/secure-storage.test.ts, 5 pruebas fallidas, EXIT_CODE=1, porque createSessionStore seguía pendiente.",
+        "Registro en su rama: npm test -- tests/telemetry.test.ts, 4 pruebas fallidas, EXIT_CODE=1, porque redactForTelemetry seguía pendiente."
+      ],
+      "reviews": [],
+      "prediction": "Los comentarios de sus pruebas predicen que persistToken guarda sólo en el puerto seguro, restoreToken recupera, clearToken elimina y las fallas devuelven storage-error sin respaldo ordinario ni filtraciones. Las pruebas de telemetría predicen redacción de claves sensibles, normalización y no mutación. No se infiere una predicción adicional no registrada.",
+      "command": "npm test -- tests/secure-storage.test.ts; npm test -- tests/telemetry.test.ts",
+      "observedResult": "Los dos logs del commit de Fernanda conservan la fase previa a la implementación: 5/5 y 4/4 pruebas fallidas por funciones pendientes, ambas con EXIT_CODE=1. Los logs se consultan en origin/codex/semana-04-fernanda, commit bd5edf89bfa1ded9e599f6683f92f5e652da103a; aún no están incorporados a esta rama. Las pruebas después pasaron en la sesión de integración de Oscar, no en una nueva ejecución personal acreditada de Fernanda.",
+      "explanation": "Fernanda aportó los puertos, el contrato/esqueleto del consumidor y pruebas nominales, de límite y de falla. El consumidor de su commit aún lanzaba un error pendiente: la implementación posterior corresponde a Oscar con asistencia de Codex. TEL-04 sólo comprueba el tipo string de errorMessage y por sí sola no demuestra ausencia de texto sensible; las aserciones adicionales de integración son de Oscar. Pendientes: revisión personal posterior a la integración, reportes de cierre y declaración de asistencia utilizada por Fernanda."
+    },
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "7df961df1aed7d3a2d33cee19a4064c4fb4907e6",
+        "b1d44b4b48867547ca5721cc25c7a69aefb2ca9e"
+      ],
+      "files": [
+        "docs/security-controls.md",
+        "evidence/week-04/engineering.json"
+      ],
+      "tests": [],
+      "reviews": [
+        "Revisión declarada por Jarumi el 28 de septiembre de 2026 en decision.individualReviews de engineering.json, commit b1d44b4b48867547ca5721cc25c7a69aefb2ca9e: revisó ExpoSecureTokenStorage y security-controls.md y afirmó manejo storage-error sin exponer tokens ni errores crudos. Corrección de integración: el catch y resultado storage-error pertenecen a createSessionStore; no existe TelemetryLogger ni transporte HTTPS demostrado. Esta entrada acredita una declaración documental de revisión, no una nueva ejecución con log propio."
+      ],
+      "prediction": "Predicción consignada en verification.prediction de su commit b1d44b4: fallar el almacén debe devolver storage-error sin copiar el token ficticio al logger o preferencias y fallar el borrado debe conservar el aviso. Coincide con la predicción de la base de Oscar; no hay evidencia adicional que permita acreditar una predicción independiente anterior a su revisión.",
+      "command": "Comando consignado por Jarumi en verification.command (sin log nuevo de ejecución personal): npm test -- --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx tests/architecture.test.ts tests/security.test.ts tests/security-audit.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts",
+      "observedResult": "Jarumi declaró código 0, 12 suites y 63 pruebas en verification.observedResult de b1d44b4. Ese resultado coincide con los logs anteriores de Oscar y el commit no añade logs propios, por lo que se conserva como resultado citado, no como una nueva ejecución verificada de Jarumi. Su aportación nueva comprobable es la redacción del inventario, comparación de alternativas y declaración de revisión. Los errores de esquema, referencia y correspondencia con el código se corrigen en la integración de Oscar/Codex.",
+      "explanation": "Jarumi aportó documentación y una revisión declarada de los controles. La integración conserva su autoría y corrige el formato del curso, el inventario y las garantías no sustentadas. No se le atribuye la implementación ni las 63 pruebas ejecutadas en la sesión de Oscar. Debe confirmar y poder explicar su revisión y las correcciones; si declara una ejecución propia, debe adjuntar el log correspondiente. La corroboración individual sigue pendiente y no se declara aprobado AC-05 sólo por completar la estructura."
+    }
+  ]
+}
