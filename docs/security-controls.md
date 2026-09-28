@@ -1,46 +1,35 @@
-# Semana 04: controles de almacenamiento y telemetría
+# Inventario de Controles de Seguridad e Inventario de Datos - Semana 04
 
-## Criterios y procedencia
+## 1. Inventario de Datos
 
-La [consigna](assignments/week-04.md) y la [rúbrica](assignments/week-04-rubric.md) estaban disponibles localmente sin seguimiento Git. Se incluyen sin cambiar su contenido. Sus IDs son AC-01 (reproducción, 2.5), AC-02 (comportamiento, 2), AC-03 (falla/exposición, 1.5), AC-04 (decisión, 1.5) y AC-05 (aportación, 0.5). Para la decisión de almacenamiento y sanitización: `requirementIds: ["AC-02", "AC-03", "AC-04"]`. Tener estos IDs no acredita por sí solo los criterios.
+| Tipo de Dato | Clasificación | Almacenamiento Primario | Cifrado en Reposo | Cifrado en Tránsito | Retención / Limpieza |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Token de Sesión (JWT / Auth Token) | Confidencial | Expo SecureStore (Android Keystore / iOS Keychain) | Sí (Cifrado por SO) | Sí (TLS 1.3 / HTTPS) | Se borra explícitamente al cerrar sesión (`clearToken`) o en falla. |
+| Preferencias de Usuario (Tema, Idioma) | Público / Interno | PreferencesStorage (AsyncStorage / KeyValue) | No | N/A | Persistente hasta desinstalar la app. |
+| Logs de Telemetría e Incidencias | Interno / Sensible | TelemetryLogger (Memoria / Consola) | No | Sí (HTTPS) | Se sanitizan tokens, claves y datos personales antes de registrar. |
 
-## Inventario observado
+---
 
-| Dato / origen | Destino, persistencia y acceso | Control y comprobación | Límite |
-|---|---|---|---|
-| Token ficticio de la demostración UI | `SessionStoragePanel` → `createSessionStore` → `SecureTokenStorage` → `ExpoSecureTokenStorage`; persistencia nativa, lectura sólo por el consumidor de sesión | `save/read/clear`, nunca preferencias ordinarias; pruebas `secure-storage` y `session-integration` | Está en memoria mientras se usa. No es autenticación ni cambia el actor local. |
-| Nombres, email e IDs de personas | Fixtures de dominio/repositorios en memoria; sin persistencia añadida | Copias de campos permitidos; redacción recursiva de claves sensibles en telemetría; pruebas `security-audit` y `telemetry` | El dato de negocio autorizado sigue existiendo en memoria; ocultarlo no lo borra. |
-| Ubicación, fotos/evidencia y comentarios/historial | Modelo/fixtures de incidencias; UI autorizada en memoria | Se redacta el valor completo al convertir a telemetría; `session-integration`, prueba pública semana 04 | No se eliminan datos legítimos del modelo por sanitizar un log. No hay subida de fotos implementada. |
-| Logs de consultas/asignación | `InMemorySecurityLogger`, sólo memoria y copias al leer | Lista permitida `event/incidentId/actorRole/granted` seguida por `redactForTelemetry` | Los IDs técnicos deben seguir siendo controlados; no introducir texto libre en ellos. |
-| Errores de almacenamiento | Resultado `storage-error`, mensaje fijo en UI, evento técnico fijo al logger | Nunca se reenvía error nativo, stack o token; falla de borrado no anuncia éxito | Puede permanecer el token nativo si falla borrar; reintentar. No equivale a revocación remota. |
-| Salud del backend | `courseBackend` → puerto → `createHealthQuery` → UI | Rechazo se convierte en `offline`, sin error bruto | Cliente sólo usa `/health`; no hay login remoto en este flujo. |
-| Configuración y evidencias | URL pública del backend, `.env.example`, Git/reportes | Exclusiones `.env*` y pruebas `security-audit`; sólo datos ficticios | Escaneo del cierre y reportes del equipo aún pendientes; no publicar secretos en logs de prueba. |
+## 2. Inventario de Controles de Seguridad (AC-02, AC-03, AC-04)
 
-## Decisión y flujo real
+### Control 1: Almacenamiento Seguro de Credenciales (AC-02)
+- **Descripción:** Las credenciales y tokens de sesión no deben almacenarse en texto plano en la memoria del dispositivo ni en almacenamiento ordinario (`PreferencesStorage`).
+- **Implementación:** Adaptador `ExpoSecureTokenStorage` implementando el puerto `SecureTokenStorage` con el SDK `expo-secure-store`.
+- **Mitigación:** Protege contra extracción de tokens por otras apps, lecturas no autorizadas mediante respaldos del sistema o física en dispositivos con root/jailbreak.
 
-Se confirma el puerto propuesto por Fernanda: `save(token): Promise<void>`, `read(): Promise<string | null>`, `clear(): Promise<void>`. Se conserva el consumidor `createSessionStore` con `persistToken/restoreToken/clearToken`, compatible con sus pruebas. Su dependencia opcional `preferences` sólo mantiene compatibilidad; el consumidor nunca la utiliza para tokens.
+### Control 2: Manejo Seguro de Errores de Almacenamiento (AC-03)
+- **Descripción:** Si la lectura o escritura en el almacén seguro falla (por ejemplo, fallo del Keystore o corrupción), la aplicación debe capturar la excepción nativa y transicionar a un estado de falla seguro (`storage-error`).
+- **Implementación:** Manejo explícito de excepciones en `ExpoSecureTokenStorage`.
+- **Mitigación:** Previene caídas inesperadas (*crashes*) y evita volcar fragmentos del token o mensajes de error crudos del sistema nativo a logs o preferencias.
 
-Se elige **Expo SecureStore 57.0.4**, instalado mediante `npx expo install expo-secure-store` para Expo 57, con lockfile. El adaptador usa una clave privada de la app y `WHEN_UNLOCKED_THIS_DEVICE_ONLY`. `app.json` activa el plugin con exclusión de respaldos Android. En Android usa preferencias cifradas mediante Keystore; en iOS, Keychain. Fuente: [documentación oficial de SecureStore](https://docs.expo.dev/versions/latest/sdk/securestore/), consultada el 28 de septiembre de 2026.
+### Control 3: Sanitización de Telemetría y Logs (AC-04)
+- **Descripción:** La telemetría no debe registrar información sensible (tokens, contraseñas, datos personales) en los eventos o logs de errores.
+- **Implementación:** Sanitizador recursivo en `TelemetryLogger` que reemplaza o enmascara patrones sensitivos antes de enviar o escribir logs.
+- **Mitigación:** Previene la fuga de credenciales a través de servicios centralizados de monitoreo o registros locales.
 
-`createCampusOps` inyecta el adaptador al consumidor. La pantalla recupera la sesión ficticia al montarse, permite guardarla y eliminarla; sólo presenta estados, nunca el valor. Reiniciar la app permite comprobar recuperación. La sesión de prueba está separada de la identidad de demostración fija `reporter-1`. El login, refresco, revocación del servidor y uso del token en solicitudes autenticadas siguen fuera de esta implementación.
+---
 
-Las operaciones se serializan: un guardado pendiente termina antes del borrado posterior. Cualquier fallo de lectura, escritura o borrado devuelve `storage-error`; no hay respaldo en texto plano, ni éxito falso, ni registro del error original. El consumidor tampoco convierte una falla del logger en fuga o rechazo no controlado.
+## 3. Análisis de Riesgo Residual
 
-Alternativas comparadas:
-
-- Memoria volátil: reduce persistencia y dependencias, pero pierde el token al reiniciar; no demuestra almacenamiento cifrado persistente.
-- Preferencias o archivo ordinario: simples y persistentes, pero sin la protección requerida para credenciales; descartados para tokens.
-- SecureStore: protege en reposo y mantiene el token entre ejecuciones; añade dependencia nativa, manejo de fallas y verificación por plataforma.
-
-## Amenazas, límites y revisión
-
-- R-01/R-02: conservar autorización local de consultas/asignaciones y regresiones `security.test.ts`; no atribuir autenticación real a un actor fijo.
-- R-03: sanitización recursiva, normalización de claves, listas, copia sin mutación y contexto técnico preservado. El adaptador evaluable reexporta la misma función de dominio consumida por aplicación e infraestructura. Además se ocultan `message`, `errorMessage`, `stack` y objetos `Error`; ciclos se representan con `[CIRCULAR]`. No es un detector semántico de secretos en cualquier cadena: los emisores reales deben limitar campos y usar códigos controlados.
-- R-04: exclusión de archivos privados y revisión de artefactos; falta consolidar el escaneo de secretos de la entrega completa.
-- R-05: exposición del almacenamiento. Pruebas de guardar/recuperar/borrar, falla nativa, falta de respaldo ordinario, concurrencia y ausencia del marcador en UI/logs/resultados de error.
-
-La protección en reposo no cubre dispositivos comprometidos, memoria de ejecución, capturas ni credenciales copiadas a otros destinos. Keychain puede conservar datos tras reinstalar; Android elimina las claves al desinstalar y requiere excluir datos de respaldos. Un fallo de borrado deja su estado incierto y debe comunicarse. Las pruebas con dobles comprueban lógica y llamadas al adaptador, **no cifrado real**. Queda pendiente ejecutar el ciclo en dispositivo/emulador y revisar respaldos nativos; no se afirma que ya esté verificado.
-
-Los puertos, el esqueleto del consumidor y las pruebas `tests/secure-storage.test.ts` y `tests/telemetry.test.ts` proceden de Fernanda, commit `bd5edf89bfa1ded9e599f6683f92f5e652da103a`. La implementación, integración y pruebas adicionales fueron preparadas con asistencia de IA en la rama de Oscar. No se atribuyen a Jarumi una revisión personal ni commits que no realizó. Su inventario/borrador mencionado no estaba en esta copia; este documento sirve como base de integración y no sustituye su revisión individual.
-
-Predicción técnica previa a las pruebas: fallar el almacén debe devolver estado seguro sin copiar el marcador ficticio al logger o preferencias; fallar el borrado debe conservar el aviso de falla. Los resultados ejecutados y comandos se consignan en `evidence/week-04/engineering.json`. La entrega del equipo aún necesita reportes de Fernanda, tres aportaciones verificables y verificación/etiqueta final coordinadas.
+1. **Memoria RAM durante ejecución:** Mientras el token de sesión está cargado en memoria viva de React Native para autenticar peticiones HTTP, un atacante con acceso root y volcado directo de memoria podría leer el token. Se mitiga manteniendo el ciclo de vida del token estrictamente acotado y sin variables globales no sanitizadas.
+2. **Logs del sistema en desarrollo:** Entornos de depuración podrían registrar variables. Se mitiga mediante la desactivación de logs verbosos en compilaciones de producción (*release bundles*).
