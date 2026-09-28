@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "plugins": [["expo-secure-store", { "configureAndroidBackup": true }]],
     "android": {
       "package": "mx.edu.dmi.engineeringapp"
     },

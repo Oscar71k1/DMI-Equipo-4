@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { CampusOpsActions } from '../application/CampusOpsActions';
 import { IncidentDetailScreen } from './IncidentDetailScreen';
 import { IncidentListScreen } from './IncidentListScreen';
+import { SessionStoragePanel } from './SessionStoragePanel';
 
 type BackendStatus = 'checking' | 'available' | 'offline';
 
@@ -31,6 +32,7 @@ export function CampusOpsScreen({ actions }: Props) {
         <Text style={styles.title}>CampusOps</Text>
         <Text>Incidencias del campus · entorno académico ficticio</Text>
         <Text testID="backend-status">Backend: {backendStatus}</Text>
+        {actions.session && <SessionStoragePanel session={actions.session} />}
       </View>
       {selectedId === null ? (
         <IncidentListScreen listIncidents={actions.listIncidents} onSelect={setSelectedId} />

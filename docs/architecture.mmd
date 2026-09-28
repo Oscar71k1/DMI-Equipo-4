@@ -41,6 +41,22 @@ flowchart TD
   end
 
   Boot --> Factory
+  Redaction["Sanitización: src/domain/redactForTelemetry.ts"]
+  TokenPort["Puerto seguro: src/domain/SecureTokenStorage.ts"]
+  PreferencesPort["Preferencias no sensibles: src/domain/PreferencesStorage.ts"]
+  SessionStore["Consumidor: src/application/createSessionStore.ts"]
+  SecureAdapter["Almacenamiento nativo: src/infrastructure/ExpoSecureTokenStorage.ts"]
+  SessionPanel["Demostración de almacenamiento: src/ui/SessionStoragePanel.tsx"]
+  SessionStore --> TokenPort
+  SessionStore --> PreferencesPort
+  SessionStore --> Redaction
+  SecureAdapter --> TokenPort
+  Factory --> SecureAdapter
+  Factory --> SessionStore
+  Actions --> SessionStore
+  Campus --> SessionPanel
+  SessionPanel --> SessionStore
+  SecurityLogStore --> Redaction
   Boot --> Campus
   Campus --> Actions
   Campus --> ListScreen
@@ -95,7 +111,7 @@ flowchart TD
   Coordinator(["Coordinador - coordinator"]) -. usa .-> Campus
 
   Session["Sesión: previsto; no implementado en Semana 02"]
-  Persistence["Persistencia: previsto; no implementado en Semana 02"]
+  Persistence["Persistencia de incidencias: futura; token ficticio en SecureStore desde Semana 04"]
   Location["Ubicación y proveedores: previsto; no implementado en Semana 02"]
   Session -. coordinación futura .-> APP
   Session -. contratos futuros .-> DOM
