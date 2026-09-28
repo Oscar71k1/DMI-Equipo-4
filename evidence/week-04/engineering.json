@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 4,
-  "commitSha": "411e1ecbb96f571d38ce0f61c3254b162dc4d1ba",
+  "commitSha": "9d8b524ea67fd5d8ed13cb2e51da4479d4c2b5fe60c42db",
   "decision": "Conservar el puerto SecureTokenStorage de Fernanda (save/read/clear) y usar Expo SecureStore 57.0.4 para el token ficticio. createCampusOps inyecta el adaptador en createSessionStore y la pantalla permite guardar, recuperar al montarse y eliminar sin mostrar el valor. La misma sanitización recursiva de dominio se utiliza en el adaptador evaluable, el consumidor de sesión y el logger. Esta evidencia es una base preparada con asistencia de IA en la rama de Oscar para revisión de Jarumi; no acredita una revisión individual suya ni autenticación real.",
   "alternatives": [
     "Memoria volátil: evita persistir y no requiere módulo nativo, pero pierde la sesión al cerrar el proceso y no satisface recuperación entre ejecuciones.",
