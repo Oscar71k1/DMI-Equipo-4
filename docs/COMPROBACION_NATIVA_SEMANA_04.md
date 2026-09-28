@@ -1,6 +1,6 @@
 # Comprobación nativa de almacenamiento — Android
 
-Este procedimiento está pendiente de ejecución. Comprueba el módulo nativo en una instalación de CampusOps, usando exclusivamente la sesión ficticia incorporada en la pantalla. No reemplaza las pruebas de fallas con dobles ni demuestra resistencia absoluta a un dispositivo comprometido.
+Este procedimiento es una recomendación técnica opcional, no un requisito explícito de la consigna o rúbrica de semana 04. No se ha ejecutado y no bloquea por sí solo el cierre académico. Comprueba el módulo nativo en una instalación de CampusOps, usando exclusivamente la sesión ficticia incorporada en la pantalla. No reemplaza las pruebas de fallas con dobles ni demuestra resistencia absoluta a un dispositivo comprometido.
 
 ## Preparar el dispositivo y ejecutar
 

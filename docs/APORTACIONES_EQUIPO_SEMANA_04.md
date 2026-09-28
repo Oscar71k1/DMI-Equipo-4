@@ -10,7 +10,7 @@ Este documento resume el trabajo comprobable en los commits y registros revisado
 
 | Integrante | Parte asignada | Aportación verificable hasta ahora | Estado |
 |---|---|---|---|
-| Oscar | Implementación, integración y comprobaciones | Almacenamiento con Expo SecureStore, consumidor de sesión, sanitización conectada a la aplicación, pruebas de integración y documentación base | Implementado y probado con dobles; falta verificación nativa y cierre del equipo |
+| Oscar | Implementación, integración y comprobaciones | Almacenamiento con Expo SecureStore, consumidor de sesión, sanitización conectada a la aplicación, pruebas de integración y documentación base | Implementado y probado con dobles; verificación nativa opcional no realizada; cierre oficial en preparación |
 | Fernanda | Pruebas de seguridad y reportes | Puertos de almacenamiento, contrato del consumidor, pruebas de almacenamiento/telemetría y registros previos a la implementación | Código de pruebas incorporado; reportes de cierre y revisión posterior pendientes |
 | Jarumi | Inventario de datos, decisión técnica y revisión individual | Ampliación documental, comparación de alternativas y revisión declarada en b1d44b4 | Integrado con correcciones de Oscar/Codex; pendiente confirmación personal, sin log nuevo de ejecución |
 
@@ -83,9 +83,9 @@ El archivo `individual.json` y este resumen se consolidaron con asistencia de Co
 ## Pendientes para cerrar la entrega
 
 1. Confirmar con Jarumi la revisión documental integrada y las correcciones; adjuntar log propio si declara una ejecución nueva.
-2. Consolidar los reportes `secret-scan.json` y `negative-tests.json`, con comandos y resultados reales sobre la versión que se entregue.
+2. Mantener actualizados los reportes `secret-scan.json` y `negative-tests.json`, ya generados por Oscar/Codex con resultados reales, al fijar la versión final.
 3. Confirmar los tres registros individuales y completar la corroboración personal pendiente.
-4. Comprobar el almacenamiento en dispositivo o emulador; los dobles no demuestran cifrado ni borrado físico.
+4. Documentar el límite de las pruebas con dobles. La comprobación en dispositivo/emulador es una recomendación adicional opcional; no se exige explícitamente en la consigna.
 5. Ejecutar la verificación final del equipo, actualizar las referencias de evidencia y coordinar la etiqueta `week-04-final`.
 
 Las pruebas aprobadas de integración son un avance verificable. La entrega completa y el cumplimiento de AC-05 aún requieren los pendientes anteriores.

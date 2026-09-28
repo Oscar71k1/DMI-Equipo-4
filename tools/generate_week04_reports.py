@@ -64,7 +64,7 @@ def main():
         scannerTestOutput=(scanner_tests.stdout + scanner_tests.stderr).decode('utf-8', errors='replace'),
         cases=summary))
     negative = dict(**envelope, checks=observations, limitations=[
-        'SecureStore se sustituye con dobles: no demuestra cifrado nativo. Comprobación en dispositivo pendiente.',
+        'SecureStore se sustituye con dobles: no demuestra cifrado nativo. Comprobación nativa opcional no realizada; no es un requisito explícito de semana 04.',
         'TEL-04 sólo comprueba el tipo de errorMessage; CASE de R-03 en session-integration añade aserciones de redacción.',
         'Los resultados de error/logs se capturan sin publicar mensajes de fallo crudos de Jest.',
         'Pruebas originales de Fernanda; esta ejecución y consolidación son de Oscar con asistencia de Codex.'
