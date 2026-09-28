@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 4,
-  "commitSha": "9d8b52447431ea5cc7be208e21cb87249bba5cb0",
+  "commitSha": "f47aeafcd4022f6594c3d119f28ef1efd3de11b3",
   "decision": "Conservar el puerto SecureTokenStorage de Fernanda y usar Expo SecureStore 57.0.4 para el token ficticio. createCampusOps inyecta el adaptador en createSessionStore y la pantalla permite guardar, recuperar y eliminar sin mostrar el valor. La sanitización de dominio se comparte con el adaptador evaluable y el logger. Jarumi documentó la comparación entre memoria, preferencias ordinarias y SecureStore, y declaró una revisión del manejo de fallas en b1d44b4b48867547ca5721cc25c7a69aefb2ca9e. Oscar/Codex integra y corrige esa documentación conforme al código y al contrato de evidencia. No se afirma autenticación real ni una nueva ejecución de pruebas por Jarumi.",
   "alternatives": [
     "Memoria volátil: evita persistir y no requiere módulo nativo, pero pierde la sesión al cerrar el proceso y no satisface recuperación entre ejecuciones.",
@@ -17,7 +17,7 @@
   "verification": [
     {
       "command": "npm test -- --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx tests/architecture.test.ts tests/security.test.ts tests/security-audit.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts",
-      "result": "Código 0; 12 suites y 63 pruebas aprobadas. Se comprobó el ciclo UI/composición/adaptador con un doble nativo, guardar/leer/borrar, fallas sin respaldo ordinario ni filtración, orden guardar-borrar, sanitización e invariantes de semanas 1 a 4. La primera ejecución tuvo un timeout de 5 segundos en el primer render; la prueba propia ahora permite 30 segundos para carga inicial de React Native y la ejecución completa posterior pasó.",
+      "result": "Código 0; 12 suites y 63 pruebas aprobadas. Se comprobó el ciclo UI/composición/adaptador con un doble nativo, guardar/leer/borrar, fallas sin respaldo ordinario ni filtración, orden guardar-borrar, sanitización e invariantes de semanas 1 a 4. La primera ejecución tuvo un timeout de 5 segundos en el primer render; la prueba propia ahora permite 30 segundos para carga inicial de React Native y la ejecución completa posterior pasó. Resultado histórico ejecutado sobre 411e1ecbb96f571d38ce0f61c3254b162dc4d1ba; esta integración sólo cambia documentación/evidencias y conserva idénticos src/, tests/, course-tests/, package.json y package-lock.json en Git. No se atribuye una nueva ejecución a Jarumi.",
       "evidence": "reports/week-04/logs/oscar-integration-tests.txt; tests/secure-storage.test.ts y tests/telemetry.test.ts proceden del commit de Fernanda bd5edf89bfa1ded9e599f6683f92f5e652da103a; pruebas adicionales en tests/session-integration.test.tsx."
     },
     {
