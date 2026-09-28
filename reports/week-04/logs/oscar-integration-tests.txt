@@ -1,0 +1,22 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx tests/architecture.test.ts tests/security.test.ts tests/security-audit.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts
+
+PASS tests/session-integration.test.tsx
+PASS tests/incidents.test.tsx
+PASS tests/security-audit.test.ts
+PASS course-tests/smoke.test.tsx
+PASS tests/architecture.test.ts
+PASS course-tests/public/week-01.test.ts
+PASS tests/secure-storage.test.ts
+PASS tests/telemetry.test.ts
+PASS tests/security.test.ts
+PASS course-tests/public/week-03.test.ts
+PASS course-tests/public/week-02.test.ts
+PASS course-tests/public/week-04.test.ts
+
+Test Suites: 12 passed, 12 total
+Tests:       63 passed, 63 total
+Snapshots:   0 total
+Time:        8.062 s, estimated 9 s
+Ran all test suites within paths "tests/secure-storage.test.ts", "tests/telemetry.test.ts", "tests/session-integration.test.tsx", "tests/architecture.test.ts", "tests/security.test.ts", "tests/security-audit.test.ts", "tests/incidents.test.tsx", "course-tests/smoke.test.tsx", "course-tests/public/week-01.test.ts", "course-tests/public/week-02.test.ts", "course-tests/public/week-03.test.ts", "course-tests/public/week-04.test.ts".

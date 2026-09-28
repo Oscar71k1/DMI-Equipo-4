@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "411e1ecbb96f571d38ce0f61c3254b162dc4d1ba",
+  "decision": "Conservar el puerto SecureTokenStorage de Fernanda (save/read/clear) y usar Expo SecureStore 57.0.4 para el token ficticio. createCampusOps inyecta el adaptador en createSessionStore y la pantalla permite guardar, recuperar al montarse y eliminar sin mostrar el valor. La misma sanitización recursiva de dominio se utiliza en el adaptador evaluable, el consumidor de sesión y el logger. Esta evidencia es una base preparada con asistencia de IA en la rama de Oscar para revisión de Jarumi; no acredita una revisión individual suya ni autenticación real.",
+  "alternatives": [
+    "Memoria volátil: evita persistir y no requiere módulo nativo, pero pierde la sesión al cerrar el proceso y no satisface recuperación entre ejecuciones.",
+    "Preferencias o archivo ordinario: persisten fácilmente, pero no ofrecen la protección requerida para tokens; se descartan y nunca se usan como respaldo ante una falla segura.",
+    "Expo SecureStore: integra Keychain en iOS y preferencias cifradas con Android Keystore; permite persistencia protegida con dependencia nativa y verificación específica por plataforma."
+  ],
+  "tradeoff": "Se gana protección en reposo y recuperación entre ejecuciones a cambio de una dependencia nativa, configuración de respaldos y manejo de fallas. Se usa WHEN_UNLOCKED_THIS_DEVICE_ONLY y el plugin de exclusión de respaldos Android. Las operaciones se serializan y devuelven storage-error ante fallas sin incluir mensajes nativos ni tokens. Un borrado fallido puede dejar el token persistido y la UI solicita reintentar. Persisten riesgos por memoria, dispositivo comprometido, reinstalación iOS y textos libres añadidos a nuevos logs. Las pruebas usan dobles: no demuestran cifrado ni borrado físico en un dispositivo. Pendiente verificación nativa; login/refresco remoto y cierre académico del equipo no forman parte de esta evidencia.",
+  "requirementIds": ["AC-02", "AC-03", "AC-04"],
+  "verification": [
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx tests/architecture.test.ts tests/security.test.ts tests/security-audit.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts",
+      "result": "Código 0; 12 suites y 63 pruebas aprobadas. Se comprobó el ciclo UI/composición/adaptador con un doble nativo, guardar/leer/borrar, fallas sin respaldo ordinario ni filtración, orden guardar-borrar, sanitización e invariantes de semanas 1 a 4. La primera ejecución tuvo un timeout de 5 segundos en el primer render; la prueba propia ahora permite 30 segundos para carga inicial de React Native y la ejecución completa posterior pasó.",
+      "evidence": "reports/week-04/logs/oscar-integration-tests.txt; tests/secure-storage.test.ts y tests/telemetry.test.ts proceden del commit de Fernanda bd5edf89bfa1ded9e599f6683f92f5e652da103a; pruebas adicionales en tests/session-integration.test.tsx."
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "Código 0; TypeScript sin errores.",
+      "evidence": "reports/week-04/logs/oscar-typecheck.txt"
+    },
+    {
+      "command": "npm run lint",
+      "result": "Código 0; ESLint sin errores tras corregir la actualización síncrona de estado dentro del efecto.",
+      "evidence": "reports/week-04/logs/oscar-lint.txt"
+    },
+    {
+      "command": "npm run bundle:release",
+      "result": "Código 0; Expo exportó Android (599 módulos) a dist/export. Esto verifica empaquetado JavaScript, no APK, instalación ni cifrado nativo. Entorno de esta sesión: Windows, Node 24.21.0; no se acredita la reproducción final con Node 22.22.0 de la consigna.",
+      "evidence": "reports/week-04/logs/oscar-bundle.txt"
+    }
+  ]
+}
