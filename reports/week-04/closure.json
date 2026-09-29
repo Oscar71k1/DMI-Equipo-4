@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "919645adb0eabcd0f4b4944e953f0671519571ae",
+  "generatedAt": "2026-09-29T00:19:42.749715+00:00",
+  "environment": {
+    "node": "22.22.0",
+    "npm": "10.9.4",
+    "platform": "Windows",
+    "make": "No disponible; se ejecutaron las recetas equivalentes documentadas en docs/entorno-windows.md",
+    "npmLauncher": "evidence/week-01/entorno-windows/npm-launcher.cs, compilado fuera del repositorio sin cambios"
+  },
+  "checks": [
+    {
+      "id": "official-verify",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/course_public_evaluator.py --week 04 --mode verify --execute-toolchain",
+      "evidence": "verify.json: 9 controles pass"
+    },
+    {
+      "id": "official-public",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "python -B tools/course_public_evaluator.py --week 04 --mode public --execute-toolchain",
+      "evidence": "public-tests.json: todos los controles pass"
+    },
+    {
+      "id": "cold-smoke",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "npm run test:smoke",
+      "evidence": "logs/smoke-primer-arranque-fallido.txt: timeout de 5000 ms tras instalación limpia; fallo conservado."
+    },
+    {
+      "id": "repeat-smoke",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm run test:smoke",
+      "evidence": "logs/final-test-smoke.txt y verify.json: repetición sin cambiar código, prueba ni timeout; exit 0."
+    }
+  ],
+  "limitations": [
+    "Dos vulnerabilidades altas en dependencias; el umbral oficial crítico no falló.",
+    "Comprobación nativa opcional no realizada; pruebas de SecureStore con dobles.",
+    "Resultados locales, no certifican ejecución remota de Actions ni calificación final.",
+    "Confirmación y corroboración personal de cada integrante dependen de cada integrante y del curso."
+  ]
+}

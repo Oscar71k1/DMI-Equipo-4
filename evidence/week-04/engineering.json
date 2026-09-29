@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "week": 4,
-  "commitSha": "161523d750dc597206defa55c51b1651f48d6ef8",
+  "commitSha": "919645adb0eabcd0f4b4944e953f0671519571ae",
   "decision": "Conservar el puerto SecureTokenStorage de Fernanda y usar Expo SecureStore 57.0.4 para el token ficticio. createCampusOps inyecta el adaptador en createSessionStore y la pantalla permite guardar, recuperar y eliminar sin mostrar el valor. La sanitización de dominio se comparte con el adaptador evaluable y el logger. Jarumi documentó la comparación entre memoria, preferencias ordinarias y SecureStore, y declaró una revisión del manejo de fallas en b1d44b4b48867547ca5721cc25c7a69aefb2ca9e. Oscar/Codex integra y corrige esa documentación conforme al código y al contrato de evidencia. No se afirma autenticación real ni una nueva ejecución de pruebas por Jarumi.",
   "alternatives": [
     "Memoria volátil: evita persistir y no requiere módulo nativo, pero pierde la sesión al cerrar el proceso y no satisface recuperación entre ejecuciones.",
     "Preferencias o archivo ordinario: persisten fácilmente, pero no ofrecen la protección requerida para tokens; se descartan y nunca se usan como respaldo ante una falla segura.",
     "Expo SecureStore: integra Keychain en iOS y preferencias cifradas con Android Keystore; permite persistencia protegida con dependencia nativa y verificación específica por plataforma."
   ],
-  "tradeoff": "Se gana protección en reposo y recuperación entre ejecuciones a cambio de una dependencia nativa, configuración de respaldos y manejo de fallas. Se usa WHEN_UNLOCKED_THIS_DEVICE_ONLY y el plugin de exclusión de respaldos Android. Las operaciones se serializan y devuelven storage-error ante fallas sin incluir mensajes nativos ni tokens. Un borrado fallido puede dejar el token persistido y la UI solicita reintentar. Persisten riesgos por memoria, dispositivo comprometido, reinstalación iOS y textos libres añadidos a nuevos logs. Las pruebas usan dobles: no demuestran cifrado ni borrado físico en un dispositivo. Pendiente verificación nativa; login/refresco remoto y cierre académico del equipo no forman parte de esta evidencia.",
+  "tradeoff": "Se gana protección en reposo y recuperación entre ejecuciones a cambio de una dependencia nativa, configuración de respaldos y manejo de fallas. Se usa WHEN_UNLOCKED_THIS_DEVICE_ONLY y el plugin de exclusión de respaldos Android. Las operaciones se serializan y devuelven storage-error ante fallas sin incluir mensajes nativos ni tokens. Un borrado fallido puede dejar el token persistido y la UI solicita reintentar. Persisten riesgos por memoria, dispositivo comprometido, reinstalación iOS y textos libres añadidos a nuevos logs. Las pruebas usan dobles: no demuestran cifrado ni borrado físico en un dispositivo. Verificación nativa opcional no realizada, no exigida explícitamente por la consigna; login/refresco remoto y cierre académico del equipo no forman parte de esta evidencia.",
   "requirementIds": [
     "AC-02",
     "AC-03",
@@ -37,8 +37,23 @@
     },
     {
       "command": "python -B tools/generate_week04_reports.py",
-      "result": "Código 0; 14 pruebas aprobadas en cuatro suites de semana 04, 3 pruebas del detector aprobadas, 0 hallazgos del escaneo y 0 artefactos con los marcadores ficticios inspeccionados. Comprobación nativa todavía pendiente.",
+      "result": "Código 0; 14 pruebas aprobadas en cuatro suites de semana 04, 3 pruebas del detector aprobadas, 0 hallazgos del escaneo y 0 artefactos con los marcadores ficticios inspeccionados. Comprobación nativa opcional no realizada; no se afirma comportamiento nativo probado.",
       "evidence": "reports/week-04/secret-scan.json; reports/week-04/negative-tests.json; reports/week-04/logs/week04-checks.json"
+    },
+    {
+      "command": "npm ci; npm run typecheck; npm run lint; npm run test:smoke; npm run audit:ci; npm run bundle:release",
+      "result": "Ejecución equivalente a setup y feedback con Node 22.22.0 y npm 10.9.4. Instalación limpia, tipos, lint, smoke repetido, audit con umbral crítico y exportación terminaron en código 0. El primer smoke después de instalar agotó 5 segundos; se conserva el fallo y la repetición pasó sin cambiar prueba ni límite. Auditoría: 2 vulnerabilidades altas, ninguna crítica; no se afirma ausencia total de vulnerabilidades.",
+      "evidence": "reports/week-04/logs/final-setup.txt; final-typecheck.txt; final-lint.txt; final-test-smoke.txt; final-audit-ci.txt; final-bundle-release.txt; smoke-primer-arranque-fallido.txt (todos bajo reports/week-04/logs/)."
+    },
+    {
+      "command": "python -B tools/course_public_evaluator.py --week 04 --mode verify --execute-toolchain",
+      "result": "Código 0; 9 comprobaciones oficiales aprobadas. Equivalente a make verify-week-04, sin cambiar el evaluador.",
+      "evidence": "reports/week-04/verify.json"
+    },
+    {
+      "command": "python -B tools/course_public_evaluator.py --week 04 --mode public --execute-toolchain",
+      "result": "Código 0; comprobaciones oficiales públicas y esquemas aprobados. Equivalente a make public-test-week-04, sin cambiar pruebas ni umbrales.",
+      "evidence": "reports/week-04/public-tests.json"
     }
   ]
 }

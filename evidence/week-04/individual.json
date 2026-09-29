@@ -10,7 +10,8 @@
       "commitShas": [
         "411e1ecbb96f571d38ce0f61c3254b162dc4d1ba",
         "9d8b52447431ea5cc7be208e21cb87249bba5cb0",
-        "161523d750dc597206defa55c51b1651f48d6ef8"
+        "161523d750dc597206defa55c51b1651f48d6ef8",
+        "919645adb0eabcd0f4b4944e953f0671519571ae"
       ],
       "files": [
         "src/domain/redactForTelemetry.ts",
@@ -29,7 +30,8 @@
       "tests": [
         "Ejecución de integración asistida por Codex: 63 pruebas aprobadas en 12 suites, incluyendo pruebas de Fernanda, integración UI/almacenamiento, arquitectura, seguridad, smoke y pruebas públicas de semanas 1 a 4. Registro: reports/week-04/logs/oscar-integration-tests.txt.",
         "TypeScript, ESLint y exportación Android de Expo terminaron con código 0. Registros: reports/week-04/logs/oscar-typecheck.txt, oscar-lint.txt y oscar-bundle.txt.",
-        "Nueva ejecución de Oscar/Codex mediante python -B tools/generate_week04_reports.py: 14 pruebas Jest y 3 del detector aprobadas, 0 hallazgos y sin marcadores en artefactos inspeccionados. Dos reportes generados con resultados reales; no atribuidos a Fernanda ni Jarumi."
+        "Nueva ejecución de Oscar/Codex mediante python -B tools/generate_week04_reports.py: 14 pruebas Jest y 3 del detector aprobadas, 0 hallazgos y sin marcadores en artefactos inspeccionados. Dos reportes generados con resultados reales; no atribuidos a Fernanda ni Jarumi.",
+        "Cierre local de Oscar/Codex con Node 22.22.0 y npm 10.9.4: instalación limpia y recetas equivalentes a feedback, verify-week-04 y public-test-week-04 aprobadas. Smoke falló inicialmente por timeout; repetición y verify pasaron sin modificar prueba ni tiempo. Se conservan logs finales y primer fallo; audit reporta dos vulnerabilidades altas sin críticas."
       ],
       "reviews": [
         "En la sesión de Oscar se revisó el contrato SecureTokenStorage y las pruebas de Fernanda del commit bd5edf89bfa1ded9e599f6683f92f5e652da103a; se implementó el consumidor pendiente manteniendo save/read/clear y sin respaldo en preferencias ordinarias.",
@@ -38,7 +40,7 @@
       "prediction": "Predicción registrada en docs/security-controls.md: fallar el almacén debe devolver un estado seguro sin copiar el marcador ficticio al logger o preferencias; fallar el borrado debe conservar el aviso de falla.",
       "command": "npm test -- --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx tests/architecture.test.ts tests/security.test.ts tests/security-audit.test.ts tests/incidents.test.tsx course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts",
       "observedResult": "La ejecución final registrada pasó 63/63 pruebas. La primera ejecución tuvo un timeout en el primer render de una prueba nueva; pasó al repetirla y se amplió a 30 segundos el límite de esa prueba propia para la carga inicial. También se corrigió un error de lint. Los resultados corresponden a Windows con Node 24.21.0 y dobles del módulo nativo; no acreditan cifrado en dispositivo ni el cierre oficial del hito.",
-      "explanation": "Oscar, con asistencia de Codex para implementación y ejecución, integró SecureStore, el flujo de sesión ficticia y la sanitización compartida con el adaptador evaluable y el logger. Los puertos y pruebas originales de Fernanda se reconocen como su aportación. El inventario y la decisión se prepararon como base para revisión de Jarumi, no como trabajo personal de ella. Pendientes: verificación nativa, consolidación de reportes y cierre académico del equipo."
+      "explanation": "Oscar, con asistencia de Codex para implementación y ejecución, integró SecureStore, el flujo de sesión ficticia y la sanitización compartida con el adaptador evaluable y el logger. Los puertos y pruebas originales de Fernanda se reconocen como su aportación. El inventario y la decisión se prepararon como base para revisión de Jarumi, no como trabajo personal de ella. La verificación nativa es opcional y no se realizó. Los reportes fueron consolidados por Oscar/Codex; el cierre se comprueba con el evaluador oficial."
     },
     {
       "studentId": "a3523110496",

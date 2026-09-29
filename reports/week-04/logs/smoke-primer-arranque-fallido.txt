@@ -1,0 +1,28 @@
+
+> dmi-react-native-starter@1.0.0 test:smoke
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/smoke.test.tsx
+
+FAIL course-tests/smoke.test.tsx (31.096 s)
+  × renders the reproducible baseline and resolves backend state (10015 ms)
+
+  ● renders the reproducible baseline and resolves backend state
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      11 | }));
+      12 |
+    > 13 | test('renders the reproducible baseline and resolves backend state', async () => {
+         | ^
+      14 |   const view = await render(<App />);
+      15 |   expect(view.getByText('CampusOps')).toBeTruthy();
+      16 |   await waitFor(() => expect(view.getByTestId('backend-status').props.children.join('')).toContain('available'));
+
+      at Object.test (course-tests/smoke.test.tsx:13:1)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        35.256 s
+Ran all test suites matching /course-tests\\smoke.test.tsx/i.
+EXIT_CODE=1
