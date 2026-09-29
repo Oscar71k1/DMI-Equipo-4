@@ -1,3 +1,4 @@
+# Current regression checks and official validation of the frozen delivery are distinct.
 name: Week 01 Public Feedback
 
 on:
@@ -13,15 +14,16 @@ permissions:
   contents: read
 
 concurrency:
-  group: week-01-${{ github.ref }}
+  group: week-01-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  evaluate:
+  current-tests:
+    name: Current commit - Week 01 tests
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout
+      - name: Checkout current commit
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -29,27 +31,63 @@ jobs:
       - name: Use Node.js 22.22.0
         uses: actions/setup-node@v4
         with:
-          node-version: 22.22.0
+          node-version: '22.22.0'
           cache: npm
       - name: Reproducible setup
         run: make setup
-      - name: Baseline feedback
+      - name: Baseline feedback and Android export
         run: make feedback
-      - name: Week 01 verification
+      - name: Verify current toolchain
         run: make verify-week-01
-      - name: Public Week 01 tests
-        run: make public-test-week-01
-      - name: Fetch final evidence tag
-        if: startsWith(github.ref, 'refs/tags/week-01-final')
-        run: git fetch --no-tags --depth=2 origin "${GITHUB_REF}:${GITHUB_REF}"
-      - name: Validate frozen evidence
-        if: startsWith(github.ref, 'refs/tags/week-01-final')
-        run: make evidence-week-01
-      - name: Upload academic evidence
+      - name: Run team and public tests on current commit
+        shell: bash
+        run: |
+          mkdir -p reports/week-01/logs
+          npm test -- --ci --runInBand --runTestsByPath course-tests/public/week-01.test.ts 2>&1 | tee reports/week-01/logs/ci-current-tests.txt
+      - name: Upload current commit results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: academic-evidence-week-01
+          name: week-01-current-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: warn
+          path: reports/week-01/**
+
+  frozen-delivery:
+    name: Official evaluation - week-01-final
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout frozen delivery
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/week-01-final
+          fetch-depth: 2
+      - name: Verify final tag identity
+        shell: bash
+        run: |
+          git fetch --no-tags --depth=2 origin refs/tags/week-01-final:refs/tags/week-01-final
+          test "$(git rev-list -n 1 refs/tags/week-01-final)" = "$(git rev-parse HEAD)"
+          echo "Evaluated delivery: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Use Node.js 22.22.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - name: Reproducible setup
+        run: make setup
+      - name: Baseline feedback and Android export
+        run: make feedback
+      - name: Official reproducibility
+        run: make verify-week-01
+      - name: Official public behavior and evidence schemas
+        run: make public-test-week-01
+      - name: Official frozen evidence validation
+        run: make evidence-week-01
+      - name: Upload frozen delivery results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week-01-frozen-delivery
           if-no-files-found: warn
           path: |
             reports/week-01/**
