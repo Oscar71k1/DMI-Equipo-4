@@ -5,7 +5,7 @@ import { createSessionStore } from '../application/createSessionStore';
 import { createExpoSecureTokenStorage } from '../infrastructure/ExpoSecureTokenStorage';
 import type { Actor } from '../domain/Actor';
 import { createCourseBackendHealthAdapter } from '../infrastructure/CourseBackendHealthAdapter';
-import { createInMemoryIncidentRepository } from '../infrastructure/InMemoryIncidentRepository';
+import { createRemoteIncidentRepository } from '../infrastructure/RemoteIncidentRepository';
 import { createInMemorySecurityLogger } from '../infrastructure/InMemorySecurityLogger';
 
 export function createCampusOps(): CampusOpsActions {
@@ -14,7 +14,7 @@ export function createCampusOps(): CampusOpsActions {
     secureStorage: createExpoSecureTokenStorage(),
     log: () => logger.log({ event: 'session-storage-error', incidentId: '', actorRole: 'demo', granted: false }),
   });
-  const incidentRepository = createInMemoryIncidentRepository();
+  const incidentRepository = createRemoteIncidentRepository();
   const healthPort = createCourseBackendHealthAdapter();
 
   // Identidad de demostración local. No constituye una sesión autenticada.
@@ -28,6 +28,10 @@ export function createCampusOps(): CampusOpsActions {
     session,
     listIncidents: () => incidentQueries.listIncidents(actor),
     getIncidentDetail: (id) => incidentQueries.getIncidentDetail(actor, id),
+    createIncident: async (input, idempotencyKey) => {
+      if (!incidentRepository.create) throw new Error('Incident creation is unavailable');
+      return incidentRepository.create(input, idempotencyKey);
+    },
     checkHealth: healthQuery.checkHealth,
   };
 }
