@@ -8,12 +8,16 @@
     "Centralizar el parser del sobre remoto (Nivel 2, parseRemoteResource) y el mapper de incidencias al dominio (Nivel 3, mapRemoteIncident) en infraestructura, antes de que cualquier dato llegue a las pantallas. Esta es la alternativa implementada."
   ],
   "tradeoff": "El beneficio es que un cambio en el formato del servidor solo requiere corregir el punto de conversion central, y se garantiza consistentemente que nunca se inventen datos ante casos como payload: null (se devuelve el estado explicito 'unavailable' en vez de un Incident con campos fabricados). El costo es que se necesitan tipos y estados adicionales explicitos (IncidentMapping con las variantes 'mapped' y 'unavailable') que cada pantalla debe saber interpretar correctamente, en vez de simplemente mostrar lo que llega directo del servidor. Tambien se requiere mantener separados el error de contrato (Nivel 2, sobre invalido) del error de datos de dominio (Nivel 3, campos de negocio invalidos), lo cual agrega superficie de codigo pero evita construir incidencias con datos incompletos o inventados.",
-  "requirementIds": ["AC-02", "AC-03", "AC-04"],
+  "requirementIds": [
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
   "verification": [
     {
-      "command": "Revision manual de codigo: src/course-evaluation/index.ts (parseRemoteResource), src/infrastructure/IncidentMapper.ts (mapRemoteIncident), src/api/incidentClient.ts (createIncidentClient)",
-      "result": "Confirmado el 2026-10-01 que parseRemoteResource ya esta implementado (valida id, status, version, payload segun las reglas del Nivel 2) y que mapRemoteIncident maneja correctamente el caso payload: null devolviendo { kind: 'unavailable', id, status, version } sin inventar campos de dominio. El cliente HTTP distingue timeout, network, server, http y contract mediante IncidentClientError.kind, con AbortController y limpieza de temporizador en finally.",
-      "evidence": "Codigo fuente de los 3 archivos citados, integrado en el commit f153d0e5556b39c1822b4be2274eec445e6059b7 tras el merge con la rama week5/oscar."
+      "command": "curl.exe -i http://127.0.0.1:4310/v1/incidents/campus-inc-001 -H \"Authorization: Bearer course-valid-token\" -H \"X-Course-Actor: reporter-1\" -H \"X-Course-Scenario: nullable\"  seguido de una prueba temporal de Jest que llamo mapRemoteIncident con el DTO real recibido",
+      "result": "El backend respondio HTTP 200 con el cuerpo real {\"id\":\"campus-inc-001\",\"version\":1,\"status\":\"assigned\",\"payload\":null}. Al pasar ese DTO real a mapRemoteIncident, el resultado fue { kind: 'unavailable', id: 'campus-inc-001', status: 'assigned', version: 1 }, confirmando la prediccion: no se invento ningun campo de dominio (category, description, etc.) ante payload null.",
+      "evidence": "Verificado el 2026-10-04 contra el backend local (make run-backend) usando curl.exe y una prueba temporal de Jest (tests/temp-verify-nullable.test.ts, PASS, eliminada despues de confirmar el resultado por no ser parte de la suite oficial del equipo)."
     },
     {
       "command": "PENDIENTE: pruebas automatizadas del cliente (timeout, HTTP 500, mapeo completo DTO-a-dominio, creacion con caso 409) acordadas con Fernanda, contra el backend real (make run-backend)",
