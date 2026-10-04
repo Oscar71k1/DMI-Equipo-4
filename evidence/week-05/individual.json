@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "teamId": "REEMPLAZAR_CON_ID_DEL_EQUIPO",
+  "members": [
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "4aee576f3507238d74f6a3672c68418e673a17fc",
+        "f153d0e5556b39c1822b4be2274eec445e6059b7",
+        "4803f62f35120f31aada002e5ae6cc718bbc1f5c"
+      ],
+      "files": [
+        "docs/api-contract.md",
+        "evidence/week-05/engineering.json"
+      ],
+      "tests": [
+        "Revision manual de codigo (no ejecucion automatizada): confirmado que parseRemoteResource (src/course-evaluation/index.ts) valida id, status, version y payload segun las reglas del sobre remoto, incluyendo payload: null como valor valido.",
+        "Revision manual de codigo: confirmado que mapRemoteIncident (src/infrastructure/IncidentMapper.ts) devuelve { kind: unavailable, id, status, version } ante payload: null, sin inventar campos de dominio como category o description.",
+        "PENDIENTE: pruebas automatizadas del cliente contra el backend real (timeout, HTTP 500, creacion con 409), coordinadas con Fernanda; el backend local no estaba activo al momento de este registro."
+      ],
+      "reviews": [
+        "Revise el merge de la rama week5/oscar contra mi propio borrador de docs/api-contract.md: hubo conflicto add/add porque ambas creamos el archivo por separado. Combine ambas versiones verificando cada afirmacion tecnica contra el codigo real (src/api/incidentClient.ts, src/infrastructure/IncidentMapper.ts, src/course-evaluation/index.ts) en vez de elegir una version a ciegas.",
+        "Encontre una discrepancia entre el borrador de Oscar (decia que Incident no almacena reporterId) y el codigo real (src/domain/Incident.ts si incluye reporterId); corregi el documento final con el dato verificado.",
+        "Confirme que los 5 tipos de error del cliente (timeout, network, server, http, contract) y el uso de AbortController con limpieza en finally coinciden entre el codigo y la documentacion final."
+      ],
+      "prediction": "Antes de revisar el codigo de Oscar, predije que el parser aceptaria payload: null como valido en el Nivel 2, y que el cliente conservaria ese estado explicitamente (sin construir una incidencia con valores inventados) en vez de fallar o rellenar datos falsos.",
+      "command": "Revision de codigo: src/course-evaluation/index.ts, src/infrastructure/IncidentMapper.ts, src/api/incidentClient.ts",
+      "observedResult": "Se confirmo la prediccion: parseRemoteResource acepta payload: null como DTO valido, y mapRemoteIncident devuelve el estado explicito unavailable (con id, status y version conservados) en vez de inventar una incidencia completa. Esto corresponde al caso documentado en docs/api-contract.md bajo el escenario X-Course-Scenario: nullable.",
+      "explanation": "La separacion en Nivel 1 (transporte), Nivel 2 (sobre remoto) y Nivel 3 (dominio) permite que el sistema distinga entre una incidencia que existe pero sin contenido disponible (unavailable), una lista realmente vacia, y un error real de red o servidor. Esto evita que la UI muestre datos inventados como si fueran reales. Limite: esta verificacion fue por revision manual del codigo fuente, no por ejecucion de pruebas automatizadas contra el backend corriendo; esa verificacion formal queda pendiente de coordinar con Fernanda."
+    },
+    {
+      "studentId": "REEMPLAZAR_INTEGRANTE_2",
+      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
+      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "tests": [],
+      "reviews": [],
+      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
+      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
+      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
+      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+    },
+    {
+      "studentId": "REEMPLAZAR_INTEGRANTE_3",
+      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
+      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "tests": [],
+      "reviews": [],
+      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
+      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
+      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
+      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+    }
+  ]
+}
