@@ -103,7 +103,31 @@ describe('RemoteIncidentClient — contrato de red real con transporte sustituib
 
     expect(result).toEqual({ ok: false, error: { kind: 'domain' } });
   });
+    test('DOM-01 nominal: DTO completo valido se convierte al modelo de dominio sin campos remotos extra', async () => {
+    // Prediccion: un sobre valido con un campo remoto adicional en el payload
+    // debe convertirse en un Incident con exactamente los 7 campos del dominio,
+    // sin copiar el campo extra.
+    const transport = createStubTransport(() =>
+      jsonResponse(200, okEnvelope('inc-41', 'open', validPayload({ campoRemotoExtra: 'no-debe-pasar' }))),
+    );
+    const client = createRemoteIncidentClient({ transport, baseUrl: BASE_URL, actorId: ACTOR_ID });
 
+    const result = await client.getIncidentDetail('inc-41');
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.incident).toEqual({
+        id: 'inc-41',
+        reporterId: 'reporter-1',
+        category: 'electrical',
+        description: 'Incidencia ficticia de prueba',
+        location: { source: 'manual', label: 'Lab de pruebas' },
+        status: 'open',
+        work: { assignedTechnicianId: null, status: 'open' },
+      });
+      expect(result.incident).not.toHaveProperty('campoRemotoExtra');
+    }
+  });
   test('CREATE-01 nominal: POST válido con clave de idempotencia produce 201 y refleja la creación', async () => {
     // Predicción: una creación válida debe producir ok:true, duplicate:false,
     // y enviar el header Idempotency-Key.

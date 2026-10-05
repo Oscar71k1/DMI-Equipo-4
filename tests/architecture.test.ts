@@ -312,7 +312,7 @@ describe('arquitectura: limites entre capas', () => {
     // Las flechas punteadas describen perfiles y capacidades futuras, no codigo.
     const nodes = new Map<string, string>();
     for (const match of diagram.matchAll(/^\s*(\w+)\["([^"]+)"\]/gm)) {
-      const file = match[2]?.match(/(?:src\/[\w/.]+\.tsx?|App\.tsx)/)?.[0];
+      const file = match[2]?.match(/(?:src\/[\w/.-]+\.tsx?|App\.tsx)/)?.[0];
       if (file && match[1]) {
         expect(fs.existsSync(path.join(PROJECT_ROOT, file))).toBe(true);
         nodes.set(match[1], file);
