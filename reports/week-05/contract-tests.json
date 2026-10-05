@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "01348417b5c55af43db11d1dff543f3ae0f8d9ee",
+  "commitSha": "ee668597f9dec681ee86d9c5d1dfee201b586137",
   "checks": [
     {
       "id": "DTO-01",
@@ -137,5 +137,5 @@
       "evidence": "Repositorio de producción y fachada conservan payload:null como unavailable; no se degrada a contract; reports/week-05/logs/oscar-final-verification.txt"
     }
   ],
-  "generatedAt": "2026-10-05T03:47:48Z"
+  "generatedAt": "2026-10-05T04:00:08Z"
 }
