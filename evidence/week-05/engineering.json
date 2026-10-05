@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434",
+  "commitSha": "01348417b5c55af43db11d1dff543f3ae0f8d9ee",
   "decision": "El equipo centraliza la validacion y conversion DTO-a-dominio en el limite de infraestructura (parser compartido en src/course-evaluation/index.ts y mapper en src/infrastructure/IncidentMapper.ts), en vez de que cada pantalla valide y mapee los datos del servidor por su cuenta. La composicion conecta ese cliente (src/api/incidentClient.ts) con las acciones de aplicacion.",
   "alternatives": [
     "Validar y mapear los datos del servidor en cada pantalla (UI) de forma independiente, sin un punto central de conversion.",
@@ -31,8 +31,8 @@
     },
     {
       "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts",
-      "result": "PASS; 5 suites y 46 pruebas aprobadas, incluyendo DOM-01, payload null y su estado seguro en UI.",
-      "evidence": "reports/week-05/logs/oscar-regressions-week-01-05.txt; resumen estructurado en reports/week-05/contract-tests.json y reports/week-05/failure-matrix.json"
+      "result": "PASS; 5 suites y 46 pruebas en la ejecución registrada entonces. La verificación final posterior, incluyendo dos pruebas del repositorio y una de la fachada para payload:null, pasó 53/53.",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt; verificación final: reports/week-05/logs/oscar-final-verification.txt"
     },
     {
       "command": "npm run backend:self-test",
@@ -46,8 +46,13 @@
     },
     {
       "command": "Suites de regresión de GitHub Actions, semanas 01–04, y suites de contrato/UI de semana 05; ver comando exacto por semana en el log.",
-      "result": "PASS; semana 01: 1/1; semana 02: 16/16; semana 03: 28/28; semana 04: 14/14; semana 05: 46/46.",
+      "result": "PASS en la regresión registrada entonces; semana 01: 1/1; semana 02: 16/16; semana 03: 28/28; semana 04: 14/14; semana 05: 46/46. La verificación final posterior registra 49 pruebas de semana 05 y 4 de arquitectura.",
       "evidence": "reports/week-05/logs/oscar-regressions-week-01-05.txt"
+    },
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts; npm run typecheck; npm run lint; npm run backend:self-test",
+      "result": "PASS; 7 suites, 53 pruebas totales (49 de Week 05 y 4 de arquitectura), typecheck, lint y backend:self-test.",
+      "evidence": "reports/week-05/logs/oscar-final-verification.txt"
     }
   ],
   "aiAssistance": {

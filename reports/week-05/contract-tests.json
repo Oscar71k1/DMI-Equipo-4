@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434",
+  "commitSha": "01348417b5c55af43db11d1dff543f3ae0f8d9ee",
   "checks": [
     {
       "id": "DTO-01",
@@ -128,7 +128,14 @@
       "scenarioType": "nominal",
       "command": "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
       "evidence": "DTO completo válido convertido al modelo de dominio sin campos remotos extra; 1/1; reports/week-05/logs/oscar-regressions-week-01-05.txt"
+    },
+    {
+      "id": "REPO-NULL-01",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/remote-incident-repository.test.ts tests/incident-client.test.ts",
+      "evidence": "Repositorio de producción y fachada conservan payload:null como unavailable; no se degrada a contract; reports/week-05/logs/oscar-final-verification.txt"
     }
   ],
-  "generatedAt": "2026-10-05T03:37:04Z"
+  "generatedAt": "2026-10-05T03:47:48Z"
 }

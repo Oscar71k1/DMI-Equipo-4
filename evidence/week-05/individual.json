@@ -3,7 +3,7 @@
   "week": 5,
   "teamId": "4",
   "status": "partial",
-  "notes": "Registro consolidado desde commits y logs disponibles. Las ejecuciones posteriores a la integración corresponden a Oscar/Codex y no se atribuyen a las otras personas. El test de arquitectura conserva un fallo de extracción del diagrama; no se modificó el evaluador ni los tests.",
+  "notes": "Registro consolidado desde commits y logs disponibles. Las ejecuciones posteriores a la integración corresponden a Oscar/Codex y no se atribuyen a las otras personas. La suite final de arquitectura pasa 4/4; payload:null se verificó también atravesando repositorio de producción y fachada.",
   "members": [
     {
       "studentId": "3523110055",
@@ -53,7 +53,7 @@
       "reviews": [],
       "prediction": "Las pruebas de contrato cubren sobres válidos e inválidos, errores de red diferenciados, creación idempotente y UI segura cuando el payload es null; la expectativa observable está expresada en las pruebas que aportó.",
       "command": "Las pruebas aportadas se ejecutaron después de integración por Oscar: npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts",
-      "observedResult": "Los logs originales de Fernanda son anteriores a la implementación y fallaban en esa fase. La ejecución de integración posterior pasó 45/45; su log e identidad de ejecutor constan en reports/week-05/logs/oscar-week05-tests.txt y no se atribuye esa ejecución a Fernanda.",
+      "observedResult": "Los logs originales de Fernanda son anteriores a la implementación y fallaban en esa fase. El log inicial de integración de Oscar registra 45/45 antes de DOM-01; la regresión posterior registra 46/46 en reports/week-05/logs/oscar-regressions-week-01-05.txt. Ninguna de esas ejecuciones se atribuye a Fernanda.",
       "explanation": "Sus pruebas y adaptadores definen los casos nominales, límites y fallos del contrato remoto. Distinguir autoría de las pruebas de quién ejecutó la integración mantiene la evidencia individual verificable."
     },
     {
@@ -63,7 +63,8 @@
         "7798cccdf0418246df8157f0a3bbc92c0aa74691",
         "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
         "e42ff139319d4855ac207f515f76f2264064fba4",
-        "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434"
+        "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434",
+        "01348417b5c55af43db11d1dff543f3ae0f8d9ee"
       ],
       "files": [
         "src/api/incidentClient.ts",
@@ -79,20 +80,22 @@
         "evidence/week-05/engineering.json",
         "evidence/week-05/individual.json",
         "tests/architecture.test.ts",
-        ".github/workflows/week-05-incidents-feedback.yml"
+        ".github/workflows/week-05-incidents-feedback.yml",
+        "tests/remote-incident-repository.test.ts"
       ],
       "tests": [
-        "Ejecución propia asistida por Codex: 5 suites y 46 pruebas de semana 5 aprobadas.",
+        "Ejecución final: 7 suites y 53 pruebas; 49 corresponden a Week 05 y 4 a arquitectura.",
         "Typecheck, lint y backend:self-test terminaron con código 0.",
-        "Arquitectura: 3/4 pasan; la comparación de flechas falla al no extraer la ruta src/course-evaluation por el guion. El test y evaluador permanecen sin cambios.",
-        "Las suites seleccionadas de semanas 01–05 quedaron verdes: 1/1, 16/16, 28/28, 14/14 y 46/46 pruebas; typecheck, lint, smoke, auditoría, bundle Android, autoprueba de backend y escáner también pasaron.",
-        "Se agregó el workflow Week 05 Incident Feedback para ejecutar backend, regresiones de semana 5 y validación de evidencia en push y pull_request."
+        "Arquitectura: las cuatro pruebas pasan; el resultado consta en reports/week-05/logs/oscar-architecture-test.txt.",
+        "La regresión integrada anterior quedó verde: semana 01: 1/1, semana 02: 16/16, semana 03: 28/28, semana 04: 14/14 y semana 05: 46/46; la verificación final posterior añadió tres pruebas y pasó 49 pruebas de semana 05 más 4 de arquitectura.",
+        "Se agregó el workflow Week 05 Incident Feedback para ejecutar backend, regresiones de semana 5 y validación de evidencia en push y pull_request.",
+        "Pruebas añadidas para repositorio de producción y fachada: payload:null se conserva como unavailable."
       ],
       "reviews": [],
       "prediction": "payload:null debe pasar la validación del sobre pero no crear un Incident ficticio; el cliente debe compartir una sola ruta de transporte/parser/mapeo y presentar un estado UI explícito.",
-      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts; npm run typecheck; npm run lint; npm run backend:self-test; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
-      "observedResult": "Las suites de semanas 01–05 pasaron (105 ejecuciones acumuladas por los comandos de cada semana; semana 05 incluye 46/46). Typecheck, lint, smoke, audit:ci, bundle Android, backend:self-test y controles del secret scanner terminaron con código 0.",
-      "explanation": "La integración deja un único core de cliente HTTP para producción y adaptadores de test, centraliza la conversión DTO-dominio y expone unavailable a la UI. La evidencia registra también el fallo residual sin alterar tests ni evaluador. Se corrigió sólo el patrón extractor de rutas de la prueba de arquitectura para admitir guiones; el evaluador no se modificó."
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts; npm run typecheck; npm run lint; npm run backend:self-test; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
+      "observedResult": "Las regresiones previas de semanas 01–05 pasaron; esta corrección final pasó 7 suites/53 pruebas (49 Week 05 y 4 arquitectura), typecheck, lint y backend:self-test. Log: reports/week-05/logs/oscar-final-verification.txt.",
+      "explanation": "El repositorio de producción y la fachada mantienen el resultado unavailable como estado distinguible de contract y domain. Las pantallas reciben el error tipado y presentan el estado seguro; no se construye un Incident ficticio. Las cuatro pruebas de arquitectura pasan y el evaluador no se modificó."
     }
   ]
 }
