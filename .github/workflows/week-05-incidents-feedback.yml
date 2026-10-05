@@ -1,0 +1,52 @@
+# Current Week 05 regression checks and evidence validation.
+name: Week 05 Incident Feedback
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: week-05-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  current-tests:
+    name: Current commit - Week 05 tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout current commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - name: Use Node.js 22.22.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - name: Reproducible setup
+        run: make setup
+      - name: Verify current toolchain and backend contracts
+        run: make verify-week-05
+      - name: Run architecture, incident and public Week 05 tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports/week-05/logs
+          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts 2>&1 | tee reports/week-05/logs/ci-current-tests.txt
+      - name: Validate public behavior and evidence schemas
+        run: make public-test-week-05
+      - name: Upload current commit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week-05-current-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: warn
+          path: |
+            reports/week-05/**
+            evidence/week-05/**
