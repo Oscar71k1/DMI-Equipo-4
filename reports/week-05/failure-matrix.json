@@ -1,0 +1,57 @@
+{
+    "schemaVersion":  1,
+    "week":  5,
+    "commitSha":  "c15baacd76910f0892ebe080a492941cbf9173b1",
+    "generatedAt":  "2026-10-05T03:08:18Z",
+    "checks":  [
+                   {
+                       "id":  "DTO-03",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/remote-resource.test.ts",
+                       "evidence":  "Casos: parseRemoteResource — contrato del sobre remoto DTO-03 failure: id vacío produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: status vacío produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: version textual produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: version negativa produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: version fraccionaria produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: entrada null produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: payload arreglo produce ok:false sin lanzar excepción | parseRemoteResource — contrato del sobre remoto DTO-03 failure: payload ausente produce ok:false sin lanzar excepción; observado: 8 de 8 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
+                   },
+                   {
+                       "id":  "NET-01",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
+                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible NET-01 failure: JSON inválido produce error de decodificación sin cuerpo crudo; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
+                   },
+                   {
+                       "id":  "NET-02",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
+                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible NET-02 failure: demora superior al timeout produce error de timeout y aborta la petición; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json; timeout configurado: 50 ms con temporizador real (sin fake timers)"
+                   },
+                   {
+                       "id":  "NET-03",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
+                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible NET-03 failure: HTTP 500 es distinguible de timeout y de formato inválido; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
+                   },
+                   {
+                       "id":  "NET-04",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
+                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible NET-04 failure: el transporte rechaza por desconexión y produce un error de red controlado; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
+                   },
+                   {
+                       "id":  "UI-01",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-cloud-flow.test.tsx",
+                       "evidence":  "Casos: flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 nominal: lista → selecciona → detalle | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: payload null muestra un estado seguro | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: timeout de red no se confunde con éxito | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: HTTP 500 produce estado genérico | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) LOG-01 failure: datos sensibles ficticios no aparecen en pantalla | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) CREATE-01 nominal vía formulario: creación exitosa muestra confirmación; observado: 6 de 6 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
+                   },
+                   {
+                       "id":  "LOG-01",
+                       "status":  "pass",
+                       "scenarioType":  "failure",
+                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-cloud-flow.test.tsx",
+                       "evidence":  "Casos: flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 nominal: lista → selecciona → detalle | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: payload null muestra un estado seguro | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: timeout de red no se confunde con éxito | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: HTTP 500 produce estado genérico | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) LOG-01 failure: datos sensibles ficticios no aparecen en pantalla | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) CREATE-01 nominal vía formulario: creación exitosa muestra confirmación; observado: 6 de 6 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
+                   }
+               ]
+}
