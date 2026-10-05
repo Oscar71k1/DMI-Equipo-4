@@ -7,6 +7,7 @@ import { incidentCategoryLabels } from './incidentLabels';
 type ListState =
   | { kind: 'loading' }
   | { kind: 'error' }
+  | { kind: 'unavailable' }
   | { kind: 'empty' }
   | { kind: 'loaded'; incidents: readonly Incident[] };
 
@@ -32,8 +33,10 @@ export function IncidentListScreen({ listIncidents, onSelect }: Props) {
           state: incidents.length === 0 ? { kind: 'empty' } : { kind: 'loaded', incidents },
         });
       })
-      .catch(() => {
-        if (active) setResult({ query: listIncidents, state: { kind: 'error' } });
+      .catch((error: unknown) => {
+        if (!active) return;
+        const kind = typeof error === 'object' && error !== null && 'kind' in error ? error.kind : undefined;
+        setResult({ query: listIncidents, state: kind === 'unavailable' ? { kind: 'unavailable' } : { kind: 'error' } });
       });
     return () => {
       active = false;
@@ -49,6 +52,9 @@ export function IncidentListScreen({ listIncidents, onSelect }: Props) {
         Ocurrió un problema al cargar la información. Intenta de nuevo.
       </Text>
     );
+  }
+  if (state.kind === 'unavailable') {
+    return <Text testID="incident-list-status">Hay incidencias cuyos detalles todavía no están disponibles.</Text>;
   }
   if (state.kind === 'empty') {
     return <Text testID="incident-list-status">No hay incidencias registradas todavía.</Text>;

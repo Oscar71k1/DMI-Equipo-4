@@ -3,7 +3,7 @@
 **Autora:** Jarumi
 **Backend:** `http://127.0.0.1:4310` (didactico, en memoria, se reinicia al reiniciar el proceso)
 
-Este documento describe las rutas reales del backend didactico (`docs/CAMPUSOPS_API.md`, `course-backend/campusops.mjs`) y como el cliente las consume. El transporte HTTP vive en `src/api/incidentClient.ts`, el parser compartido del sobre remoto en `src/course-evaluation/index.ts` (funcion `parseRemoteResource`) y el mapeo de DTO a dominio en `src/infrastructure/IncidentMapper.ts`.
+Este documento describe las rutas reales del backend didactico (`docs/CAMPUSOPS_API.md`, `course-backend/campusops.mjs`) y como el cliente las consume. `src/api/incidentClient.ts` es el cliente compartido usado por producción; acepta un `fetch` real o un `HttpTransport` sustituible. `src/infrastructure/RemoteIncidentClient.ts` es una fachada de resultados discriminados sobre ese mismo cliente para pruebas. El parser compartido está en `src/course-evaluation/index.ts` y la validación única de dominio en `src/domain/IncidentRemoteMapper.ts`, invocada mediante el adaptador DTO `src/infrastructure/IncidentMapper.ts`.
 
 ## Autenticacion de prueba
 
@@ -56,7 +56,10 @@ El cliente distingue, mediante `IncidentClientError.kind`:
 - `network` — fallo de conexion (fetch lanzo excepcion sin ser timeout)
 - `server` — codigo HTTP 5xx (error de servidor, aunque su cuerpo no tenga forma de DTO)
 - `http` — rechazo HTTP con codigo tecnico (ej. 403, 404, 409) que no es 5xx
-- `contract` — fallo al decodificar el cuerpo como JSON, o el sobre no tiene forma valida
+- `decode` — fallo al decodificar el cuerpo como JSON
+- `contract` — el sobre o el envoltorio de operación no tiene forma valida
+- `domain` — el DTO es estructuralmente válido, pero no cumple los campos de `Incident`
+- `unavailable` — `payload: null` es válido, aunque no construye un `Incident` completo
 
 Ninguna excepcion de transporte se propaga con su texto original sin filtrar.
 
@@ -74,7 +77,7 @@ La firma de este parser es: exito `{ ok: true, value }`; fallo `{ ok: false, err
 
 ### Nivel 3 — Dominio
 
-Implementado en `mapRemoteIncident` (`src/infrastructure/IncidentMapper.ts`). Aunque el sobre sea valido, el mapper exige mas:
+Implementado en `mapRemoteIncidentToDomain` (`src/domain/IncidentRemoteMapper.ts`), llamado desde `mapRemoteIncident` (`src/infrastructure/IncidentMapper.ts`). Aunque el sobre sea valido, el mapper exige mas:
 - `status` debe ser uno de los cinco valores reales del dominio (`open`, `assigned`, `in_progress`, `resolved`, `closed`)
 - `category` debe pertenecer a `IncidentCategory`
 - `description`, `location` y `reporterId` deben ser texto no vacio
@@ -91,7 +94,7 @@ El backend soporta el escenario `nullable`, que devuelve un DTO con `payload: nu
 1. El parser de Nivel 2 **acepta** este DTO como valido (`payload: null` es una de las formas permitidas)
 2. El mapper de Nivel 3 **NO construye** un `Incident` completo con campos inventados
 3. En su lugar, devuelve el estado explicito `{ kind: 'unavailable', id, status, version }`
-4. La UI no debe mostrar datos inventados. Actualmente el repositorio de dominio no puede devolver un `Incident` desde `unavailable`, por lo que la pantalla presenta su error genérico; un mensaje visual específico de datos no disponibles queda pendiente.
+4. El repositorio no convierte `unavailable` a `Incident`; lista y detalle conservan una causa tipada que la UI representa con un mensaje explícito de detalles no disponibles.
 
 **Por que importa:** si la UI inventara datos para rellenar los campos vacios, un coordinador no podria distinguir entre "esta incidencia realmente no tiene categoria asignada" (un dato real incompleto) y "la app no tenia informacion todavia" (un hueco tecnico) — ambos se verian identicos en pantalla, lo cual podria llevar a una decision equivocada sobre la incidencia real.
 
@@ -108,7 +111,7 @@ El backend soporta el escenario `nullable`, que devuelve un DTO con `payload: nu
 
 Union discriminada con categorias: `contract` (el sobre no tiene forma valida), `timeout`, `server` (error HTTP 5xx), `network` (desconexion), y `http` (rechazo HTTP con codigo tecnico, ej. 403, 404, 409). Se distingue tambien el estado `unavailable` (payload null valido), que no es un error.
 
-La UI actual solo tiene un mensaje de error generico; se debe ampliar para conservar la causa distinguible internamente, mostrando siempre un mensaje seguro al usuario (sin exponer detalles tecnicos del servidor, como se establecio en la auditoria de la semana 4).
+La UI conserva el tipo `unavailable` para distinguirlo del error genérico y presenta mensajes seguros, sin exponer detalles técnicos del servidor.
 
 ## Logs y sanitizacion
 
@@ -119,5 +122,5 @@ Al registrar informacion sobre estas operaciones, conservar solo: codigo de esta
 - `CampusOpsScreen` ofrece acceso al formulario de creación cuando la acción está disponible.
 - Las pruebas controladas de Fernanda cubren parser, mapeo, lista/detalle/creación, timeout, HTTP 500, desconexión y presentación segura. Se ejecutaron en esta integración junto con las regresiones; los comandos y resultados deben registrarse en la evidencia consolidada del equipo.
 - El formulario genera una clave de idempotencia por intento; una política de reintento que conserve la clave sigue pendiente.
-- El detalle de `payload: null` continúa mostrándose como error genérico, no como un estado visual específico de datos todavía no disponibles.
+- Lista y detalle muestran un mensaje específico cuando el repositorio recibe una incidencia válida con `payload: null`.
 - `tests/architecture.test.ts` no puede leer destinos bajo `src/course-evaluation/`: su expresión de ruta no contempla guiones. No se modificó la prueba ni el evaluador por instrucción del equipo; esa limitación impide que la comparación de flechas valide ese destino.

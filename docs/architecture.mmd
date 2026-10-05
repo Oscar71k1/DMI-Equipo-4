@@ -62,6 +62,7 @@ flowchart TD
   F_App_tsx --> F_src_composition_createCampusOps_ts
   F_App_tsx --> F_src_ui_CampusOpsScreen_tsx
   F_src_api_incidentClient_ts --> F_src_infrastructure_IncidentMapper_ts
+  F_src_api_incidentClient_ts --> F_src_domain_HttpTransport_ts
   F_src_application_CampusOpsActions_ts --> F_src_domain_Incident_ts
   F_src_application_CampusOpsActions_ts --> F_src_application_createHealthQuery_ts
   F_src_application_CampusOpsActions_ts --> F_src_application_createSessionStore_ts
@@ -104,9 +105,9 @@ flowchart TD
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_api_courseBackend_ts
   F_src_infrastructure_ExpoSecureTokenStorage_ts --> F_src_domain_SecureTokenStorage_ts
   F_src_infrastructure_IncidentMapper_ts --> F_src_domain_Incident_ts
-  F_src_infrastructure_IncidentMapper_ts --> F_src_campusops_contracts_ts
   F_src_infrastructure_IncidentMapper_ts --> F_src_course_evaluation_contracts_ts
   F_src_infrastructure_IncidentMapper_ts --> F_src_course_evaluation_index_ts
+  F_src_infrastructure_IncidentMapper_ts --> F_src_domain_IncidentRemoteMapper_ts
   F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_domain_IncidentAssignmentPort_ts
   F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_infrastructure_copyIncident_ts
@@ -115,8 +116,8 @@ flowchart TD
   F_src_infrastructure_InMemoryIncidentRepository_ts --> F_src_infrastructure_copyIncident_ts
   F_src_infrastructure_InMemorySecurityLogger_ts --> F_src_domain_SecurityLogger_ts
   F_src_infrastructure_InMemorySecurityLogger_ts --> F_src_domain_redactForTelemetry_ts
-  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_course_evaluation_index_ts
-  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_IncidentRemoteMapper_ts
+  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_api_incidentClient_ts
+  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_infrastructure_IncidentMapper_ts
   F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_HttpTransport_ts
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_IncidentRepository_ts
@@ -135,7 +136,7 @@ flowchart TD
   F_src_ui_IncidentListScreen_tsx --> F_src_ui_incidentLabels_ts
   F_src_ui_SessionStoragePanel_tsx --> F_src_application_createSessionStore_ts
 
-  %% Semana 5: createCampusOps ensambla sesión segura, cliente remoto, parser, mapeadores y repositorio; la UI expone lista, detalle y formulario de creación.
-  %% IncidentClient usa fetch; RemoteIncidentClient permite transporte sustituible y aporta las pruebas deterministas de Fernanda. Ambos clientes comparten el parser del sobre.
-  %% El mapeador acepta el DTO real (ubicación textual y asignado en payload) y la forma de dominio usada por pruebas; payload null no produce Incident.
-  %% InMemoryIncidentRepository y adaptadores de asignación permanecen como implementaciones locales de prueba. No se dibujan imports externos ni endpoints como dependencias internas.
+  %% Semana 5: createCampusOps ensambla sesión segura, repositorio remoto, cliente HTTP, parser compartido, mapeador, y formularios de lista/detalle/creación.
+  %% RemoteIncidentClient inyecta HttpTransport para pruebas y delega en createIncidentClient; IncidentMapper llama a la única validación de dominio IncidentRemoteMapper.
+  %% IncidentMapping conserva payload null como unavailable y la UI presenta ese estado sin inventar datos. Los adaptadores en memoria permanecen disponibles para pruebas.
+  %% La prueba de diagrama usa una expresión que no admite guiones en rutas y no puede mapear src/course-evaluation; no se cambió el test ni el evaluador.

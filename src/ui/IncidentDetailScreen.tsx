@@ -7,6 +7,7 @@ import { incidentCategoryLabels, incidentStatusLabels } from './incidentLabels';
 type DetailState =
   | { kind: 'loading' }
   | { kind: 'error' }
+  | { kind: 'unavailable' }
   | { kind: 'not-found' }
   | { kind: 'loaded'; incident: Incident };
 
@@ -38,8 +39,10 @@ export function IncidentDetailScreen({ incidentId, getIncidentDetail, onBack }: 
           state: incident === null ? { kind: 'not-found' } : { kind: 'loaded', incident },
         });
       })
-      .catch(() => {
-        if (active) setResult({ incidentId, query: getIncidentDetail, state: { kind: 'error' } });
+      .catch((error: unknown) => {
+        if (!active) return;
+        const kind = typeof error === 'object' && error !== null && 'kind' in error ? error.kind : undefined;
+        setResult({ incidentId, query: getIncidentDetail, state: kind === 'unavailable' ? { kind: 'unavailable' } : { kind: 'error' } });
       });
     return () => {
       active = false;
@@ -56,6 +59,9 @@ export function IncidentDetailScreen({ incidentId, getIncidentDetail, onBack }: 
         <Text testID="incident-detail-status">
           Ocurrió un problema al cargar la información. Intenta de nuevo.
         </Text>
+      )}
+      {state.kind === 'unavailable' && (
+        <Text testID="incident-detail-status">La incidencia existe, pero sus detalles todavía no están disponibles.</Text>
       )}
       {state.kind === 'not-found' && (
         <Text testID="incident-detail-status">No se encontró la incidencia solicitada.</Text>
