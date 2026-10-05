@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
+  "checks": [
+    {
+      "id": "DTO-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DTO-02",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts",
+      "evidence": "payload:null, version 0 y campo futuro aceptados; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DTO-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts",
+      "evidence": "Sobres inválidos producen ok:false; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "LIST-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Lista nominal, vacía y contrato inválido; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DETAIL-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DOM-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Dominio incompleto distinguible del error de parser; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "CREATE-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "Creación, replay idempotente y sobre corrupto; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "UI-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-cloud-flow.test.tsx",
+      "evidence": "Lista-detalle y estado seguro para payload:null; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-01",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Decode, timeout, HTTP 500 y desconexión diferenciados; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "LIST-02",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Lista vacía válida; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "LIST-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Items ausente o inválido produce error de contrato; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "CREATE-02",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Replay idempotente; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "CREATE-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Envoltorio corrupto rechazado; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Timeout; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "HTTP 500; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-04",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Desconexión; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "UI-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-cloud-flow.test.tsx",
+      "evidence": "payload:null muestra estado seguro; reports/week-05/logs/oscar-week05-tests.txt"
+    }
+  ],
+  "generatedAt": "2026-10-05T03:09:57Z"
+}

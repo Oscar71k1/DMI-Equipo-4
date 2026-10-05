@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
+  "generatedAt": "2026-10-05T03:09:57Z",
+  "checks": [
+    {
+      "id": "NET-01",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-04",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DTO-03/DOM-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "UI-01",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "ARCH-01",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
+      "evidence": "reports/week-05/logs/oscar-architecture-test.txt; 3/4 pasan; extractor del test no reconoce el guion de src/course-evaluation. Test/evaluador sin modificar."
+    }
+  ]
+}
