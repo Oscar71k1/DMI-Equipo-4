@@ -1,0 +1,256 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/remote-resource.test.ts
+
+FAIL tests/remote-resource.test.ts
+  parseRemoteResource — contrato del sobre remoto
+    × DTO-01 nominal: sobre válido con payload objeto conserva sus valores (3 ms)
+    × DTO-02 boundary: payload null, version 0 y campo futuro del sobre
+    × DTO-03 failure: id vacío produce ok:false sin lanzar excepción (17 ms)
+    × DTO-03 failure: status vacío produce ok:false sin lanzar excepción (3 ms)
+    × DTO-03 failure: version textual produce ok:false sin lanzar excepción (3 ms)
+    × DTO-03 failure: version negativa produce ok:false sin lanzar excepción (6 ms)
+    × DTO-03 failure: version fraccionaria produce ok:false sin lanzar excepción (2 ms)
+    × DTO-03 failure: entrada null produce ok:false sin lanzar excepción (2 ms)
+    × DTO-03 failure: payload arreglo produce ok:false sin lanzar excepción (2 ms)
+    × DTO-03 failure: payload ausente produce ok:false sin lanzar excepción (2 ms)
+    × no muta la entrada original (1 ms)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-01 nominal: sobre válido con payload objeto conserva sus valores
+
+    parseRemoteResource must be implemented in the assigned week
+
+    [0m [90m 10 |[39m
+     [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+    [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 13 |[39m }
+     [90m 14 |[39m
+     [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at Object.<anonymous> (tests/remote-resource.test.ts:13:39)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-02 boundary: payload null, version 0 y campo futuro del sobre
+
+    parseRemoteResource must be implemented in the assigned week
+
+    [0m [90m 10 |[39m
+     [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+    [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 13 |[39m }
+     [90m 14 |[39m
+     [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at Object.<anonymous> (tests/remote-resource.test.ts:31:39)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: id vacío produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: status vacío produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: version textual produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: version negativa produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: version fraccionaria produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: entrada null produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: payload arreglo produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › DTO-03 failure: payload ausente produce ok:false sin lanzar excepción
+
+    expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "parseRemoteResource must be implemented in the assigned week"
+
+        [0m [90m 10 |[39m
+         [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+        [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+         [90m    |[39m         [31m[1m^[22m[39m
+         [90m 13 |[39m }
+         [90m 14 |[39m
+         [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at tests/remote-resource.test.ts:56:35
+      at Object.<anonymous> (node_modules/expect/build/toThrowMatchers.js:74:11)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:320:21)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+      at toThrow (tests/remote-resource.test.ts:57:12)
+
+  ● parseRemoteResource — contrato del sobre remoto › no muta la entrada original
+
+    parseRemoteResource must be implemented in the assigned week
+
+    [0m [90m 10 |[39m
+     [90m 11 |[39m [36mfunction[39m pending(name[33m:[39m string)[33m:[39m never {
+    [31m[1m>[22m[39m[90m 12 |[39m   [36mthrow[39m [36mnew[39m [33mError[39m([32m`${name} must be implemented in the assigned week`[39m)[33m;[39m
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 13 |[39m }
+     [90m 14 |[39m
+     [90m 15 |[39m [36mexport[39m { redactForTelemetry } [36mfrom[39m [32m'../domain/redactForTelemetry'[39m[33m;[39m[0m
+
+      at pending (src/course-evaluation/index.ts:12:9)
+      at pending (src/course-evaluation/index.ts:18:10)
+      at Object.<anonymous> (tests/remote-resource.test.ts:72:24)
+
+Test Suites: 1 failed, 1 total
+Tests:       11 failed, 11 total
+Snapshots:   0 total
+Time:        1.613 s, estimated 2 s
+Ran all test suites within paths "tests/remote-resource.test.ts".
+EXIT_CODE=1

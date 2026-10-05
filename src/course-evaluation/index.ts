@@ -14,8 +14,30 @@ function pending(name: string): never {
 
 export { redactForTelemetry } from '../domain/redactForTelemetry';
 
-export function parseRemoteResource(_input: unknown): ParseResult {
-  return pending('parseRemoteResource');
+export function parseRemoteResource(input: unknown): ParseResult {
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    return { ok: false, error: 'contract' };
+  }
+
+  const candidate = input as Record<string, unknown>;
+  if (
+    typeof candidate.id !== 'string' || candidate.id.trim().length === 0 ||
+    typeof candidate.status !== 'string' || candidate.status.trim().length === 0 ||
+    typeof candidate.version !== 'number' || !Number.isInteger(candidate.version) || candidate.version < 0 ||
+    !(candidate.payload === null || (typeof candidate.payload === 'object' && !Array.isArray(candidate.payload)))
+  ) {
+    return { ok: false, error: 'contract' };
+  }
+
+  return {
+    ok: true,
+    value: {
+      id: candidate.id,
+      version: candidate.version,
+      status: candidate.status,
+      payload: candidate.payload as JsonObject | null,
+    },
+  };
 }
 
 export function coordinateRefresh(_events: readonly AuthEvent[]): Readonly<{
