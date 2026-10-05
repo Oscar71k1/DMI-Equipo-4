@@ -6,6 +6,7 @@ import type { HttpTransport } from '../domain/HttpTransport';
 export type RemoteError =
   | Readonly<{ kind: 'contract' }>
   | Readonly<{ kind: 'domain' }>
+  | Readonly<{ kind: 'unavailable' }>
   | Readonly<{ kind: 'server-error'; status: number }>
   | Readonly<{ kind: 'http-error'; status: number }>
   | Readonly<{ kind: 'timeout' }>
@@ -39,8 +40,8 @@ function mapError(error: unknown): RemoteError {
     case 'server': return { kind: 'server-error', status: error.status ?? 500 };
     case 'http': return { kind: 'http-error', status: error.status ?? 400 };
     case 'decode': return { kind: 'decode' };
-    case 'domain':
-    case 'unavailable': return { kind: 'domain' };
+    case 'domain': return { kind: 'domain' };
+    case 'unavailable': return { kind: 'unavailable' };
     case 'contract': return { kind: 'contract' };
   }
 }

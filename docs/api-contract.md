@@ -122,5 +122,5 @@ Al registrar informacion sobre estas operaciones, conservar solo: codigo de esta
 - `CampusOpsScreen` ofrece acceso al formulario de creación cuando la acción está disponible.
 - Las pruebas controladas de Fernanda cubren parser, mapeo, lista/detalle/creación, timeout, HTTP 500, desconexión y presentación segura. Se ejecutaron en esta integración junto con las regresiones; los comandos y resultados deben registrarse en la evidencia consolidada del equipo.
 - El formulario genera una clave de idempotencia por intento; una política de reintento que conserve la clave sigue pendiente.
-- Lista y detalle muestran un mensaje específico cuando el repositorio recibe una incidencia válida con `payload: null`.
-- `tests/architecture.test.ts` no puede leer destinos bajo `src/course-evaluation/`: su expresión de ruta no contempla guiones. No se modificó la prueba ni el evaluador por instrucción del equipo; esa limitación impide que la comparación de flechas valide ese destino.
+- La conversión de `payload: null` conserva `unavailable` a través del repositorio de producción; lista y detalle presentan mensajes específicos sin construir un `Incident` incompleto.
+- `tests/architecture.test.ts` compara correctamente las dependencias con el diagrama; las cuatro pruebas de arquitectura pasan.

@@ -38,7 +38,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p reports/week-05/logs
-          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts 2>&1 | tee reports/week-05/logs/ci-current-tests.txt
+          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts 2>&1 | tee reports/week-05/logs/ci-current-tests.txt
       - name: Validate public behavior and evidence schemas
         run: make public-test-week-05
       - name: Upload current commit results

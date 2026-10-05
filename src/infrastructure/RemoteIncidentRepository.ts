@@ -6,7 +6,8 @@ import { IncidentClientError } from '../api/incidentClient';
 export function createRemoteIncidentRepository(config: IncidentClientConfig = {}): IncidentRepository {
   const client = createIncidentClient(config);
   const requireIncident = (result: Awaited<ReturnType<typeof client.getIncidentDetail>>): Incident => {
-    if (!result || result.kind === 'unavailable') throw new IncidentClientError('contract');
+    if (!result) throw new IncidentClientError('contract');
+    if (result.kind === 'unavailable') throw new IncidentClientError('unavailable');
     return result.incident;
   };
   return {
