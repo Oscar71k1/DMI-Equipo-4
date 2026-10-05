@@ -1,0 +1,138 @@
+Local regression suites corresponding to GitHub Actions weeks 01-04 plus week 05 contract/UI suites.
+
+=== Week 01 ===
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath course-tests/public/week-01.test.ts
+
+PASS course-tests/public/week-01.test.ts
+  √ baseline preserves the reproduced failure and its verified correction (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1.441 s
+Ran all test suites within paths "course-tests/public/week-01.test.ts".
+EXIT_CODE=0
+
+=== Week 02 ===
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx course-tests/public/week-02.test.ts
+
+PASS tests/architecture.test.ts
+PASS tests/incidents.test.tsx
+PASS course-tests/public/week-02.test.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        3.581 s
+Ran all test suites within paths "tests/architecture.test.ts", "tests/incidents.test.tsx", "course-tests/public/week-02.test.ts".
+EXIT_CODE=0
+
+=== Week 03 ===
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx tests/security.test.ts course-tests/public/week-03.test.ts
+
+PASS tests/architecture.test.ts
+PASS tests/incidents.test.tsx
+PASS tests/security.test.ts
+PASS course-tests/public/week-03.test.ts
+
+Test Suites: 4 passed, 4 total
+Tests:       28 passed, 28 total
+Snapshots:   0 total
+Time:        3.782 s, estimated 4 s
+Ran all test suites within paths "tests/architecture.test.ts", "tests/incidents.test.tsx", "tests/security.test.ts", "course-tests/public/week-03.test.ts".
+EXIT_CODE=0
+
+=== Week 04 ===
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/secure-storage.test.ts tests/telemetry.test.ts tests/session-integration.test.tsx course-tests/public/week-04.test.ts
+
+PASS tests/session-integration.test.tsx
+PASS tests/telemetry.test.ts
+PASS course-tests/public/week-04.test.ts
+PASS tests/secure-storage.test.ts
+
+Test Suites: 4 passed, 4 total
+Tests:       14 passed, 14 total
+Snapshots:   0 total
+Time:        3.211 s
+Ran all test suites within paths "tests/secure-storage.test.ts", "tests/telemetry.test.ts", "tests/session-integration.test.tsx", "course-tests/public/week-04.test.ts".
+EXIT_CODE=0
+
+=== Week 05 ===
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts
+
+PASS tests/incident-cloud-flow.test.tsx
+  flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01)
+    √ UI-01 nominal: lista → selecciona → detalle (773 ms)
+    √ UI-01 failure: payload null muestra un estado seguro (6 ms)
+    √ UI-01 failure: timeout de red no se confunde con éxito (62 ms)
+    √ UI-01 failure: HTTP 500 produce estado genérico (1 ms)
+    √ LOG-01 failure: datos sensibles ficticios no aparecen en pantalla (50 ms)
+    √ CREATE-01 nominal vía formulario: creación exitosa muestra confirmación (13 ms)
+
+PASS tests/incidents.test.tsx
+  esqueleto de lista/detalle de incidencias
+    √ lista, selecciona una incidencia, muestra su detalle y permite regresar (101 ms)
+    √ seleccionar una incidencia distinta muestra datos distintos, no siempre el primero (11 ms)
+    √ lista vacía muestra el mensaje acordado, sin cerrarse (3 ms)
+    √ un identificador inexistente devuelve null y la UI muestra "no encontrada" (3 ms)
+    √ sustituir el repositorio cambia los datos observados sin tocar UI ni application (12 ms)
+    √ un proveedor que rechaza la consulta muestra un mensaje de error controlado (3 ms)
+    √ un error del detalle conserva la opcion de regresar a la lista (22 ms)
+    √ la lista ficticia funciona cuando el puerto de salud falla (11 ms)
+    √ al cambiar de identificador se oculta el detalle anterior mientras llega el nuevo (7 ms)
+    √ al sustituir la consulta de lista se ocultan los datos del proveedor anterior (6 ms)
+    √ el fake conserva sus datos aunque se modifiquen los datos iniciales o una respuesta
+
+PASS tests/incident-client.test.ts
+  RemoteIncidentClient — contrato de red real con transporte sustituible
+    √ LIST-01 nominal: HTTP 200 con items visibles mediante el cliente (77 ms)
+    √ LIST-02 boundary: items vacío es una lista válida, no error (1 ms)
+    √ LIST-03 failure: items ausente o no-arreglo se rechaza como error de contrato
+    √ DETAIL-01 nominal: el detalle corresponde al id solicitado y la URL lo codifica (1 ms)
+    √ DOM-02 failure: sobre válido pero payload de dominio incompleto se rechaza distinguible del parser (1 ms)
+    √ DOM-01 nominal: DTO completo valido se convierte al modelo de dominio sin campos remotos extra (1 ms)
+    √ CREATE-01 nominal: POST válido con clave de idempotencia produce 201 y refleja la creación (1 ms)
+    √ CREATE-02 boundary: misma clave en un replay no duplica, duplicate:true (1 ms)
+    √ CREATE-03 failure: envoltorio de respuesta corrupto no declara creación exitosa (1 ms)
+    √ NET-01 failure: JSON inválido produce error de decodificación sin cuerpo crudo (1 ms)
+    √ NET-02 failure: demora superior al timeout produce error de timeout y aborta la petición (67 ms)
+    √ NET-03 failure: HTTP 500 es distinguible de timeout y de formato inválido (1 ms)
+    √ NET-04 failure: el transporte rechaza por desconexión y produce un error de red controlado (1 ms)
+
+PASS tests/remote-resource.test.ts
+  parseRemoteResource — contrato del sobre remoto
+    √ DTO-01 nominal: sobre válido con payload objeto conserva sus valores (1 ms)
+    √ DTO-02 boundary: payload null, version 0 y campo futuro del sobre
+    √ DTO-03 failure: id vacío produce ok:false sin lanzar excepción
+    √ DTO-03 failure: status vacío produce ok:false sin lanzar excepción
+    √ DTO-03 failure: version textual produce ok:false sin lanzar excepción
+    √ DTO-03 failure: version negativa produce ok:false sin lanzar excepción
+    √ DTO-03 failure: version fraccionaria produce ok:false sin lanzar excepción
+    √ DTO-03 failure: entrada null produce ok:false sin lanzar excepción
+    √ DTO-03 failure: payload arreglo produce ok:false sin lanzar excepción
+    √ DTO-03 failure: payload ausente produce ok:false sin lanzar excepción (1 ms)
+    √ no muta la entrada original
+
+PASS course-tests/public/week-05.test.ts
+  √ CampusOps validates the published incident DTO boundary 0 (1 ms)
+  √ CampusOps validates the published incident DTO boundary 1
+  √ CampusOps validates the published incident DTO boundary 2
+  √ CampusOps validates the published incident DTO boundary 3
+  √ CampusOps validates the published incident DTO boundary 4
+
+Test Suites: 5 passed, 5 total
+Tests:       46 passed, 46 total
+Snapshots:   0 total
+Time:        3.901 s, estimated 5 s
+Ran all test suites within paths "tests/remote-resource.test.ts", "tests/incident-client.test.ts", "tests/incident-cloud-flow.test.tsx", "tests/incidents.test.tsx", "course-tests/public/week-05.test.ts".
+EXIT_CODE=0

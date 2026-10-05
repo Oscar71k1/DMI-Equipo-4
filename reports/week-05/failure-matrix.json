@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
-  "generatedAt": "2026-10-05T03:09:57Z",
+  "commitSha": "e42ff139319d4855ac207f515f76f2264064fba4",
+  "generatedAt": "2026-10-05T03:27:03Z",
   "checks": [
     {
       "id": "NET-01",
@@ -48,10 +48,10 @@
     },
     {
       "id": "ARCH-01",
-      "status": "fail",
+      "status": "pass",
       "scenarioType": "failure",
       "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
-      "evidence": "reports/week-05/logs/oscar-architecture-test.txt; 3/4 pasan; extractor del test no reconoce el guion de src/course-evaluation. Test/evaluador sin modificar."
+      "evidence": "El extractor de tests/architecture.test.ts ahora reconoce el path con guion y las 4 pruebas de arquitectura pasan; reports/week-05/logs/oscar-architecture-test.txt"
     }
   ]
 }

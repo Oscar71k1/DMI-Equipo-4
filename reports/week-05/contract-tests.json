@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
+  "commitSha": "e42ff139319d4855ac207f515f76f2264064fba4",
   "checks": [
     {
       "id": "DTO-01",
@@ -121,7 +121,14 @@
       "scenarioType": "failure",
       "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-cloud-flow.test.tsx",
       "evidence": "payload:null muestra estado seguro; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DOM-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "DTO completo válido convertido al modelo de dominio sin campos remotos extra; 1/1; reports/week-05/logs/oscar-regressions-week-01-05.txt"
     }
   ],
-  "generatedAt": "2026-10-05T03:09:57Z"
+  "generatedAt": "2026-10-05T03:27:03Z"
 }

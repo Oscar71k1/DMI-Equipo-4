@@ -61,7 +61,8 @@
       "commitShas": [
         "de04fa17eb548e78292f1a3dd7c89b5654565536",
         "7798cccdf0418246df8157f0a3bbc92c0aa74691",
-        "ae5cf5f920361097c7693b5ae6284d05d0f5ea50"
+        "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
+        "e42ff139319d4855ac207f515f76f2264064fba4"
       ],
       "files": [
         "src/api/incidentClient.ts",
@@ -75,18 +76,20 @@
         "reports/week-05/contract-tests.json",
         "reports/week-05/failure-matrix.json",
         "evidence/week-05/engineering.json",
-        "evidence/week-05/individual.json"
+        "evidence/week-05/individual.json",
+        "tests/architecture.test.ts"
       ],
       "tests": [
-        "Ejecución propia asistida por Codex: 5 suites y 45 pruebas de semana 5 aprobadas.",
+        "Ejecución propia asistida por Codex: 5 suites y 46 pruebas de semana 5 aprobadas.",
         "Typecheck, lint y backend:self-test terminaron con código 0.",
-        "Arquitectura: 3/4 pasan; la comparación de flechas falla al no extraer la ruta src/course-evaluation por el guion. El test y evaluador permanecen sin cambios."
+        "Arquitectura: 3/4 pasan; la comparación de flechas falla al no extraer la ruta src/course-evaluation por el guion. El test y evaluador permanecen sin cambios.",
+        "Las suites seleccionadas de semanas 01–05 quedaron verdes: 1/1, 16/16, 28/28, 14/14 y 46/46 pruebas; typecheck, lint, smoke, auditoría, bundle Android, autoprueba de backend y escáner también pasaron."
       ],
       "reviews": [],
       "prediction": "payload:null debe pasar la validación del sobre pero no crear un Incident ficticio; el cliente debe compartir una sola ruta de transporte/parser/mapeo y presentar un estado UI explícito.",
       "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts; npm run typecheck; npm run lint; npm run backend:self-test; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
-      "observedResult": "45/45 pruebas objetivo, typecheck, lint y backend:self-test pasaron. El test de arquitectura tuvo 3/4 aprobadas y un fallo del matcher de rutas del diagrama, documentado con su log.",
-      "explanation": "La integración deja un único core de cliente HTTP para producción y adaptadores de test, centraliza la conversión DTO-dominio y expone unavailable a la UI. La evidencia registra también el fallo residual sin alterar tests ni evaluador."
+      "observedResult": "Las suites de semanas 01–05 pasaron (105 ejecuciones acumuladas por los comandos de cada semana; semana 05 incluye 46/46). Typecheck, lint, smoke, audit:ci, bundle Android, backend:self-test y controles del secret scanner terminaron con código 0.",
+      "explanation": "La integración deja un único core de cliente HTTP para producción y adaptadores de test, centraliza la conversión DTO-dominio y expone unavailable a la UI. La evidencia registra también el fallo residual sin alterar tests ni evaluador. Se corrigió sólo el patrón extractor de rutas de la prueba de arquitectura para admitir guiones; el evaluador no se modificó."
     }
   ]
 }
