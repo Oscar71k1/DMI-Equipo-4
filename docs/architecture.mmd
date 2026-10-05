@@ -1,9 +1,9 @@
 flowchart TD
-  Boot["Montaje: App.tsx"]
 
   subgraph UI["UI - presentación"]
     F_App_tsx["App.tsx"]
     F_src_ui_CampusOpsScreen_tsx["src/ui/CampusOpsScreen.tsx"]
+    F_src_ui_IncidentCreateForm_tsx["src/ui/IncidentCreateForm.tsx"]
     F_src_ui_IncidentDetailScreen_tsx["src/ui/IncidentDetailScreen.tsx"]
     F_src_ui_IncidentListScreen_tsx["src/ui/IncidentListScreen.tsx"]
     F_src_ui_SessionStoragePanel_tsx["src/ui/SessionStoragePanel.tsx"]
@@ -23,8 +23,10 @@ flowchart TD
     F_src_campusops_contracts_ts["src/campusops/contracts.ts"]
     F_src_domain_Actor_ts["src/domain/Actor.ts"]
     F_src_domain_BackendHealthPort_ts["src/domain/BackendHealthPort.ts"]
+    F_src_domain_HttpTransport_ts["src/domain/HttpTransport.ts"]
     F_src_domain_Incident_ts["src/domain/Incident.ts"]
     F_src_domain_IncidentAssignmentPort_ts["src/domain/IncidentAssignmentPort.ts"]
+    F_src_domain_IncidentRemoteMapper_ts["src/domain/IncidentRemoteMapper.ts"]
     F_src_domain_IncidentRepository_ts["src/domain/IncidentRepository.ts"]
     F_src_domain_PreferencesStorage_ts["src/domain/PreferencesStorage.ts"]
     F_src_domain_SecureTokenStorage_ts["src/domain/SecureTokenStorage.ts"]
@@ -42,6 +44,7 @@ flowchart TD
     F_src_infrastructure_InMemoryIncidentRepository_ts["src/infrastructure/InMemoryIncidentRepository.ts"]
     F_src_infrastructure_InMemorySecurityLogger_ts["src/infrastructure/InMemorySecurityLogger.ts"]
     F_src_infrastructure_IncidentMapper_ts["src/infrastructure/IncidentMapper.ts"]
+    F_src_infrastructure_RemoteIncidentClient_ts["src/infrastructure/RemoteIncidentClient.ts"]
     F_src_infrastructure_RemoteIncidentRepository_ts["src/infrastructure/RemoteIncidentRepository.ts"]
     F_src_infrastructure_copyIncident_ts["src/infrastructure/copyIncident.ts"]
   end
@@ -55,7 +58,7 @@ flowchart TD
     F_src_course_evaluation_index_ts["src/course-evaluation/index.ts"]
   end
 
-  %% Cada flecha continua representa un import interno detectado por tests/architecture.test.ts.
+  %% Flechas continuas: imports internos reales analizados por tests/architecture.test.ts.
   F_App_tsx --> F_src_composition_createCampusOps_ts
   F_App_tsx --> F_src_ui_CampusOpsScreen_tsx
   F_src_api_incidentClient_ts --> F_src_infrastructure_IncidentMapper_ts
@@ -93,6 +96,8 @@ flowchart TD
   F_src_domain_IncidentAssignmentPort_ts --> F_src_domain_IncidentRepository_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Actor_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Incident_ts
+  F_src_domain_IncidentRemoteMapper_ts --> F_src_campusops_contracts_ts
+  F_src_domain_IncidentRemoteMapper_ts --> F_src_domain_Incident_ts
   F_src_domain_IncidentRepository_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_copyIncident_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_domain_BackendHealthPort_ts
@@ -110,13 +115,19 @@ flowchart TD
   F_src_infrastructure_InMemoryIncidentRepository_ts --> F_src_infrastructure_copyIncident_ts
   F_src_infrastructure_InMemorySecurityLogger_ts --> F_src_domain_SecurityLogger_ts
   F_src_infrastructure_InMemorySecurityLogger_ts --> F_src_domain_redactForTelemetry_ts
+  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_course_evaluation_index_ts
+  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_IncidentRemoteMapper_ts
+  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_HttpTransport_ts
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_IncidentRepository_ts
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_api_incidentClient_ts
   F_src_ui_CampusOpsScreen_tsx --> F_src_application_CampusOpsActions_ts
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentDetailScreen_tsx
+  F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentCreateForm_tsx
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentListScreen_tsx
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_SessionStoragePanel_tsx
+  F_src_ui_IncidentCreateForm_tsx --> F_src_application_CampusOpsActions_ts
   F_src_ui_IncidentDetailScreen_tsx --> F_src_domain_Incident_ts
   F_src_ui_IncidentDetailScreen_tsx --> F_src_ui_incidentLabels_ts
   F_src_ui_incidentLabels_ts --> F_src_campusops_contracts_ts
@@ -124,9 +135,7 @@ flowchart TD
   F_src_ui_IncidentListScreen_tsx --> F_src_ui_incidentLabels_ts
   F_src_ui_SessionStoragePanel_tsx --> F_src_application_createSessionStore_ts
 
-  Reporter(["Reportante - reporter"]); Technician(["Técnico - technician"]); Coordinator(["Coordinador - coordinator"]);
-
-  %% Estado real al cierre de semana 5: createCampusOps inyecta RemoteIncidentRepository y mantiene sesión segura e identidad local de demostración.
-  %% incidentClient valida transporte/HTTP; IncidentMapper llama parseRemoteResource y convierte DTO a Incident. payload null se conserva como unavailable en el mapeo; el repositorio de dominio actual no lo transforma en incidencia completa.
-  %% La UI lista/detalle consume acciones, pero el formulario de creación y la presentación visual de unavailable aún no están conectados. InMemoryIncidentRepository sigue disponible para pruebas y otros casos locales.
-  %% El diagrama refleja imports estáticos reales; dependencias externas, endpoints del backend y capacidades conceptuales no se dibujan como flechas internas.
+  %% Semana 5: createCampusOps ensambla sesión segura, cliente remoto, parser, mapeadores y repositorio; la UI expone lista, detalle y formulario de creación.
+  %% IncidentClient usa fetch; RemoteIncidentClient permite transporte sustituible y aporta las pruebas deterministas de Fernanda. Ambos clientes comparten el parser del sobre.
+  %% El mapeador acepta el DTO real (ubicación textual y asignado en payload) y la forma de dominio usada por pruebas; payload null no produce Incident.
+  %% InMemoryIncidentRepository y adaptadores de asignación permanecen como implementaciones locales de prueba. No se dibujan imports externos ni endpoints como dependencias internas.

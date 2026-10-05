@@ -91,7 +91,7 @@ El backend soporta el escenario `nullable`, que devuelve un DTO con `payload: nu
 1. El parser de Nivel 2 **acepta** este DTO como valido (`payload: null` es una de las formas permitidas)
 2. El mapper de Nivel 3 **NO construye** un `Incident` completo con campos inventados
 3. En su lugar, devuelve el estado explicito `{ kind: 'unavailable', id, status, version }`
-4. La UI debe mostrar algo honesto como "Detalles no disponibles por el momento", nunca datos inventados presentados como reales — **pendiente:** la UI actual todavia no representa `unavailable` como un estado visual separado
+4. La UI no debe mostrar datos inventados. Actualmente el repositorio de dominio no puede devolver un `Incident` desde `unavailable`, por lo que la pantalla presenta su error genérico; un mensaje visual específico de datos no disponibles queda pendiente.
 
 **Por que importa:** si la UI inventara datos para rellenar los campos vacios, un coordinador no podria distinguir entre "esta incidencia realmente no tiene categoria asignada" (un dato real incompleto) y "la app no tenia informacion todavia" (un hueco tecnico) — ambos se verian identicos en pantalla, lo cual podria llevar a una decision equivocada sobre la incidencia real.
 
@@ -114,8 +114,10 @@ La UI actual solo tiene un mensaje de error generico; se debe ampliar para conse
 
 Al registrar informacion sobre estas operaciones, conservar solo: codigo de estado, contexto tecnico permitido (como `incidentId`, `correlationId`, `attempt`, `durationMs`). Nunca registrar: el cuerpo completo de la respuesta remota, cabeceras de sesion, ubicacion, descripcion, o el mensaje de una excepcion sin revisar (puede contener texto sensible incrustado).
 
-## Pendientes conocidos (fuera de alcance de esta revision)
+## Estado tras integrar las pruebas de semana 5
 
-- La pantalla aun no incluye un formulario de creacion; la capacidad existe en composicion/cliente pero no esta conectada a la UI.
-- La UI no representa el estado `unavailable` de forma visual distinta a un error.
-- Faltan pruebas propias del cliente para: timeout, HTTP 500, mapeo completo DTO->dominio y creacion (incluyendo el caso 409). Se dejan como verificacion pendiente en `evidence/week-05/engineering.json` hasta que el equipo las ejecute.
+- `CampusOpsScreen` ofrece acceso al formulario de creación cuando la acción está disponible.
+- Las pruebas controladas de Fernanda cubren parser, mapeo, lista/detalle/creación, timeout, HTTP 500, desconexión y presentación segura. Se ejecutaron en esta integración junto con las regresiones; los comandos y resultados deben registrarse en la evidencia consolidada del equipo.
+- El formulario genera una clave de idempotencia por intento; una política de reintento que conserve la clave sigue pendiente.
+- El detalle de `payload: null` continúa mostrándose como error genérico, no como un estado visual específico de datos todavía no disponibles.
+- `tests/architecture.test.ts` no puede leer destinos bajo `src/course-evaluation/`: su expresión de ruta no contempla guiones. No se modificó la prueba ni el evaluador por instrucción del equipo; esa limitación impide que la comparación de flechas valide ese destino.
