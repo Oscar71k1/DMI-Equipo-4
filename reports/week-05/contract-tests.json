@@ -1,78 +1,141 @@
 {
-    "schemaVersion":  1,
-    "week":  5,
-    "commitSha":  "c15baacd76910f0892ebe080a492941cbf9173b1",
-    "generatedAt":  "2026-10-05T03:08:18Z",
-    "checks":  [
-                   {
-                       "id":  "DTO-01",
-                       "status":  "pass",
-                       "scenarioType":  "nominal",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/remote-resource.test.ts",
-                       "evidence":  "Casos: parseRemoteResource — contrato del sobre remoto DTO-01 nominal: sobre válido con payload objeto conserva sus valores; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "DTO-02",
-                       "status":  "pass",
-                       "scenarioType":  "boundary",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/remote-resource.test.ts",
-                       "evidence":  "Casos: parseRemoteResource — contrato del sobre remoto DTO-02 boundary: payload null, version 0 y campo futuro del sobre; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "DOM-01",
-                       "status":  "pass",
-                       "scenarioType":  "nominal",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
-                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible DOM-01 nominal: DTO completo valido se convierte al modelo de dominio sin campos remotos extra; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "DOM-02",
-                       "status":  "pass",
-                       "scenarioType":  "failure",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
-                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible DOM-02 failure: sobre válido pero payload de dominio incompleto se rechaza distinguible del parser; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "LIST-01",
-                       "status":  "pass",
-                       "scenarioType":  "nominal",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
-                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible LIST-01 nominal: HTTP 200 con items visibles mediante el cliente; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "LIST-02",
-                       "status":  "pass",
-                       "scenarioType":  "boundary",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
-                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible LIST-02 boundary: items vacío es una lista válida, no error; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "DETAIL-01",
-                       "status":  "pass",
-                       "scenarioType":  "nominal",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
-                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible DETAIL-01 nominal: el detalle corresponde al id solicitado y la URL lo codifica; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "CREATE-01",
-                       "status":  "pass",
-                       "scenarioType":  "nominal",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
-                       "evidence":  "Casos: flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) CREATE-01 nominal vía formulario: creación exitosa muestra confirmación | RemoteIncidentClient — contrato de red real con transporte sustituible CREATE-01 nominal: POST válido con clave de idempotencia produce 201 y refleja la creación; observado: 2 de 2 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "CREATE-02",
-                       "status":  "pass",
-                       "scenarioType":  "boundary",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
-                       "evidence":  "Casos: RemoteIncidentClient — contrato de red real con transporte sustituible CREATE-02 boundary: misma clave en un replay no duplica, duplicate:true; observado: 1 de 1 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   },
-                   {
-                       "id":  "UI-01",
-                       "status":  "pass",
-                       "scenarioType":  "nominal",
-                       "command":  "npm test -- --ci --runInBand --runTestsByPath tests/incident-cloud-flow.test.tsx",
-                       "evidence":  "Casos: flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 nominal: lista → selecciona → detalle | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: payload null muestra un estado seguro | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: timeout de red no se confunde con éxito | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) UI-01 failure: HTTP 500 produce estado genérico | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) LOG-01 failure: datos sensibles ficticios no aparecen en pantalla | flujo cloud de incidencias — lista, detalle, creación y estados (UI-01, LOG-01) CREATE-01 nominal vía formulario: creación exitosa muestra confirmación; observado: 6 de 6 pruebas pasaron; salida: EXIT_CODE=0; log: reports/week-05/logs/jest-results.json"
-                   }
-               ]
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "01348417b5c55af43db11d1dff543f3ae0f8d9ee",
+  "checks": [
+    {
+      "id": "DTO-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DTO-02",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts",
+      "evidence": "payload:null, version 0 y campo futuro aceptados; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DTO-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts",
+      "evidence": "Sobres inválidos producen ok:false; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "LIST-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Lista nominal, vacía y contrato inválido; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DETAIL-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DOM-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Dominio incompleto distinguible del error de parser; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "CREATE-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx",
+      "evidence": "Creación, replay idempotente y sobre corrupto; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "UI-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-cloud-flow.test.tsx",
+      "evidence": "Lista-detalle y estado seguro para payload:null; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-01",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Decode, timeout, HTTP 500 y desconexión diferenciados; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "LIST-02",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Lista vacía válida; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "LIST-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Items ausente o inválido produce error de contrato; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "CREATE-02",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Replay idempotente; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "CREATE-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Envoltorio corrupto rechazado; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Timeout; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "HTTP 500; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "NET-04",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "Desconexión; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "UI-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/incident-cloud-flow.test.tsx",
+      "evidence": "payload:null muestra estado seguro; reports/week-05/logs/oscar-week05-tests.txt"
+    },
+    {
+      "id": "DOM-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/incident-client.test.ts",
+      "evidence": "DTO completo válido convertido al modelo de dominio sin campos remotos extra; 1/1; reports/week-05/logs/oscar-regressions-week-01-05.txt"
+    },
+    {
+      "id": "REPO-NULL-01",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/remote-incident-repository.test.ts tests/incident-client.test.ts",
+      "evidence": "Repositorio de producción y fachada conservan payload:null como unavailable; no se degrada a contract; reports/week-05/logs/oscar-final-verification.txt"
+    }
+  ],
+  "generatedAt": "2026-10-05T03:47:48Z"
 }

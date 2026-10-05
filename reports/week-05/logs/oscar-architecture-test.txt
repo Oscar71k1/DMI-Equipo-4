@@ -1,0 +1,17 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/architecture.test.ts
+
+PASS tests/architecture.test.ts
+  arquitectura: limites entre capas
+    √ el detector reconoce una violacion fabricada en un fixture temporal (29 ms)
+    √ una reexportacion desde application no permite acceder a composition (10 ms)
+    √ el codigo real del proyecto no debe tener importaciones prohibidas entre capas (97 ms)
+    √ las dependencias internas reales coinciden con las flechas del diagrama (82 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        1.957 s
+Ran all test suites within paths "tests/architecture.test.ts".
+EXIT_CODE=0

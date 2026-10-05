@@ -1,0 +1,17 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts
+
+PASS tests/remote-incident-repository.test.ts
+PASS tests/incident-cloud-flow.test.tsx
+PASS tests/architecture.test.ts
+PASS tests/incident-client.test.ts
+PASS tests/incidents.test.tsx
+PASS tests/remote-resource.test.ts
+PASS course-tests/public/week-05.test.ts
+
+Test Suites: 7 passed, 7 total
+Tests:       53 passed, 53 total
+Snapshots:   0 total
+Time:        5.17 s, estimated 6 s
+Ran all test suites within paths "tests/architecture.test.ts", "tests/remote-resource.test.ts", "tests/incident-client.test.ts", "tests/remote-incident-repository.test.ts", "tests/incident-cloud-flow.test.tsx", "tests/incidents.test.tsx", "course-tests/public/week-05.test.ts".

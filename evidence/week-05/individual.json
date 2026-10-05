@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "teamId": "4",
+  "status": "partial",
+  "notes": "Registro consolidado desde commits y logs disponibles. Las ejecuciones posteriores a la integración corresponden a Oscar/Codex y no se atribuyen a las otras personas. La suite final de arquitectura pasa 4/4; payload:null se verificó también atravesando repositorio de producción y fachada.",
+  "members": [
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "4aee576f3507238d74f6a3672c68418e673a17fc",
+        "f153d0e5556b39c1822b4be2274eec445e6059b7",
+        "4803f62f35120f31aada002e5ae6cc718bbc1f5c"
+      ],
+      "files": [
+        "docs/api-contract.md",
+        "evidence/week-05/engineering.json"
+      ],
+      "tests": [
+        "En su registro, npx jest course-tests/public/week-05.test.ts: 5/5 aprobadas.",
+        "Revisión documentada del contrato y del caso payload:null contra el parser y mapper integrados."
+      ],
+      "reviews": [
+        "Combinó y revisó el contrato API después del merge, cotejando afirmaciones con el código."
+      ],
+      "prediction": "El parser aceptaría payload:null como sobre válido y el mapper lo conservaría como unavailable sin inventar campos de dominio.",
+      "command": "npx jest course-tests/public/week-05.test.ts (comando consignado en su registro)",
+      "observedResult": "Jarumi reportó 5/5 aprobadas. Esta entrada conserva su registro; la ejecución nueva de 45 pruebas está registrada por separado bajo Oscar.",
+      "explanation": "Separar la validez del sobre remoto de la disponibilidad del contenido evita confundir payload:null con una incidencia completa o con una lista vacía."
+    },
+    {
+      "studentId": "a3523110496",
+      "commitShas": [
+        "6f8b1eb71e726d82459a916eea8996239d855e48",
+        "cd82c38ef8d20cc76220b95f34f2b282a39cad54",
+        "7eef6d4d88447aae632510e0feb2d019e1ac8d14"
+      ],
+      "files": [
+        "tests/remote-resource.test.ts",
+        "tests/incident-client.test.ts",
+        "tests/incident-cloud-flow.test.tsx",
+        "src/domain/HttpTransport.ts",
+        "src/domain/IncidentRemoteMapper.ts",
+        "src/infrastructure/RemoteIncidentClient.ts",
+        "src/ui/IncidentCreateForm.tsx",
+        "reports/week-05/logs/fernanda-incident-client-antes.txt",
+        "reports/week-05/logs/fernanda-remote-resource-antes.txt"
+      ],
+      "tests": [
+        "Aportó pruebas para parser, cliente HTTP, flujo de UI, timeout/red/HTTP 500, creación y payload:null.",
+        "Sus logs preintegración registran fallos porque parser/cliente aún no estaban implementados; esos logs no se presentan como resultado final."
+      ],
+      "reviews": [],
+      "prediction": "Las pruebas de contrato cubren sobres válidos e inválidos, errores de red diferenciados, creación idempotente y UI segura cuando el payload es null; la expectativa observable está expresada en las pruebas que aportó.",
+      "command": "Las pruebas aportadas se ejecutaron después de integración por Oscar: npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts",
+      "observedResult": "Los logs originales de Fernanda son anteriores a la implementación y fallaban en esa fase. El log inicial de integración de Oscar registra 45/45 antes de DOM-01; la regresión posterior registra 46/46 en reports/week-05/logs/oscar-regressions-week-01-05.txt. Ninguna de esas ejecuciones se atribuye a Fernanda.",
+      "explanation": "Sus pruebas y adaptadores definen los casos nominales, límites y fallos del contrato remoto. Distinguir autoría de las pruebas de quién ejecutó la integración mantiene la evidencia individual verificable."
+    },
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "de04fa17eb548e78292f1a3dd7c89b5654565536",
+        "7798cccdf0418246df8157f0a3bbc92c0aa74691",
+        "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
+        "e42ff139319d4855ac207f515f76f2264064fba4",
+        "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434",
+        "01348417b5c55af43db11d1dff543f3ae0f8d9ee"
+      ],
+      "files": [
+        "src/api/incidentClient.ts",
+        "src/infrastructure/RemoteIncidentClient.ts",
+        "src/infrastructure/IncidentMapper.ts",
+        "src/domain/IncidentRemoteMapper.ts",
+        "src/ui/IncidentDetailScreen.tsx",
+        "src/ui/IncidentListScreen.tsx",
+        "docs/api-contract.md",
+        "docs/architecture.mmd",
+        "reports/week-05/contract-tests.json",
+        "reports/week-05/failure-matrix.json",
+        "evidence/week-05/engineering.json",
+        "evidence/week-05/individual.json",
+        "tests/architecture.test.ts",
+        ".github/workflows/week-05-incidents-feedback.yml",
+        "tests/remote-incident-repository.test.ts"
+      ],
+      "tests": [
+        "Ejecución final: 7 suites y 53 pruebas; 49 corresponden a Week 05 y 4 a arquitectura.",
+        "Typecheck, lint y backend:self-test terminaron con código 0.",
+        "Arquitectura: las cuatro pruebas pasan; el resultado consta en reports/week-05/logs/oscar-architecture-test.txt.",
+        "La regresión integrada anterior quedó verde: semana 01: 1/1, semana 02: 16/16, semana 03: 28/28, semana 04: 14/14 y semana 05: 46/46; la verificación final posterior añadió tres pruebas y pasó 49 pruebas de semana 05 más 4 de arquitectura.",
+        "Se agregó el workflow Week 05 Incident Feedback para ejecutar backend, regresiones de semana 5 y validación de evidencia en push y pull_request.",
+        "Pruebas añadidas para repositorio de producción y fachada: payload:null se conserva como unavailable."
+      ],
+      "reviews": [],
+      "prediction": "payload:null debe pasar la validación del sobre pero no crear un Incident ficticio; el cliente debe compartir una sola ruta de transporte/parser/mapeo y presentar un estado UI explícito.",
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts; npm run typecheck; npm run lint; npm run backend:self-test; npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
+      "observedResult": "Las regresiones previas de semanas 01–05 pasaron; esta corrección final pasó 7 suites/53 pruebas (49 Week 05 y 4 arquitectura), typecheck, lint y backend:self-test. Log: reports/week-05/logs/oscar-final-verification.txt.",
+      "explanation": "El repositorio de producción y la fachada mantienen el resultado unavailable como estado distinguible de contract y domain. Las pantallas reciben el error tipado y presentan el estado seguro; no se construye un Incident ficticio. Las cuatro pruebas de arquitectura pasan y el evaluador no se modificó."
+    }
+  ]
+}

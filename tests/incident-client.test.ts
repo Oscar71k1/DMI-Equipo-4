@@ -91,6 +91,18 @@ describe('RemoteIncidentClient — contrato de red real con transporte sustituib
     expect(transport.calls[0]?.path).toContain('/v1/incidents/inc-42');
   });
 
+  test('payload:null valido se conserva como error unavailable distinguible', async () => {
+    const transport = createStubTransport(() =>
+      jsonResponse(200, okEnvelope('inc-null', 'assigned', null)),
+    );
+    const client = createRemoteIncidentClient({ transport, baseUrl: BASE_URL, actorId: ACTOR_ID });
+
+    await expect(client.getIncidentDetail('inc-null')).resolves.toEqual({
+      ok: false,
+      error: { kind: 'unavailable' },
+    });
+  });
+
   test('DOM-02 failure: sobre válido pero payload de dominio incompleto se rechaza distinguible del parser', async () => {
     // Predicción: un sobre con payload que no cumple las reglas de dominio
     // (sin category) debe devolver error 'domain', distinto de 'contract'.

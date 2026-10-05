@@ -1,12 +1,14 @@
-import { parseRemoteResource } from '../course-evaluation';
-import { mapRemoteIncidentToDomain } from '../domain/IncidentRemoteMapper';
+import { createIncidentClient, IncidentClientError } from '../api/incidentClient';
+import type { IncidentMapping } from './IncidentMapper';
 import type { Incident } from '../domain/Incident';
 import type { HttpTransport } from '../domain/HttpTransport';
 
 export type RemoteError =
   | Readonly<{ kind: 'contract' }>
   | Readonly<{ kind: 'domain' }>
+  | Readonly<{ kind: 'unavailable' }>
   | Readonly<{ kind: 'server-error'; status: number }>
+  | Readonly<{ kind: 'http-error'; status: number }>
   | Readonly<{ kind: 'timeout' }>
   | Readonly<{ kind: 'network-error' }>
   | Readonly<{ kind: 'decode' }>;
@@ -30,109 +32,62 @@ export type RemoteIncidentClientDeps = Readonly<{
   timeoutMs?: number;
 }>;
 
-async function withTimeout<T>(
-  run: (signal: AbortSignal) => Promise<T>,
-  timeoutMs: number,
-): Promise<T | 'timeout' | 'network-error'> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await run(controller.signal);
-  } catch (error) {
-    if (controller.signal.aborted) return 'timeout';
-    return 'network-error';
-  } finally {
-    clearTimeout(timer);
+function mapError(error: unknown): RemoteError {
+  if (!(error instanceof IncidentClientError)) return { kind: 'contract' };
+  switch (error.kind) {
+    case 'timeout': return { kind: 'timeout' };
+    case 'network': return { kind: 'network-error' };
+    case 'server': return { kind: 'server-error', status: error.status ?? 500 };
+    case 'http': return { kind: 'http-error', status: error.status ?? 400 };
+    case 'decode': return { kind: 'decode' };
+    case 'domain': return { kind: 'domain' };
+    case 'unavailable': return { kind: 'unavailable' };
+    case 'contract': return { kind: 'contract' };
   }
 }
 
+function requireIncident(mapping: IncidentMapping): Incident {
+  if (mapping.kind === 'unavailable') throw new IncidentClientError('unavailable');
+  return mapping.incident;
+}
+
 export function createRemoteIncidentClient(deps: RemoteIncidentClientDeps) {
-  const { transport, baseUrl, actorId, timeoutMs = 5000 } = deps;
-  const headers = { Authorization: 'Bearer course-valid-token', 'X-Course-Actor': actorId };
+  const client = createIncidentClient({
+    transport: deps.transport,
+    baseUrl: deps.baseUrl,
+    actorId: deps.actorId,
+    acceptMissingOperationIdForAdapter: true,
+    ...(deps.timeoutMs === undefined ? {} : { timeoutMs: deps.timeoutMs }),
+  });
 
-  async function decode(outcome: Readonly<{ status: number; json: () => Promise<unknown> }>) {
-    if (outcome.status >= 500) return { ok: false as const, error: { kind: 'server-error', status: outcome.status } as RemoteError };
-    try {
-      return { ok: true as const, body: await outcome.json() };
-    } catch {
-      return { ok: false as const, error: { kind: 'decode' } as RemoteError };
-    }
-  }
-
-  async function listIncidents(): Promise<RemoteListResult> {
-    const outcome = await withTimeout(
-      (signal) => transport.request({ method: 'GET', path: `${baseUrl}/v1/incidents`, headers, signal }),
-      timeoutMs,
-    );
-    if (outcome === 'timeout') return { ok: false, error: { kind: 'timeout' } };
-    if (outcome === 'network-error') return { ok: false, error: { kind: 'network-error' } };
-    const decoded = await decode(outcome);
-    if (!decoded.ok) return decoded;
-
-    const body = decoded.body;
-    if (typeof body !== 'object' || body === null || !Array.isArray((body as { items?: unknown }).items)) {
-      return { ok: false, error: { kind: 'contract' } };
-    }
-    const items: Incident[] = [];
-    for (const raw of (body as { items: readonly unknown[] }).items) {
-      const parsed = parseRemoteResource(raw);
-      if (!parsed.ok) return { ok: false, error: { kind: 'contract' } };
-      const mapped = mapRemoteIncidentToDomain(parsed.value);
-      if (!mapped.ok) return { ok: false, error: { kind: 'domain' } };
-      items.push(mapped.value);
-    }
-    return { ok: true, items };
-  }
-
-  async function getIncidentDetail(id: string): Promise<RemoteDetailResult> {
-    const outcome = await withTimeout(
-      (signal) =>
-        transport.request({ method: 'GET', path: `${baseUrl}/v1/incidents/${encodeURIComponent(id)}`, headers, signal }),
-      timeoutMs,
-    );
-    if (outcome === 'timeout') return { ok: false, error: { kind: 'timeout' } };
-    if (outcome === 'network-error') return { ok: false, error: { kind: 'network-error' } };
-    const decoded = await decode(outcome);
-    if (!decoded.ok) return decoded;
-
-    const parsed = parseRemoteResource(decoded.body);
-    if (!parsed.ok) return { ok: false, error: { kind: 'contract' } };
-    const mapped = mapRemoteIncidentToDomain(parsed.value);
-    if (!mapped.ok) return { ok: false, error: { kind: 'domain' } };
-    return { ok: true, incident: mapped.value };
-  }
-
-  async function createIncident(
-    input: Readonly<{ category: string; description: string; location: string }>,
-    idempotencyKey: string,
-  ): Promise<RemoteCreateResult> {
-    const outcome = await withTimeout(
-      (signal) =>
-        transport.request({
-          method: 'POST',
-          path: `${baseUrl}/v1/incidents`,
-          headers: { ...headers, 'Idempotency-Key': idempotencyKey },
-          body: input,
-          signal,
-        }),
-      timeoutMs,
-    );
-    if (outcome === 'timeout') return { ok: false, error: { kind: 'timeout' } };
-    if (outcome === 'network-error') return { ok: false, error: { kind: 'network-error' } };
-    const decoded = await decode(outcome);
-    if (!decoded.ok) return decoded;
-
-    const body = decoded.body;
-    if (typeof body !== 'object' || body === null || !('incident' in body)) {
-      return { ok: false, error: { kind: 'contract' } };
-    }
-    const envelope = body as { incident: unknown; duplicate?: unknown };
-    const parsed = parseRemoteResource(envelope.incident);
-    if (!parsed.ok) return { ok: false, error: { kind: 'contract' } };
-    const mapped = mapRemoteIncidentToDomain(parsed.value);
-    if (!mapped.ok) return { ok: false, error: { kind: 'domain' } };
-    return { ok: true, incident: mapped.value, duplicate: envelope.duplicate === true };
-  }
-
-  return { listIncidents, getIncidentDetail, createIncident };
+  return {
+    async listIncidents(): Promise<RemoteListResult> {
+      try {
+        const mappings = await client.listIncidents();
+        return { ok: true, items: mappings.map(requireIncident) };
+      } catch (error) {
+        return { ok: false, error: mapError(error) };
+      }
+    },
+    async getIncidentDetail(id: string): Promise<RemoteDetailResult> {
+      try {
+        const result = await client.getIncidentDetail(id);
+        if (result === null) return { ok: false, error: { kind: 'http-error', status: 404 } };
+        return { ok: true, incident: requireIncident(result) };
+      } catch (error) {
+        return { ok: false, error: mapError(error) };
+      }
+    },
+    async createIncident(
+      input: Readonly<{ category: string; description: string; location: string }>,
+      idempotencyKey: string,
+    ): Promise<RemoteCreateResult> {
+      try {
+        const result = await client.createIncident(input, idempotencyKey);
+        return { ok: true, incident: requireIncident(result.incident), duplicate: result.duplicate };
+      } catch (error) {
+        return { ok: false, error: mapError(error) };
+      }
+    },
+  };
 }

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "01348417b5c55af43db11d1dff543f3ae0f8d9ee",
+  "decision": "El equipo centraliza la validacion y conversion DTO-a-dominio en el limite de infraestructura (parser compartido en src/course-evaluation/index.ts y mapper en src/infrastructure/IncidentMapper.ts), en vez de que cada pantalla valide y mapee los datos del servidor por su cuenta. La composicion conecta ese cliente (src/api/incidentClient.ts) con las acciones de aplicacion.",
+  "alternatives": [
+    "Validar y mapear los datos del servidor en cada pantalla (UI) de forma independiente, sin un punto central de conversion.",
+    "Centralizar el parser del sobre remoto (Nivel 2, parseRemoteResource) y el mapper de incidencias al dominio (Nivel 3, mapRemoteIncident) en infraestructura, antes de que cualquier dato llegue a las pantallas. Esta es la alternativa implementada."
+  ],
+  "tradeoff": "El beneficio es que un cambio en el formato del servidor solo requiere corregir el punto de conversion central, y se garantiza consistentemente que nunca se inventen datos ante casos como payload: null (se devuelve el estado explicito 'unavailable' en vez de un Incident con campos fabricados). El costo es que se necesitan tipos y estados adicionales explicitos (IncidentMapping con las variantes 'mapped' y 'unavailable') que cada pantalla debe saber interpretar correctamente, en vez de simplemente mostrar lo que llega directo del servidor. Tambien se requiere mantener separados el error de contrato (Nivel 2, sobre invalido) del error de datos de dominio (Nivel 3, campos de negocio invalidos), lo cual agrega superficie de codigo pero evita construir incidencias con datos incompletos o inventados.",
+  "requirementIds": [
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "curl.exe -i http://127.0.0.1:4310/v1/incidents/campus-inc-001 -H \"Authorization: Bearer course-valid-token\" -H \"X-Course-Actor: reporter-1\" -H \"X-Course-Scenario: nullable\"  seguido de una prueba temporal de Jest que llamo mapRemoteIncident con el DTO real recibido",
+      "result": "El backend respondio HTTP 200 con el cuerpo real {\"id\":\"campus-inc-001\",\"version\":1,\"status\":\"assigned\",\"payload\":null}. Al pasar ese DTO real a mapRemoteIncident, el resultado fue { kind: 'unavailable', id: 'campus-inc-001', status: 'assigned', version: 1 }, confirmando la prediccion: no se invento ningun campo de dominio (category, description, etc.) ante payload null.",
+      "evidence": "Verificado el 2026-10-04 contra el backend local (make run-backend) usando curl.exe y una prueba temporal de Jest (tests/temp-verify-nullable.test.ts, PASS, eliminada despues de confirmar el resultado por no ser parte de la suite oficial del equipo)."
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS; TypeScript terminó con código 0.",
+      "evidence": "reports/week-05/logs/oscar-typecheck.txt"
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS; ESLint terminó con código 0.",
+      "evidence": "reports/week-05/logs/oscar-lint.txt"
+    },
+    {
+      "command": "npm test -- --ci --runInBand --verbose --runTestsByPath tests/remote-resource.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts",
+      "result": "PASS; 5 suites y 46 pruebas en la ejecución registrada entonces. La verificación final posterior, incluyendo dos pruebas del repositorio y una de la fachada para payload:null, pasó 53/53.",
+      "evidence": "reports/week-05/logs/oscar-week05-tests.txt; verificación final: reports/week-05/logs/oscar-final-verification.txt"
+    },
+    {
+      "command": "npm run backend:self-test",
+      "result": "PASS; autoprueba controlada del backend terminada con código 0.",
+      "evidence": "reports/week-05/logs/oscar-backend-selftest.txt"
+    },
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts",
+      "result": "PASS; las 4 pruebas de arquitectura pasan después de ampliar el extractor de rutas para permitir guiones en componentes del path.",
+      "evidence": "reports/week-05/logs/oscar-architecture-test.txt"
+    },
+    {
+      "command": "Suites de regresión de GitHub Actions, semanas 01–04, y suites de contrato/UI de semana 05; ver comando exacto por semana en el log.",
+      "result": "PASS en la regresión registrada entonces; semana 01: 1/1; semana 02: 16/16; semana 03: 28/28; semana 04: 14/14; semana 05: 46/46. La verificación final posterior registra 49 pruebas de semana 05 y 4 de arquitectura.",
+      "evidence": "reports/week-05/logs/oscar-regressions-week-01-05.txt"
+    },
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts; npm run typecheck; npm run lint; npm run backend:self-test",
+      "result": "PASS; 7 suites, 53 pruebas totales (49 de Week 05 y 4 de arquitectura), typecheck, lint y backend:self-test.",
+      "evidence": "reports/week-05/logs/oscar-final-verification.txt"
+    }
+  ],
+  "aiAssistance": {
+    "used": true,
+    "description": "Oscar usó Codex para unificar el cliente HTTP y el mapeo DTO-dominio, hacer visible payload null como unavailable, y consolidar los reportes a partir de logs generados por los comandos registrados.",
+    "verification": "Las verificaciones atribuidas a Oscar se respaldan en los logs de reports/week-05/logs. La verificación de backend declarada previamente por Jarumi se conserva como su evidencia y no se atribuye a Oscar."
+  }
+}
