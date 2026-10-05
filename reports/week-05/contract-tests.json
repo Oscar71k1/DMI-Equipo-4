@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "e42ff139319d4855ac207f515f76f2264064fba4",
+  "commitSha": "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434",
   "checks": [
     {
       "id": "DTO-01",
@@ -130,5 +130,5 @@
       "evidence": "DTO completo válido convertido al modelo de dominio sin campos remotos extra; 1/1; reports/week-05/logs/oscar-regressions-week-01-05.txt"
     }
   ],
-  "generatedAt": "2026-10-05T03:27:03Z"
+  "generatedAt": "2026-10-05T03:37:04Z"
 }

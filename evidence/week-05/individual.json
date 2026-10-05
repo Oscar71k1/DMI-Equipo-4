@@ -62,7 +62,8 @@
         "de04fa17eb548e78292f1a3dd7c89b5654565536",
         "7798cccdf0418246df8157f0a3bbc92c0aa74691",
         "ae5cf5f920361097c7693b5ae6284d05d0f5ea50",
-        "e42ff139319d4855ac207f515f76f2264064fba4"
+        "e42ff139319d4855ac207f515f76f2264064fba4",
+        "cfff48c1187f08ba77fd2b0f07b35e6d0cb84434"
       ],
       "files": [
         "src/api/incidentClient.ts",
@@ -77,13 +78,15 @@
         "reports/week-05/failure-matrix.json",
         "evidence/week-05/engineering.json",
         "evidence/week-05/individual.json",
-        "tests/architecture.test.ts"
+        "tests/architecture.test.ts",
+        ".github/workflows/week-05-incidents-feedback.yml"
       ],
       "tests": [
         "Ejecución propia asistida por Codex: 5 suites y 46 pruebas de semana 5 aprobadas.",
         "Typecheck, lint y backend:self-test terminaron con código 0.",
         "Arquitectura: 3/4 pasan; la comparación de flechas falla al no extraer la ruta src/course-evaluation por el guion. El test y evaluador permanecen sin cambios.",
-        "Las suites seleccionadas de semanas 01–05 quedaron verdes: 1/1, 16/16, 28/28, 14/14 y 46/46 pruebas; typecheck, lint, smoke, auditoría, bundle Android, autoprueba de backend y escáner también pasaron."
+        "Las suites seleccionadas de semanas 01–05 quedaron verdes: 1/1, 16/16, 28/28, 14/14 y 46/46 pruebas; typecheck, lint, smoke, auditoría, bundle Android, autoprueba de backend y escáner también pasaron.",
+        "Se agregó el workflow Week 05 Incident Feedback para ejecutar backend, regresiones de semana 5 y validación de evidencia en push y pull_request."
       ],
       "reviews": [],
       "prediction": "payload:null debe pasar la validación del sobre pero no crear un Incident ficticio; el cliente debe compartir una sola ruta de transporte/parser/mapeo y presentar un estado UI explícito.",
