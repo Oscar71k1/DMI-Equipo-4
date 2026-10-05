@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "f153d0e5556b39c1822b4be2274eec445e6059b7",
+  "decision": "El equipo centraliza la validacion y conversion DTO-a-dominio en el limite de infraestructura (parser compartido en src/course-evaluation/index.ts y mapper en src/infrastructure/IncidentMapper.ts), en vez de que cada pantalla valide y mapee los datos del servidor por su cuenta. La composicion conecta ese cliente (src/api/incidentClient.ts) con las acciones de aplicacion.",
+  "alternatives": [
+    "Validar y mapear los datos del servidor en cada pantalla (UI) de forma independiente, sin un punto central de conversion.",
+    "Centralizar el parser del sobre remoto (Nivel 2, parseRemoteResource) y el mapper de incidencias al dominio (Nivel 3, mapRemoteIncident) en infraestructura, antes de que cualquier dato llegue a las pantallas. Esta es la alternativa implementada."
+  ],
+  "tradeoff": "El beneficio es que un cambio en el formato del servidor solo requiere corregir el punto de conversion central, y se garantiza consistentemente que nunca se inventen datos ante casos como payload: null (se devuelve el estado explicito 'unavailable' en vez de un Incident con campos fabricados). El costo es que se necesitan tipos y estados adicionales explicitos (IncidentMapping con las variantes 'mapped' y 'unavailable') que cada pantalla debe saber interpretar correctamente, en vez de simplemente mostrar lo que llega directo del servidor. Tambien se requiere mantener separados el error de contrato (Nivel 2, sobre invalido) del error de datos de dominio (Nivel 3, campos de negocio invalidos), lo cual agrega superficie de codigo pero evita construir incidencias con datos incompletos o inventados.",
+  "requirementIds": [
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "curl.exe -i http://127.0.0.1:4310/v1/incidents/campus-inc-001 -H \"Authorization: Bearer course-valid-token\" -H \"X-Course-Actor: reporter-1\" -H \"X-Course-Scenario: nullable\"  seguido de una prueba temporal de Jest que llamo mapRemoteIncident con el DTO real recibido",
+      "result": "El backend respondio HTTP 200 con el cuerpo real {\"id\":\"campus-inc-001\",\"version\":1,\"status\":\"assigned\",\"payload\":null}. Al pasar ese DTO real a mapRemoteIncident, el resultado fue { kind: 'unavailable', id: 'campus-inc-001', status: 'assigned', version: 1 }, confirmando la prediccion: no se invento ningun campo de dominio (category, description, etc.) ante payload null.",
+      "evidence": "Verificado el 2026-10-04 contra el backend local (make run-backend) usando curl.exe y una prueba temporal de Jest (tests/temp-verify-nullable.test.ts, PASS, eliminada despues de confirmar el resultado por no ser parte de la suite oficial del equipo)."
+    },
+    {
+      "command": "PENDIENTE: pruebas automatizadas del cliente (timeout, HTTP 500, mapeo completo DTO-a-dominio, creacion con caso 409) acordadas con Fernanda, contra el backend real (make run-backend)",
+      "result": "PENDIENTE: estas pruebas todavia no se han ejecutado en equipo; el backend local no estaba activo al momento de este registro.",
+      "evidence": "Por generar en reports/week-05/contract-tests.json cuando el equipo las ejecute, segun la guia de Fernanda."
+    }
+  ],
+  "aiAssistance": {
+    "used": true,
+    "description": "Se uso asistencia de IA para redactar y combinar docs/api-contract.md (resolviendo un conflicto de merge add/add con la version de Oscar), verificar su contenido contra el codigo real de src/api/incidentClient.ts, src/infrastructure/IncidentMapper.ts y src/course-evaluation/index.ts, y para redactar este archivo de justificacion.",
+    "verification": "Jarumi reviso el codigo fuente real linea por linea junto con la IA antes de dar por valida cada afirmacion del documento combinado, y corrigio un dato desactualizado (ausencia de reporterId en Incident) tras confirmar el tipo real en src/domain/Incident.ts."
+  }
+}

@@ -1,25 +1,121 @@
-# Contrato de datos del cliente CampusOps (semana 5)
+﻿# Contrato de API — CampusOps (Semana 05)
 
-Este documento describe las rutas del backend didáctico de `docs/CAMPUSOPS_API.md` y `course-backend/campusops.mjs`. Sus actores y tokens son fixtures sintéticos de pruebas, no autenticación de producción. La interfaz llama acciones de aplicación; el transporte HTTP vive en `src/api/incidentClient.ts`, el parser compartido en `src/course-evaluation/index.ts` y el mapeo de DTO a dominio en `src/infrastructure/IncidentMapper.ts`.
+**Autora:** Jarumi
+**Backend:** `http://127.0.0.1:4310` (didactico, en memoria, se reinicia al reiniciar el proceso)
 
-## Solicitudes y respuestas
+Este documento describe las rutas reales del backend didactico (`docs/CAMPUSOPS_API.md`, `course-backend/campusops.mjs`) y como el cliente las consume. El transporte HTTP vive en `src/api/incidentClient.ts`, el parser compartido del sobre remoto en `src/course-evaluation/index.ts` (funcion `parseRemoteResource`) y el mapeo de DTO a dominio en `src/infrastructure/IncidentMapper.ts`.
 
-Todas las rutas de incidencias envían `Authorization: Bearer course-valid-token` y `X-Course-Actor` con uno de los actores documentados. `GET /v1/incidents` no lleva cuerpo y devuelve HTTP 200 con `{ "items": [DTO, ...] }`. Un arreglo vacío es una respuesta válida. `GET /v1/incidents/:id` codifica el ID como segmento de URL; devuelve HTTP 200 con un DTO visible, 404 para un ID inexistente y 403 si el actor no puede verlo.
+## Autenticacion de prueba
 
-`POST /v1/incidents` envía `Content-Type: application/json`, una `Idempotency-Key` estable de al menos ocho caracteres y `{ category, description, location }`. La categoría pertenece al conjunto de dominio, y descripción y ubicación son textos no vacíos. El servidor deriva `reporterId` del actor. Una creación nueva devuelve HTTP 201 con `{ incident: DTO, operationId, duplicate: false }`. El replay con igual actor, ruta, clave y cuerpo devuelve HTTP 200 y `duplicate: true`; reutilizar la clave con otro cuerpo produce 409.
+Todas las rutas de CampusOps requieren:
+- `Authorization: Bearer course-valid-token` (fixture publico, no es autenticacion real de produccion)
+- `X-Course-Actor: <actorId>` — uno de: `reporter-1`, `reporter-2`, `technician-1`, `technician-2`, `coordinator-1`
 
-El DTO tiene la forma `{ id, version, status, payload }`; los campos propios de la incidencia están dentro de `payload`. Campos adicionales del sobre se ignoran para compatibilidad futura. El parser devuelve `{ ok: true, value }` o `{ ok: false, error: 'contract' }` y comprueba que `id` y `status` sean textos no vacíos, `version` sea entero no negativo, y `payload` sea objeto o `null`. Rechaza entrada completa nula, campos obligatorios ausentes, tipos incorrectos y arreglos como payload. El parser no muta la entrada.
+Ningun rol se debe confiar si viene enviado solo por el cliente; el servidor es quien determina los permisos reales segun el actor autenticado.
 
-## Validación y conversión al dominio
+## Operaciones
 
-1. **Transporte:** el cliente distingue `timeout`, `network`, error HTTP de servidor (`server`) y rechazo HTTP (`http`, con código). Un fallo al decodificar JSON se clasifica como `contract`. Ninguna excepción de transporte se propaga con el texto arbitrario original. Cada solicitud cancela con `AbortController` al superar el límite y limpia su temporizador.
-2. **Sobre remoto:** `parseRemoteResource` aplica las reglas del DTO anteriores. Un estado textual no vacío puede pasar el parser general aunque el dominio todavía no lo reconozca.
-3. **Dominio:** el mapper requiere uno de los cinco estados del dominio, categoría válida, descripción, ubicación textual, reportante no vacío y asignado nulo o no vacío. Convierte `payload.location` en `{ source: 'manual', label }` y refleja el estado coherente en `Incident.status` y `Incident.work.status`. No crea coordenadas ni completa campos faltantes. La versión se conserva junto al resultado de mapeo, ya que `Incident` todavía no define ese metadato.
+### 1. Lista — `GET /v1/incidents`
 
-Un `payload: null` es un DTO válido; el mapper produce el estado explícito `unavailable`, conservando `id`, `status` y `version`. No representa una incidencia de dominio completa y el repositorio de dominio actual, que sólo expone `Incident`, no puede convertir ese resultado en un objeto `Incident`; al pedir el flujo de dominio, falla de forma controlada como contrato insuficiente. Lista vacía, detalle 404 y payload nulo son situaciones distintas.
+**Solicitud:** sin cuerpo, con los headers de autenticacion.
 
-## Errores y límites conocidos
+**Respuesta a validar:**
+- HTTP 200 con `{ items: [...] }`
+- El contenido de `items` varia segun el actor: un reportante ve solo sus propios reportes, un tecnico ve sus asignaciones, un coordinador ve todas
+- `items: []` es una lista vacia **valida** — no es un error
 
-Las formas de error del cliente son `IncidentClientError.kind`: `timeout`, `network`, `server`, `http` o `contract`. Para errores HTTP conserva el status numérico, no el cuerpo de respuesta. Lista, detalle y creación validan los sobres antes de devolver datos. La composición usa el cliente remoto en lugar del repositorio en memoria. La UI existente convierte rechazos de consulta a un mensaje genérico y seguro.
+### 2. Detalle — `GET /v1/incidents/:id`
 
-La pantalla actual todavía no incluye un formulario de creación ni representa `unavailable` como un estado visual separado; estas acciones están disponibles en la composición/cliente, pero la integración de UI de creación queda pendiente. `Incident` tampoco almacena `reporterId`, por lo que el mapeo valida su presencia sin descartarlo como si fuera un campo de dominio ya implementado. Estas limitaciones deben considerarse al evaluar la cobertura de AC-02.
+**Solicitud:** ID codificado en la URL.
+
+**Respuesta a validar:**
+- HTTP 200 con un DTO de la incidencia, si el actor tiene permiso de verla
+- HTTP 404 si el ID no existe
+- HTTP 403 si el actor no tiene permiso sobre esa incidencia especifica (existe, pero no es visible para el)
+
+Ejemplo real de prueba: la incidencia `campus-inc-001` pertenece a `reporter-1`, esta asignada a `technician-1`, version 1. Si `reporter-2` intenta consultarla, deberia recibir 403, no datos.
+
+El cliente (`getIncidentDetail`) ademas verifica que el `id` devuelto por el servidor coincida con el que se pidio; si no coincide, se trata como error de contrato.
+
+### 3. Creacion — `POST /v1/incidents`
+
+**Solicitud:** JSON con `category` (debe pertenecer a `IncidentCategory`), `description` (texto no vacio), `location` (texto). Requiere `Content-Type: application/json` y header `Idempotency-Key` estable de al menos 8 caracteres ASCII imprimibles (el cliente valida ese formato antes de llamar al servidor; si no cumple, rechaza localmente como error de contrato). Solo el **reportante** puede crear — tecnicos y coordinadores no tienen este permiso.
+
+**Respuesta a validar:**
+- Primera creacion: HTTP 201 con `{ incident: DTO, operationId, duplicate: false }`
+- Reintento con la misma `Idempotency-Key`, mismo actor, misma ruta y mismo cuerpo: HTTP 200 con `duplicate: true` (no se duplica el registro)
+- Reutilizar la misma `Idempotency-Key` con un cuerpo distinto: HTTP 409 (conflicto)
+- El servidor obtiene `reporterId` del actor autenticado, **nunca** del cuerpo de la solicitud
+
+## Niveles de validacion
+
+### Nivel 1 — Transporte
+
+El cliente distingue, mediante `IncidentClientError.kind`:
+- `timeout` — se agoto el limite de espera (controlado con `AbortController`, temporizador limpiado siempre en `finally`)
+- `network` — fallo de conexion (fetch lanzo excepcion sin ser timeout)
+- `server` — codigo HTTP 5xx (error de servidor, aunque su cuerpo no tenga forma de DTO)
+- `http` — rechazo HTTP con codigo tecnico (ej. 403, 404, 409) que no es 5xx
+- `contract` — fallo al decodificar el cuerpo como JSON, o el sobre no tiene forma valida
+
+Ninguna excepcion de transporte se propaga con su texto original sin filtrar.
+
+### Nivel 2 — Sobre remoto (DTO)
+
+Implementado en `parseRemoteResource` (`src/course-evaluation/index.ts`). El "sobre" tiene la forma `{ id, version, status, payload }`. Se valida que:
+- `id` sea texto no vacio
+- `status` sea texto no vacio (sin validar aun que sea un valor especifico del dominio)
+- `version` sea un entero no negativo
+- `payload` sea un objeto **o `null`** — ambos son validos a este nivel
+- Se rechaza: un arreglo como `payload`, tipos incorrectos, campos requeridos ausentes, o una entrada nula completa
+- Se ignoran campos adicionales que el sobre pueda traer en el futuro
+
+La firma de este parser es: exito `{ ok: true, value }`; fallo `{ ok: false, error: 'contract' }`.
+
+### Nivel 3 — Dominio
+
+Implementado en `mapRemoteIncident` (`src/infrastructure/IncidentMapper.ts`). Aunque el sobre sea valido, el mapper exige mas:
+- `status` debe ser uno de los cinco valores reales del dominio (`open`, `assigned`, `in_progress`, `resolved`, `closed`)
+- `category` debe pertenecer a `IncidentCategory`
+- `description`, `location` y `reporterId` deben ser texto no vacio
+- `assignedTechnicianId` debe ser `null` o texto no vacio
+- Si algo de esto falla, se lanza un error de datos de dominio invalidos (distinto del error de contrato de Nivel 2)
+
+`Incident` (`src/domain/Incident.ts`) si incluye el campo `reporterId`; se valida su presencia como parte del mapeo.
+
+## El caso central: `payload: null` (escenario `X-Course-Scenario: nullable`)
+
+El backend soporta el escenario `nullable`, que devuelve un DTO con `payload: null` a proposito — representa una incidencia que **existe** (tiene `id`, `status`, `version`) pero cuyo contenido detallado aun no esta disponible.
+
+**Comportamiento correcto (verificado en `IncidentMapper.ts`):**
+1. El parser de Nivel 2 **acepta** este DTO como valido (`payload: null` es una de las formas permitidas)
+2. El mapper de Nivel 3 **NO construye** un `Incident` completo con campos inventados
+3. En su lugar, devuelve el estado explicito `{ kind: 'unavailable', id, status, version }`
+4. La UI debe mostrar algo honesto como "Detalles no disponibles por el momento", nunca datos inventados presentados como reales — **pendiente:** la UI actual todavia no representa `unavailable` como un estado visual separado
+
+**Por que importa:** si la UI inventara datos para rellenar los campos vacios, un coordinador no podria distinguir entre "esta incidencia realmente no tiene categoria asignada" (un dato real incompleto) y "la app no tenia informacion todavia" (un hueco tecnico) — ambos se verian identicos en pantalla, lo cual podria llevar a una decision equivocada sobre la incidencia real.
+
+## Conversion DTO -> Dominio
+
+- `payload` (el contenido especifico de CampusOps) se traduce a los campos propios de `Incident`: `category`, `description`, `location`, `work`, `reporterId`
+- `payload.location`, si es textual, se convierte a `{ source: 'manual', label: <texto> }`
+- `work.status` debe ser coherente con el `status` general del DTO
+- `assignedTechnicianId` dentro de `work` debe validarse antes de utilizarse (no se asume que siempre viene bien formado)
+- `version` del sobre se conserva junto al resultado del mapeo (en `IncidentMapping`), ya que `Incident` todavia no define ese metadato dentro de si mismo
+- No se fabrican coordenadas, categoria, descripcion ni `reporterId` — todo viene del servidor o se marca explicitamente como no disponible
+
+## Manejo de errores propuesto
+
+Union discriminada con categorias: `contract` (el sobre no tiene forma valida), `timeout`, `server` (error HTTP 5xx), `network` (desconexion), y `http` (rechazo HTTP con codigo tecnico, ej. 403, 404, 409). Se distingue tambien el estado `unavailable` (payload null valido), que no es un error.
+
+La UI actual solo tiene un mensaje de error generico; se debe ampliar para conservar la causa distinguible internamente, mostrando siempre un mensaje seguro al usuario (sin exponer detalles tecnicos del servidor, como se establecio en la auditoria de la semana 4).
+
+## Logs y sanitizacion
+
+Al registrar informacion sobre estas operaciones, conservar solo: codigo de estado, contexto tecnico permitido (como `incidentId`, `correlationId`, `attempt`, `durationMs`). Nunca registrar: el cuerpo completo de la respuesta remota, cabeceras de sesion, ubicacion, descripcion, o el mensaje de una excepcion sin revisar (puede contener texto sensible incrustado).
+
+## Pendientes conocidos (fuera de alcance de esta revision)
+
+- La pantalla aun no incluye un formulario de creacion; la capacidad existe en composicion/cliente pero no esta conectada a la UI.
+- La UI no representa el estado `unavailable` de forma visual distinta a un error.
+- Faltan pruebas propias del cliente para: timeout, HTTP 500, mapeo completo DTO->dominio y creacion (incluyendo el caso 409). Se dejan como verificacion pendiente en `evidence/week-05/engineering.json` hasta que el equipo las ejecute.
