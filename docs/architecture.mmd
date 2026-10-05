@@ -2,120 +2,131 @@ flowchart TD
   Boot["Montaje: App.tsx"]
 
   subgraph UI["UI - presentación"]
-    Campus["Contenedor, selección y salud: src/ui/CampusOpsScreen.tsx"]
-    ListScreen["Lista: src/ui/IncidentListScreen.tsx"]
-    DetailScreen["Detalle: src/ui/IncidentDetailScreen.tsx"]
-    Labels["Etiquetas en español: src/ui/incidentLabels.ts"]
+    F_App_tsx["App.tsx"]
+    F_src_ui_CampusOpsScreen_tsx["src/ui/CampusOpsScreen.tsx"]
+    F_src_ui_IncidentDetailScreen_tsx["src/ui/IncidentDetailScreen.tsx"]
+    F_src_ui_IncidentListScreen_tsx["src/ui/IncidentListScreen.tsx"]
+    F_src_ui_SessionStoragePanel_tsx["src/ui/SessionStoragePanel.tsx"]
+    F_src_ui_incidentLabels_ts["src/ui/incidentLabels.ts"]
   end
 
-  subgraph APP["application - acciones"]
-    Actions["Contrato de acciones: src/application/CampusOpsActions.ts"]
-    Queries["Lista y detalle: src/application/createIncidentQueries.ts"]
-    HealthQuery["Salud: src/application/createHealthQuery.ts"]
-    AuthorizedQueries["Consulta autorizada local: src/application/createAuthorizedIncidentQueries.ts"]
-    AssignCase["Reasignación local: src/application/createAssignIncidentUseCase.ts"]
+  subgraph APPLICATION["application - casos de uso"]
+    F_src_application_CampusOpsActions_ts["src/application/CampusOpsActions.ts"]
+    F_src_application_createAssignIncidentUseCase_ts["src/application/createAssignIncidentUseCase.ts"]
+    F_src_application_createAuthorizedIncidentQueries_ts["src/application/createAuthorizedIncidentQueries.ts"]
+    F_src_application_createHealthQuery_ts["src/application/createHealthQuery.ts"]
+    F_src_application_createIncidentQueries_ts["src/application/createIncidentQueries.ts"]
+    F_src_application_createSessionStore_ts["src/application/createSessionStore.ts"]
   end
 
-  subgraph DOM["domain - modelo y puertos"]
-    Incident["Modelo: src/domain/Incident.ts"]
-    Vocabulary["Tipos y perfiles: src/campusops/contracts.ts"]
-    IncidentPort["Puerto: src/domain/IncidentRepository.ts"]
-    HealthPort["Puerto: src/domain/BackendHealthPort.ts"]
-    Actor["Actor ficticio: src/domain/Actor.ts"]
-    Authorization["Políticas por operación: src/domain/incidentAuthorization.ts"]
-    AssignPort["Puerto compartido: src/domain/IncidentAssignmentPort.ts"]
-    SecurityLog["Contrato de log: src/domain/SecurityLogger.ts"]
+  subgraph DOMAIN["domain - modelo y puertos"]
+    F_src_campusops_contracts_ts["src/campusops/contracts.ts"]
+    F_src_domain_Actor_ts["src/domain/Actor.ts"]
+    F_src_domain_BackendHealthPort_ts["src/domain/BackendHealthPort.ts"]
+    F_src_domain_Incident_ts["src/domain/Incident.ts"]
+    F_src_domain_IncidentAssignmentPort_ts["src/domain/IncidentAssignmentPort.ts"]
+    F_src_domain_IncidentRepository_ts["src/domain/IncidentRepository.ts"]
+    F_src_domain_PreferencesStorage_ts["src/domain/PreferencesStorage.ts"]
+    F_src_domain_SecureTokenStorage_ts["src/domain/SecureTokenStorage.ts"]
+    F_src_domain_SecurityLogger_ts["src/domain/SecurityLogger.ts"]
+    F_src_domain_incidentAuthorization_ts["src/domain/incidentAuthorization.ts"]
+    F_src_domain_redactForTelemetry_ts["src/domain/redactForTelemetry.ts"]
   end
 
-  subgraph INFRA["infrastructure - adaptadores"]
-    Fake["Fake en memoria: src/infrastructure/InMemoryIncidentRepository.ts"]
-    HealthAdapter["Adaptador: src/infrastructure/CourseBackendHealthAdapter.ts"]
-    Client["Cliente heredado: src/api/courseBackend.ts"]
-    AssignmentStore["Almacén local: src/infrastructure/InMemoryIncidentAssignmentPort.ts"]
-    SecurityLogStore["Log con campos permitidos: src/infrastructure/InMemorySecurityLogger.ts"]
-    IncidentCopy["Copia con campos permitidos: src/infrastructure/copyIncident.ts"]
+  subgraph INFRASTRUCTURE["infrastructure - adaptadores"]
+    F_src_api_courseBackend_ts["src/api/courseBackend.ts"]
+    F_src_api_incidentClient_ts["src/api/incidentClient.ts"]
+    F_src_infrastructure_CourseBackendHealthAdapter_ts["src/infrastructure/CourseBackendHealthAdapter.ts"]
+    F_src_infrastructure_ExpoSecureTokenStorage_ts["src/infrastructure/ExpoSecureTokenStorage.ts"]
+    F_src_infrastructure_InMemoryIncidentAssignmentPort_ts["src/infrastructure/InMemoryIncidentAssignmentPort.ts"]
+    F_src_infrastructure_InMemoryIncidentRepository_ts["src/infrastructure/InMemoryIncidentRepository.ts"]
+    F_src_infrastructure_InMemorySecurityLogger_ts["src/infrastructure/InMemorySecurityLogger.ts"]
+    F_src_infrastructure_IncidentMapper_ts["src/infrastructure/IncidentMapper.ts"]
+    F_src_infrastructure_RemoteIncidentRepository_ts["src/infrastructure/RemoteIncidentRepository.ts"]
+    F_src_infrastructure_copyIncident_ts["src/infrastructure/copyIncident.ts"]
   end
 
-  subgraph COMP["composition - construcción e inyección"]
-    Factory["src/composition/createCampusOps.ts"]
+  subgraph COMPOSITION["composition - ensamblado"]
+    F_src_composition_createCampusOps_ts["src/composition/createCampusOps.ts"]
   end
 
-  Boot --> Factory
-  Redaction["Sanitización: src/domain/redactForTelemetry.ts"]
-  TokenPort["Puerto seguro: src/domain/SecureTokenStorage.ts"]
-  PreferencesPort["Preferencias no sensibles: src/domain/PreferencesStorage.ts"]
-  SessionStore["Consumidor: src/application/createSessionStore.ts"]
-  SecureAdapter["Almacenamiento nativo: src/infrastructure/ExpoSecureTokenStorage.ts"]
-  SessionPanel["Demostración de almacenamiento: src/ui/SessionStoragePanel.tsx"]
-  SessionStore --> TokenPort
-  SessionStore --> PreferencesPort
-  SessionStore --> Redaction
-  SecureAdapter --> TokenPort
-  Factory --> SecureAdapter
-  Factory --> SessionStore
-  Actions --> SessionStore
-  Campus --> SessionPanel
-  SessionPanel --> SessionStore
-  SecurityLogStore --> Redaction
-  Boot --> Campus
-  Campus --> Actions
-  Campus --> ListScreen
-  Campus --> DetailScreen
-  ListScreen --> Incident
-  DetailScreen --> Incident
-  ListScreen --> Labels
-  DetailScreen --> Labels
-  Labels --> Vocabulary
-  Actions --> Incident
-  Actions --> HealthQuery
-  Queries --> Incident
-  Queries --> IncidentPort
-  HealthQuery --> HealthPort
-  IncidentPort --> Incident
-  Incident --> Vocabulary
-  Fake --> Incident
-  Fake -->|implementa| IncidentPort
-  Fake --> IncidentCopy
-  HealthAdapter -->|implementa| HealthPort
-  HealthAdapter --> Client
-  Factory --> Actions
-  Factory --> AuthorizedQueries
-  Factory --> Actor
-  Factory --> SecurityLogStore
-  Factory --> HealthQuery
-  Factory --> Fake
-  Factory --> HealthAdapter
-  Actor --> Vocabulary
-  Authorization --> Actor
-  Authorization --> Incident
-  AssignPort --> Incident
-  AssignPort --> IncidentPort
-  AuthorizedQueries --> Actor
-  AuthorizedQueries --> Authorization
-  AuthorizedQueries --> Incident
-  AuthorizedQueries --> IncidentPort
-  AuthorizedQueries --> SecurityLog
-  AssignCase --> Actor
-  AssignCase --> Authorization
-  AssignCase --> Incident
-  AssignCase --> AssignPort
-  AssignCase --> SecurityLog
-  AssignmentStore --> Incident
-  AssignmentStore --> AssignPort
-  AssignmentStore --> IncidentCopy
-  IncidentCopy --> Incident
-  SecurityLogStore --> SecurityLog
+  subgraph UNCLASSIFIED["Contratos compartidos y evaluación"]
+    F_src_course_evaluation_contracts_ts["src/course-evaluation/contracts.ts"]
+    F_src_course_evaluation_index_ts["src/course-evaluation/index.ts"]
+  end
 
-  Reporter(["Reportante - reporter"]) -. usa .-> Campus
-  Technician(["Técnico - technician"]) -. usa .-> Campus
-  Coordinator(["Coordinador - coordinator"]) -. usa .-> Campus
+  %% Cada flecha continua representa un import interno detectado por tests/architecture.test.ts.
+  F_App_tsx --> F_src_composition_createCampusOps_ts
+  F_App_tsx --> F_src_ui_CampusOpsScreen_tsx
+  F_src_api_incidentClient_ts --> F_src_infrastructure_IncidentMapper_ts
+  F_src_application_CampusOpsActions_ts --> F_src_domain_Incident_ts
+  F_src_application_CampusOpsActions_ts --> F_src_application_createHealthQuery_ts
+  F_src_application_CampusOpsActions_ts --> F_src_application_createSessionStore_ts
+  F_src_application_createAssignIncidentUseCase_ts --> F_src_domain_Actor_ts
+  F_src_application_createAssignIncidentUseCase_ts --> F_src_domain_incidentAuthorization_ts
+  F_src_application_createAssignIncidentUseCase_ts --> F_src_domain_Incident_ts
+  F_src_application_createAssignIncidentUseCase_ts --> F_src_domain_IncidentAssignmentPort_ts
+  F_src_application_createAssignIncidentUseCase_ts --> F_src_domain_SecurityLogger_ts
+  F_src_application_createAuthorizedIncidentQueries_ts --> F_src_domain_Actor_ts
+  F_src_application_createAuthorizedIncidentQueries_ts --> F_src_domain_incidentAuthorization_ts
+  F_src_application_createAuthorizedIncidentQueries_ts --> F_src_domain_Incident_ts
+  F_src_application_createAuthorizedIncidentQueries_ts --> F_src_domain_IncidentRepository_ts
+  F_src_application_createAuthorizedIncidentQueries_ts --> F_src_domain_SecurityLogger_ts
+  F_src_application_createHealthQuery_ts --> F_src_domain_BackendHealthPort_ts
+  F_src_application_createIncidentQueries_ts --> F_src_domain_Incident_ts
+  F_src_application_createIncidentQueries_ts --> F_src_domain_IncidentRepository_ts
+  F_src_application_createSessionStore_ts --> F_src_domain_PreferencesStorage_ts
+  F_src_application_createSessionStore_ts --> F_src_domain_SecureTokenStorage_ts
+  F_src_application_createSessionStore_ts --> F_src_domain_redactForTelemetry_ts
+  F_src_composition_createCampusOps_ts --> F_src_application_CampusOpsActions_ts
+  F_src_composition_createCampusOps_ts --> F_src_application_createAuthorizedIncidentQueries_ts
+  F_src_composition_createCampusOps_ts --> F_src_application_createHealthQuery_ts
+  F_src_composition_createCampusOps_ts --> F_src_application_createSessionStore_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_ExpoSecureTokenStorage_ts
+  F_src_composition_createCampusOps_ts --> F_src_domain_Actor_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_CourseBackendHealthAdapter_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_RemoteIncidentRepository_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_InMemorySecurityLogger_ts
+  F_src_domain_Actor_ts --> F_src_campusops_contracts_ts
+  F_src_domain_Incident_ts --> F_src_campusops_contracts_ts
+  F_src_domain_IncidentAssignmentPort_ts --> F_src_domain_Incident_ts
+  F_src_domain_IncidentAssignmentPort_ts --> F_src_domain_IncidentRepository_ts
+  F_src_domain_incidentAuthorization_ts --> F_src_domain_Actor_ts
+  F_src_domain_incidentAuthorization_ts --> F_src_domain_Incident_ts
+  F_src_domain_IncidentRepository_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_copyIncident_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_domain_BackendHealthPort_ts
+  F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_api_courseBackend_ts
+  F_src_infrastructure_ExpoSecureTokenStorage_ts --> F_src_domain_SecureTokenStorage_ts
+  F_src_infrastructure_IncidentMapper_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_IncidentMapper_ts --> F_src_campusops_contracts_ts
+  F_src_infrastructure_IncidentMapper_ts --> F_src_course_evaluation_contracts_ts
+  F_src_infrastructure_IncidentMapper_ts --> F_src_course_evaluation_index_ts
+  F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_domain_IncidentAssignmentPort_ts
+  F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_infrastructure_copyIncident_ts
+  F_src_infrastructure_InMemoryIncidentRepository_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_InMemoryIncidentRepository_ts --> F_src_domain_IncidentRepository_ts
+  F_src_infrastructure_InMemoryIncidentRepository_ts --> F_src_infrastructure_copyIncident_ts
+  F_src_infrastructure_InMemorySecurityLogger_ts --> F_src_domain_SecurityLogger_ts
+  F_src_infrastructure_InMemorySecurityLogger_ts --> F_src_domain_redactForTelemetry_ts
+  F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_IncidentRepository_ts
+  F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_api_incidentClient_ts
+  F_src_ui_CampusOpsScreen_tsx --> F_src_application_CampusOpsActions_ts
+  F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentDetailScreen_tsx
+  F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentListScreen_tsx
+  F_src_ui_CampusOpsScreen_tsx --> F_src_ui_SessionStoragePanel_tsx
+  F_src_ui_IncidentDetailScreen_tsx --> F_src_domain_Incident_ts
+  F_src_ui_IncidentDetailScreen_tsx --> F_src_ui_incidentLabels_ts
+  F_src_ui_incidentLabels_ts --> F_src_campusops_contracts_ts
+  F_src_ui_IncidentListScreen_tsx --> F_src_domain_Incident_ts
+  F_src_ui_IncidentListScreen_tsx --> F_src_ui_incidentLabels_ts
+  F_src_ui_SessionStoragePanel_tsx --> F_src_application_createSessionStore_ts
 
-  Session["Sesión: previsto; no implementado en Semana 02"]
-  Persistence["Persistencia de incidencias: futura; token ficticio en SecureStore desde Semana 04"]
-  Location["Ubicación y proveedores: previsto; no implementado en Semana 02"]
-  Session -. coordinación futura .-> APP
-  Session -. contratos futuros .-> DOM
-  Persistence -. adaptadores futuros .-> INFRA
-  Location -. adaptadores futuros .-> INFRA
+  Reporter(["Reportante - reporter"]); Technician(["Técnico - technician"]); Coordinator(["Coordinador - coordinator"]);
 
-  Legend["Continua: dependencia interna de código, incluidos tipos. Punteada: uso conceptual o límite futuro, no import implementado. Semana 4: lista y detalle aplican permisos locales al reportante ficticio fijo; no hay login. En ejecución, UI llama a las acciones inyectadas; application usa los puertos. Infraestructura devuelve datos sin invertir las dependencias. React, React Native y Expo se omiten de este mapa interno."]
+  %% Estado real al cierre de semana 5: createCampusOps inyecta RemoteIncidentRepository y mantiene sesión segura e identidad local de demostración.
+  %% incidentClient valida transporte/HTTP; IncidentMapper llama parseRemoteResource y convierte DTO a Incident. payload null se conserva como unavailable en el mapeo; el repositorio de dominio actual no lo transforma en incidencia completa.
+  %% La UI lista/detalle consume acciones, pero el formulario de creación y la presentación visual de unavailable aún no están conectados. InMemoryIncidentRepository sigue disponible para pruebas y otros casos locales.
+  %% El diagrama refleja imports estáticos reales; dependencias externas, endpoints del backend y capacidades conceptuales no se dibujan como flechas internas.
