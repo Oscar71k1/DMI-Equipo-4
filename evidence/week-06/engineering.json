@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 6,
-  "commitSha": "0b47e0b9e28eceb2e4cbb4d4c8a080751ceaa459",
+  "commitSha": "c2d171dab19be205f4297a27c4f06acf3b24bcf0",
   "decision": "La sesión se representa en createSessionCoordinator y coordina solicitudes concurrentes con una sola promesa de refresh por época de sesión. Un 401 permite un solo reintento por solicitud; expiración usa un reloj inyectado; logout o refresh fallido invalidan la época, vuelven a anonymous y limpian el almacenamiento. Las comprobaciones de rol se aplican en las políticas de dominio y el backend valida también sus operaciones.",
   "alternatives": [
     "Renovar por separado desde cada petición 401: reduce coordinación interna, pero produce refresh duplicados cuando varias solicitudes expiran juntas y facilita carreras con logout.",
