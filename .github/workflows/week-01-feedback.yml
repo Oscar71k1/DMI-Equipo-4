@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - semana-06-oscar
     tags:
       - week-01-final
   pull_request:
