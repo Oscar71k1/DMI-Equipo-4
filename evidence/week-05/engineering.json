@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "ad697a7ae9d2a43efc65495cf665e2c50c0cda9a",
+  "commitSha": "2ec80f65335a7c0d10662f1a0adb59cf51dae2f1",
   "decision": "El equipo centraliza la validacion y conversion DTO-a-dominio en el limite de infraestructura (parser compartido en src/course-evaluation/index.ts y mapper en src/infrastructure/IncidentMapper.ts), en vez de que cada pantalla valide y mapee los datos del servidor por su cuenta. La composicion conecta ese cliente (src/api/incidentClient.ts) con las acciones de aplicacion.",
   "alternatives": [
     "Validar y mapear los datos del servidor en cada pantalla (UI) de forma independiente, sin un punto central de conversion.",
