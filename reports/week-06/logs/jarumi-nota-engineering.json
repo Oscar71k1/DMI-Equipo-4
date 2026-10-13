@@ -1,0 +1,23 @@
+{
+  "commitSha": "717a84b5d250d669535d9dec8425c820b8f60db8",
+  "decision": "Coordinar la renovacion de sesion con una sola llamada compartida (single-flight) en coordinateRefresh: varios 401 simultaneos esperan la misma renovacion, cada peticion se reintenta una sola vez, y si la renovacion falla o hay logout la sesion vuelve a anonymous con el token persistido en null. Un exito de renovacion que llega despues de un logout se ignora y no revive la sesion.",
+  "alternatives": [
+    "Que cada peticion con 401 renueve por su cuenta: es mas simple, pero genera renovaciones duplicadas y simultaneas, y el backend didactico rechaza el segundo uso de course-refresh-0 en la rotacion (course-refresh-1 siempre da 401 invalid_grant).",
+    "Reintentar la renovacion sin limite hasta que funcione: tolera fallos temporales, pero un invalid_grant permanente produciria un bucle y mantendria una sesion que ya no es valida."
+  ],
+  "tradeoff": "Beneficio: una sola llamada de renovacion, sin bucles y con un estado seguro conocido al fallar. Costo aceptado: una peticion que vuelve a recibir 401 tras su reintento no se reintenta otra vez, y un fallo temporal de red al renovar cierra la sesion en lugar de reintentar.",
+  "requirementIds": ["AC-02", "AC-03", "AC-04"],
+  "verification": [
+    {
+      "command": "npx jest course-tests/public/week-06.test.ts",
+      "result": "2 passed",
+      "evidence": "Tres 401 simultaneos producen 1 renovacion y 3 reintentos unicos; logout deja persistedToken en null."
+    },
+    {
+      "command": "npx jest src/course-evaluation/tmp-refresh.test.ts (archivo temporal, no versionado)",
+      "result": "2 passed",
+      "evidence": "refreshFailed deja status anonymous, token null y 1 sola renovacion; un refreshSucceeded posterior al logout no revive la sesion."
+    }
+  ],
+  "limitaciones": "coordinateRefresh es una funcion pura sobre eventos y aun no esta conectada a createSessionManager ni a las peticiones reales; el flujo de login y logout en la app no esta probado."
+}
