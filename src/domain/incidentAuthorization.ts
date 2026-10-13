@@ -23,3 +23,38 @@ export function canModifyIncident(actor: Actor, incident: Incident): boolean {
   if (actor.role === 'technician') return incident.work.assignedTechnicianId === actor.id;
   return false;
 }
+
+// --- Semana 6: politica por accion ---
+// Fuente: course-backend/campusops.mjs y docs/CAMPUSOPS.md.
+// Solo cubre permisos por rol y asignacion. Las transiciones de estado
+// (por ejemplo, resolver solo desde in_progress) las valida el servidor.
+
+export function canCreateIncident(actor: Actor): boolean {
+  return actor.role === 'reporter';
+}
+
+export function canPrioritizeIncident(actor: Actor): boolean {
+  return actor.role === 'coordinator';
+}
+
+export function canCloseIncident(actor: Actor): boolean {
+  return actor.role === 'coordinator';
+}
+
+export function canReopenIncident(actor: Actor): boolean {
+  return actor.role === 'coordinator';
+}
+
+// Iniciar y resolver son del tecnico asignado; la coordinacion no los ejecuta.
+export function canStartIncident(actor: Actor, incident: Incident): boolean {
+  return actor.role === 'technician' && incident.work.assignedTechnicianId === actor.id;
+}
+
+export function canResolveIncident(actor: Actor, incident: Incident): boolean {
+  return actor.role === 'technician' && incident.work.assignedTechnicianId === actor.id;
+}
+
+// Comentar y agregar evidencia: quien puede ver la incidencia.
+export function canAnnotateIncident(actor: Actor, incident: Incident): boolean {
+  return canViewIncident(actor, incident);
+}
