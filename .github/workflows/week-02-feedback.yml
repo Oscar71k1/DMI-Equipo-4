@@ -47,7 +47,6 @@ jobs:
           path: reports/week-02/**
 
   frozen-delivery:
-    if: github.ref == 'refs/tags/week-02-final'
     name: Official evaluation - week-02-final
     runs-on: ubuntu-latest
     timeout-minutes: 25
