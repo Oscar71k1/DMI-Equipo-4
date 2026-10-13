@@ -1,6 +1,6 @@
 import type { IncidentRepository } from '../domain/IncidentRepository';
 import type { Incident } from '../domain/Incident';
-import { createIncidentClient, type IncidentClientConfig } from '../api/incidentClient';
+import { createIncidentClient, type IncidentActionInput, type IncidentClientConfig } from '../api/incidentClient';
 import { IncidentClientError } from '../api/incidentClient';
 
 export function createRemoteIncidentRepository(config: IncidentClientConfig = {}): IncidentRepository {
@@ -21,6 +21,9 @@ export function createRemoteIncidentRepository(config: IncidentClientConfig = {}
     },
     async create(input, idempotencyKey) {
       return requireIncident((await client.createIncident(input, idempotencyKey)).incident);
+    },
+    async performAction(incidentId: string, input: IncidentActionInput, idempotencyKey: string) {
+      return requireIncident(await client.performIncidentAction(incidentId, input, idempotencyKey));
     },
   };
 }

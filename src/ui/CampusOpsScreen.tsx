@@ -6,6 +6,7 @@ import { IncidentDetailScreen } from './IncidentDetailScreen';
 import { IncidentCreateForm } from './IncidentCreateForm';
 import { IncidentListScreen } from './IncidentListScreen';
 import { SessionStoragePanel } from './SessionStoragePanel';
+import { SessionPanel } from './SessionPanel';
 
 type BackendStatus = 'checking' | 'available' | 'offline';
 
@@ -17,6 +18,15 @@ export function CampusOpsScreen({ actions }: Props) {
   const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [sessionSnapshot, setSessionSnapshot] = useState(actions.auth?.snapshot() ?? null);
+
+  useEffect(() => {
+    if (!actions.auth) return undefined;
+    setSessionSnapshot(actions.auth.snapshot());
+    const unsubscribe = actions.auth.subscribe(setSessionSnapshot);
+    if (actions.auth.snapshot().status === 'restoring') void actions.auth.restore();
+    return unsubscribe;
+  }, [actions.auth]);
 
   useEffect(() => {
     let active = true;
@@ -34,9 +44,9 @@ export function CampusOpsScreen({ actions }: Props) {
         <Text style={styles.title}>CampusOps</Text>
         <Text>Incidencias del campus · entorno académico ficticio</Text>
         <Text testID="backend-status">Backend: {backendStatus}</Text>
-        {actions.session && <SessionStoragePanel session={actions.session} />}
+        {actions.auth ? <SessionPanel auth={actions.auth} /> : actions.session && <SessionStoragePanel session={actions.session} />}
       </View>
-      {selectedId !== null ? (
+      {actions.auth && sessionSnapshot?.status !== 'authenticated' ? null : selectedId !== null ? (
         <IncidentDetailScreen
           incidentId={selectedId}
           getIncidentDetail={actions.getIncidentDetail}

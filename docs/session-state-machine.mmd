@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> restoring
+    restoring --> anonymous: no hay sesión o el almacenamiento falla
+    restoring --> authenticated: sesión guardada y vigente
+    restoring --> expired: sesión guardada vencida
+    anonymous --> authenticated: login válido y persistencia segura
+    anonymous --> anonymous: login rechazado, error de red o almacenamiento
+    authenticated --> expired: vence expiresAt
+    authenticated --> refreshing: respuesta 401
+    expired --> refreshing: restauración o solicitud requiere renovar
+    refreshing --> refreshing: otros 401 comparten la renovación en curso
+    refreshing --> authenticated: refresh válido y tokens guardados
+    refreshing --> anonymous: refresh fallido, obsoleto o error al guardar
+    authenticated --> anonymous: logout
+    expired --> anonymous: logout
+    refreshing --> anonymous: logout invalida la generación
