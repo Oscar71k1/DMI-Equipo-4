@@ -1,0 +1,29 @@
+{
+  "studentId": "3523110055",
+  "commitShas": [
+    "b2b335428931be0c7d38d2d5a8fe93af28386f26",
+    "50cb742bddf137a05820d1d56216cae96280ad16",
+    "2e0aeeacb61b74a2f747a26b3c3588a89d0e6b85",
+    "9653accf881f9a7f6ef331fd1dba198dc9b4228a",
+    "717a84b5d250d669535d9dec8425c820b8f60db8"
+  ],
+  "files": [
+    "src/domain/incidentAuthorization.ts",
+    "src/course-evaluation/index.ts",
+    "src/application/createSessionManager.ts",
+    "docs/session-state-machine.mmd",
+    "reports/week-06/auth-tests.json",
+    "reports/week-06/concurrency.json"
+  ],
+  "tests": [
+    "npx jest course-tests/public/week-06.test.ts: 2 pruebas pasaron",
+    "npm run typecheck: sin errores",
+    "npm test (tests/security.test.ts y tests/architecture.test.ts): 15 pruebas pasaron en el commit b2b3354",
+    "Prueba temporal de coordinateRefresh (refreshFailed y exito tardio tras logout): 2 pruebas pasaron; el archivo se borro y no esta versionado"
+  ],
+  "reviews": [],
+  "prediction": "Escrita el 2026-10-12T19:25:22-06:00, antes de ejecutar (reports/week-06/logs/jarumi-prediccion-login.txt): 1) el login de technician-1 devuelve solo un token; 2) un actor inexistente (fantasma-1) da error, sin saber el codigo; 3) reporter-1 haciendo resolve sobre campus-inc-001 cambia el estado de la incidencia.",
+  "command": "curl contra el backend didactico: login de technician-1, login de fantasma-1 y resolve de reporter-1 sobre campus-inc-001 (salida en reports/week-06/logs/jarumi-login-observado.txt)",
+  "observedResult": "1) 200 con actorId, role, accessToken, refreshToken y expiresIn 60: no coincidio, devuelve mas que un token. 2) 401 con code unknown_fixture_actor: coincidio. 3) 403 forbidden y la incidencia siguio en version 1, estado assigned: no coincidio, el rechazo no modifica el recurso.",
+  "explanation": "Agregue politicas de autorizacion por accion en incidentAuthorization.ts segun lo observado en el backend. Implemente coordinateRefresh: tres 401 simultaneos producen una sola renovacion, cada peticion se reintenta una vez, y un refreshFailed o un logout vuelven a anonimo con el token en null; un exito tardio despues del logout no revive la sesion. Escribi createSessionManager.ts (estados restoring, unauthenticated, authenticated y expired, con login y logout sobre el almacen seguro) y el diagrama de estados. Pendiente: createSessionManager aun no esta conectado a createCampusOps.ts ni a la interfaz, asi que el login y el logout en la app no estan probados. Las politicas tampoco estan conectadas a la capa de aplicacion. coordinateRefresh y createSessionManager todavia no se comunican, por eso el diagrama no muestra expired a authenticated."
+}

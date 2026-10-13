@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "717a84b5d250d669535d9dec8425c820b8f60db8",
+  "generatedAt": "2026-10-12T20:52:46.7169979-06:00",
+  "checks": [
+    {
+      "id": "coalesce-concurrent-401",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest course-tests/public/week-06.test.ts",
+      "evidence": "2 passed. Tres 401 simultaneos producen 1 renovacion y 3 reintentos, uno por peticion."
+    },
+    {
+      "id": "logout-clears-persisted-token",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest course-tests/public/week-06.test.ts",
+      "evidence": "logout deja persistedToken en null."
+    },
+    {
+      "id": "refresh-failed-returns-anonymous",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/course-evaluation/tmp-refresh.test.ts",
+      "evidence": "2 passed. refreshFailed deja status anonymous, token null, 1 sola renovacion y 0 reintentos. Archivo temporal ya borrado; no esta versionado."
+    },
+    {
+      "id": "late-refresh-after-logout-ignored",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/course-evaluation/tmp-refresh.test.ts",
+      "evidence": "Un refreshSucceeded posterior al logout no revive la sesion: status anonymous y token null."
+    }
+  ]
+}
