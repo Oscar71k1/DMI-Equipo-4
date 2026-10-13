@@ -1,0 +1,8 @@
+﻿Predicciones antes de probar (semana 6, Jarumi)
+Escritas ANTES de ejecutar las pruebas del token invalido y de las politicas.
+
+A) GET /v1/incidents con Bearer token-caducado: espero 401 Unauthorized con un JSON de error estructurado, sin trazas internas.
+B) La misma peticion sin X-Course-Actor: espero rechazo por falta de identidad (400 o 401).
+C1) Coordinador intenta resolve: la politica lo rechaza; resolver es exclusivo del tecnico asignado.
+C2) Tecnico asignado intenta resolve: la politica lo autoriza, siempre que sea el asignado y la incidencia este en assigned o in_progress.
+Fecha de guardado: 2026-10-12T19:53:07.7776036-06:00

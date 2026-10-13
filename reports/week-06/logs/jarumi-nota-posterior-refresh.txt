@@ -1,0 +1,7 @@
+﻿Nota posterior sobre la respuesta 1 del refresh (semana 6, Jarumi)
+Escrita DESPUES de ver los resultados de las pruebas.
+
+En las pruebas del backend didactico se observo que course-refresh-0 responde exitosamente (HTTP 200), mientras que course-refresh-1 es rechazado con invalid_grant. Mi mencion previa de un fallo en course-refresh-0 fue una imprecision de mi interpretacion inicial.
+
+Propuesta de diseno (AUN NO IMPLEMENTADA en codigo): ante un error de renovacion como invalid_grant, createSessionStore deberia pasar a un estado explicito unauthenticated y pedir la eliminacion del token en ExpoSecureTokenStorage. Esto se conectara durante el desarrollo del flujo de sesion de la semana 6.
+Fecha de esta nota: 2026-10-12T19:53:07.6994789-06:00

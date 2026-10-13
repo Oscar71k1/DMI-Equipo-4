@@ -40,14 +40,85 @@ export function parseRemoteResource(input: unknown): ParseResult {
   };
 }
 
-export function coordinateRefresh(_events: readonly AuthEvent[]): Readonly<{
+export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   status: 'anonymous' | 'authenticated';
   activeGeneration: number | null;
   refreshCalls: number;
   retriedRequestIds: readonly string[];
   persistedToken: string | null;
 }> {
-  return pending('coordinateRefresh');
+  let status: 'anonymous' | 'authenticated' = 'anonymous';
+  let activeGeneration: number | null = null;
+  let persistedToken: string | null = null;
+  let refreshCalls = 0;
+  let refreshInFlight = false;
+  let sessionEnded = false;
+  const waiting: string[] = [];
+  const retried: string[] = [];
+
+  function endSession() {
+    status = 'anonymous';
+    activeGeneration = null;
+    persistedToken = null;
+    refreshInFlight = false;
+    sessionEnded = true;
+    waiting.length = 0;
+  }
+
+  events.forEach((event, index) => {
+    switch (event.type) {
+      case 'request401': {
+        if (sessionEnded) return;
+        if (activeGeneration === null) {
+          activeGeneration = event.generation ?? 0;
+          status = 'authenticated';
+        }
+        const id = event.requestId ?? `request-${index}`;
+        if (retried.includes(id)) return;
+        if (event.generation !== undefined && event.generation < activeGeneration) {
+          retried.push(id);
+          return;
+        }
+        if (!waiting.includes(id)) waiting.push(id);
+        if (!refreshInFlight) {
+          refreshInFlight = true;
+          refreshCalls += 1;
+        }
+        return;
+      }
+      case 'refreshSucceeded': {
+        if (sessionEnded || !refreshInFlight) return;
+        if (!event.token) {
+          endSession();
+          return;
+        }
+        activeGeneration = event.generation ?? (activeGeneration ?? 0) + 1;
+        persistedToken = event.token;
+        status = 'authenticated';
+        refreshInFlight = false;
+        retried.push(...waiting);
+        waiting.length = 0;
+        return;
+      }
+      case 'refreshFailed': {
+        if (sessionEnded || !refreshInFlight) return;
+        endSession();
+        return;
+      }
+      case 'logout': {
+        endSession();
+        return;
+      }
+    }
+  });
+
+  return {
+    status,
+    activeGeneration,
+    refreshCalls,
+    retriedRequestIds: [...retried],
+    persistedToken,
+  };
 }
 
 export function resolveSync(

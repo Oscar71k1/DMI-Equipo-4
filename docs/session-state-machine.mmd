@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> restoring
+    restoring --> authenticated: sesion valida guardada
+    restoring --> expired: sesion guardada vencida
+    restoring --> unauthenticated: sin token o error de almacenamiento
+    unauthenticated --> authenticated: signIn correcto y token guardado
+    unauthenticated --> unauthenticated: signIn rechazado o error de red
+    authenticated --> expired: expiracion
+    authenticated --> unauthenticated: signOut
+    expired --> unauthenticated: refreshFailed
+    expired --> unauthenticated: signOut

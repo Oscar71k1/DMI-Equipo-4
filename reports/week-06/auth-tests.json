@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "717a84b5d250d669535d9dec8425c820b8f60db8",
+  "generatedAt": "2026-10-12T20:56:01.3981049-06:00",
+  "checks": [
+    {
+      "id": "backend-login-ok",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "curl login technician-1 (comando completo en reports/week-06/logs/jarumi-login-observado.txt, PRUEBA 1)",
+      "evidence": "Backend: 200 con actorId, role, accessToken, refreshToken y expiresIn 60. Observacion del backend; el login conectado en la app no esta implementado."
+    },
+    {
+      "id": "backend-login-unknown-actor",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "curl login fantasma-1 (reports/week-06/logs/jarumi-login-observado.txt, PRUEBA 2)",
+      "evidence": "Backend: 401 con code unknown_fixture_actor."
+    },
+    {
+      "id": "backend-resolve-forbidden-reporter",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "curl resolve con reporter-1 sobre campus-inc-001 (reports/week-06/logs/jarumi-login-observado.txt, PRUEBA 3b)",
+      "evidence": "Backend: 403 forbidden. La incidencia siguio en version 1 y estado assigned antes y despues."
+    },
+    {
+      "id": "backend-expired-token-401",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "curl con token-caducado (reports/week-06/logs/jarumi-token-invalido-observado.txt, A, B y C)",
+      "evidence": "Backend: token caducado, actor ausente o ambos devuelven 401 con el mismo cuerpo unauthorized; el cliente no puede distinguir la causa."
+    },
+    {
+      "id": "backend-refresh-invalid-grant",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "curl refresh con course-refresh-0 y course-refresh-1 (reports/week-06/logs/jarumi-refresh-observado.txt)",
+      "evidence": "Backend: course-refresh-0 devuelve 200 cada vez; course-refresh-1 devuelve 401 invalid_grant."
+    },
+    {
+      "id": "authorization-policies-tests",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test (reports/week-06/logs/jarumi-politicas-despues.txt)",
+      "evidence": "2 suites y 15 pruebas pasaron, EXIT_CODE=0, con las politicas por accion de incidentAuthorization.ts. Las politicas aun no estan conectadas a la aplicacion."
+    },
+    {
+      "id": "logout-clears-token-coordinateRefresh",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest course-tests/public/week-06.test.ts",
+      "evidence": "Prueba unitaria de coordinateRefresh: logout deja persistedToken en null. No es el logout de la interfaz."
+    }
+  ]
+}
