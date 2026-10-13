@@ -281,7 +281,8 @@ export function createSessionCoordinator(deps: SessionCoordinatorDependencies): 
 
       safeLog({ event: 'request-401', requestId, generation: sentGeneration });
       if (generation === sentGeneration && !(await refreshShared())) return { kind: 'unauthenticated' };
-      if (status === 'refreshing' && inFlight && !(await inFlight.promise)) return { kind: 'unauthenticated' };
+      const pendingRefresh = inFlight;
+      if (pendingRefresh !== null && !(await pendingRefresh.promise)) return { kind: 'unauthenticated' };
       if (sessionEpoch !== requestEpoch) return { kind: 'unauthenticated' };
       const retryToken = accessToken;
       if (status !== 'authenticated' || retryToken === null) return { kind: 'unauthenticated' };

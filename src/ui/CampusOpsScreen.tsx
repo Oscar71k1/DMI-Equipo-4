@@ -22,7 +22,6 @@ export function CampusOpsScreen({ actions }: Props) {
 
   useEffect(() => {
     if (!actions.auth) return undefined;
-    setSessionSnapshot(actions.auth.snapshot());
     const unsubscribe = actions.auth.subscribe(setSessionSnapshot);
     if (actions.auth.snapshot().status === 'restoring') void actions.auth.restore();
     return unsubscribe;
