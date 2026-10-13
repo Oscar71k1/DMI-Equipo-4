@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "966e73cd9b25d2c214373834dc45de31b19299fc",
+  "generatedAt": "2026-10-13T02:53:09Z",
+  "checks": [
+    {
+      "id": "SES-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "evidence": "3 solicitudes concurrentes recibieron 401; refreshCalls = 1 (renovacion compartida single-flight); las 3 terminaron ok; 6 envios en total (3 iniciales + 3 reintentos, uno por solicitud); generacion final 2. Prueba con puerto de refresh falso, no con el cliente HTTP real. Codigo de salida 0. Log: reports/week-06/logs/fernanda-concurrencia.txt"
+    },
+    {
+      "id": "SES-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "evidence": "Refresh rechazado (invalid_grant simulado) con 3 solicitudes concurrentes: las 3 terminaron unauthenticated, refreshCalls = 1, estado anonymous, token persistido = null y una solicitud posterior no disparo otro refresh (sin bucle). Codigo de salida 0. Log: reports/week-06/logs/fernanda-concurrencia.txt"
+    },
+    {
+      "id": "SES-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "evidence": "Logout mientras el refresh seguia en curso y respuesta tardia despues: resultado unauthenticated, estado anonymous, token persistido = null; la unica escritura al almacenamiento fue refresh-0 del login, la respuesta tardia no volvio a persistir. Codigo de salida 0. Log: reports/week-06/logs/fernanda-concurrencia.txt"
+    },
+    {
+      "id": "SES-04",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "evidence": "Reloj falso avanzado 61000 ms con expiresIn 60 s: la primera llamada renovo antes de enviar; refreshCalls = 1 y 1 solo envio, ya con el token nuevo. Sin esperas reales. Codigo de salida 0. Log: reports/week-06/logs/fernanda-concurrencia.txt"
+    },
+    {
+      "id": "SES-05",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "evidence": "Limite de reintentos: el servidor responde 401 aun tras renovar; resultado unauthorized, refreshCalls = 1 y exactamente 2 envios (1 reintento por solicitud, sin segundo refresh). Codigo de salida 0. Log: reports/week-06/logs/fernanda-concurrencia.txt"
+    },
+    {
+      "id": "SES-06",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "evidence": "Los eventos de log incluyen session-refresh-success y ninguno contiene los valores access-0, access-1, refresh-0 ni refresh-1. Codigo de salida 0. La primera version de esta prueba fallo por una revision demasiado floja y se conserva en reports/week-06/logs/fernanda-sesion-prueba-floja.txt. Log: reports/week-06/logs/fernanda-concurrencia.txt"
+    }
+  ]
+}
