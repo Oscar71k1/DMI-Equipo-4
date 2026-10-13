@@ -1,0 +1,15 @@
+
+> dmi-react-native-starter@1.0.0 bundle:release
+> expo export --platform android --output-dir dist/export
+
+Starting Metro Bundler
+
+Android Bundled 6041ms index.ts (609 modules)
+
+› android bundles (1):
+_expo/static/js/android/index-8fc45cb67bd8da479469581ef0e3eddf.hbc (1.5MB)
+
+› Files (1):
+metadata.json (150B)
+
+Exported: dist/export

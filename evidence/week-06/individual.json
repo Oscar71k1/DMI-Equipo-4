@@ -3,8 +3,62 @@
   "week": 6,
   "teamId": "4",
   "status": "partial",
-  "notes": "Registro individual de Fernanda; los demas integrantes los consolida Oscar.",
+  "notes": "Se conservaron las aportaciones y SHAs originales de Fernanda y Jarumi. Los commits de Jarumi son de su rama previa; la integración final de sesión y permisos está registrada en el commit de Oscar. Los resultados de esta versión se enlazan a logs reproducidos aquí; la autenticación de actores sigue siendo una fixture didáctica.",
   "members": [
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "aea46f371919eb4698bbe1bb0a6833555bc5357c"
+      ],
+      "files": [
+        "src/application/createSessionCoordinator.ts",
+        "src/domain/incidentAuthorization.ts",
+        "src/infrastructure/CourseSessionAdapter.ts",
+        "src/composition/createCampusOps.ts",
+        "src/ui/SessionPanel.tsx",
+        "docs/session-state-machine.mmd"
+      ],
+      "tests": [
+        "Verificación asistida sobre el SHA actualizado: 4 suites y 23 pruebas (refresh, integración SecureStore, políticas y prueba pública semana 6) pasaron; salida reports/week-06/logs/oscar-session-tests.txt.",
+        "npm run backend:self-test, typecheck, lint, smoke, audit:ci y bundle:release pasaron; logs bajo reports/week-06/logs/oscar-*.txt."
+      ],
+      "reviews": [
+        "Contrasté permisos de dominio y backend: reportante no cierra; técnico sólo opera la asignación vigente; coordinación asigna, cierra y reabre. El selector X-Course-Actor queda identificado como fixture, no autenticación de producción."
+      ],
+      "prediction": "Al integrar la coordinación, esperaba que un logout durante una renovación invalidara la generación de sesión y que la respuesta tardía no persistiera tokens; también que un 401 posterior al único reintento no iniciara otro refresh.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts tests/session-integration.test.tsx tests/security.test.ts course-tests/public/week-06.test.ts",
+      "observedResult": "4 suites/23 pruebas aprobadas, incluyendo SES-03 y SES-05; typecheck, lint, audit:ci, smoke, backend:self-test y bundle también finalizaron con código 0.",
+      "explanation": "El commit de integración aea46f3 conecta el coordinador de sesión con la composición y el cliente de incidencias, y aplica políticas de permiso en la capa de aplicación además de la validación del backend. El agente asistió a la edición y ejecución actual; no se modificaron pruebas, worker, workflow ni evaluador. La lista de actor del backend es ficticia y no se presenta como autenticación de producción."
+    },
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "b2b335428931be0c7d38d2d5a8fe93af28386f26",
+        "50cb742bddf137a05820d1d56216cae96280ad16",
+        "2e0aeeacb61b74a2f747a26b3c3588a89d0e6b85",
+        "9ad3c30e4adc0b556312bc42e9004d99058ea28e",
+        "eab0c850569f757a1f7208f56db588c425bd48b2"
+      ],
+      "files": [
+        "src/domain/incidentAuthorization.ts",
+        "src/application/createSessionManager.ts",
+        "src/course-evaluation/index.ts",
+        "docs/session-state-machine.mmd",
+        "reports/week-06/auth-tests.json",
+        "reports/week-06/logs/jarumi-nota-engineering.json"
+      ],
+      "tests": [
+        "En la revisión de su rama previa registró 2 pruebas públicas de coordinateRefresh aprobadas y 15 pruebas de políticas; su reporte explícita que login/conexión aún no estaban integrados en esa versión.",
+        "Observó login válido de technician-1 y rechazo 401 de fantasma-1; la prueba usaba actor didáctico, no autenticación real."
+      ],
+      "reviews": [
+        "Su nota técnica comparó renovación individual y reintentos ilimitados, y documentó el límite de la fixture. La coordinación final actualizó la implementación y volvió a ejecutar 23 pruebas sobre el SHA de integración."
+      ],
+      "prediction": "Antes de las pruebas de backend predijo que un actor inexistente sería rechazado y que reporter-1 no podría cerrar campus-inc-001 ni cambiar su estado.",
+      "command": "npx jest course-tests/public/week-06.test.ts; npm test (políticas en su rama); backend login/resolve según reports/week-06/logs/jarumi-login-observado.txt",
+      "observedResult": "En su rama previa quedaron registradas 2 pruebas de coordinateRefresh y 15 pruebas de autorización aprobadas; reporter-1 recibió 403 sin modificar la incidencia. Los logs separan esa observación previa de las comprobaciones actuales de integración.",
+      "explanation": "Sus commits aportaron una primera coordinación de refresh, reglas por acción y el diseño inicial del diagrama. Son evidencia histórica de su contribución en origin/semana-06-jarumi; la solución final consolidó el ciclo real en createSessionCoordinator y volvió a verificarlo, sin atribuirle como actual el resultado anterior."
+    },
     {
       "studentId": "3523110496",
       "commitShas": [
