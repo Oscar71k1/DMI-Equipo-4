@@ -1,4 +1,4 @@
-﻿stateDiagram-v2
+stateDiagram-v2
     [*] --> restoring
     restoring --> authenticated: sesion valida guardada
     restoring --> expired: sesion guardada vencida
@@ -7,6 +7,5 @@
     unauthenticated --> unauthenticated: signIn rechazado o error de red
     authenticated --> expired: expiracion
     authenticated --> unauthenticated: signOut
-    expired --> authenticated: refreshSucceeded
     expired --> unauthenticated: refreshFailed
     expired --> unauthenticated: signOut
