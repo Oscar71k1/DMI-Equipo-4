@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "teamId": "4",
+  "status": "partial",
+  "notes": "Registro individual de Fernanda; los demas integrantes los consolida Oscar.",
+  "members": [
+    {
+      "studentId": "3523110496",
+      "commitShas": [
+        "966e73cd9b25d2c214373834dc45de31b19299fc"
+      ],
+      "files": [
+        "src/domain/sessionRefresh.ts",
+        "src/domain/SessionRefreshPort.ts",
+        "src/application/createSessionCoordinator.ts",
+        "src/course-evaluation/index.ts",
+        "tests/session-refresh.test.ts",
+        "reports/week-06/concurrency.json",
+        "reports/week-06/logs/fernanda-sesion-antes.txt",
+        "reports/week-06/logs/fernanda-sesion-prueba-floja.txt",
+        "reports/week-06/logs/fernanda-sesion-despues.txt",
+        "reports/week-06/logs/fernanda-concurrencia.txt",
+        "reports/week-06/logs/fernanda-regresiones.txt"
+      ],
+      "tests": [
+        "tests/session-refresh.test.ts (archivo nuevo, SES-01 a SES-06): single-flight con 3 solicitudes, refresh rechazado, logout durante el refresh, expiracion con reloj falso, limite de reintentos y logs sin valores de token.",
+        "course-tests/public/week-06.test.ts: 2/2 aprobadas con coordinateRefresh implementado sobre reduceSession.",
+        "Regresiones de 11 archivos: 64 pasaron y 3 fallaron en 2 archivos (detalle en observedResult). tsc y lint sin errores."
+      ],
+      "reviews": [],
+      "prediction": "SES-01: 3 solicitudes con 401 comparten 1 refresh, las 3 terminan ok y hay 6 envios (3 mas 3 reintentos). SES-02: con refresh rechazado las 3 terminan unauthenticated, hay 1 refresh, el token persistido queda en null y una solicitud nueva no dispara otro refresh. SES-03: un logout durante el refresh deja la sesion anonima sin escribir el token nuevo. SES-04: con el reloj avanzado 61 s la primera llamada ya usa el token nuevo y hay 1 solo envio. SES-05: un segundo 401 devuelve unauthorized con 1 refresh y exactamente 2 envios. SES-06: los logs traen eventos tecnicos pero ningun valor de token. Estas predicciones estan escritas como comentarios en tests/session-refresh.test.ts.",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "observedResult": "tests/session-refresh.test.ts: 6 passed, 6 total, codigo de salida 0 (log reports/week-06/logs/fernanda-concurrencia.txt). La primera version de SES-06 fallo por una revision demasiado floja (buscaba refresh- y coincidia con nombres de eventos); se corrigio para buscar valores reales de tokens y la corrida fallida se conserva en reports/week-06/logs/fernanda-sesion-prueba-floja.txt. Regresiones: 64 pasaron y 3 fallaron. tests/architecture.test.ts falla por mi codigo: createSessionCoordinator importa createSessionStore y SessionRefreshPort y esas dos dependencias no estan en docs/architecture.mmd (archivo de Jarumi, pendiente de coordinar; no se modifico la prueba). tests/security-audit.test.ts (Hallazgo 3) falla con IncidentClientError http en src/api/incidentClient.ts; no modifique cliente ni composicion y el origen no esta confirmado: no se verifico en main limpio ni con el backend levantado. Limites: las pruebas usan un puerto de refresh y un reloj falsos; no cree el adaptador real de SessionRefreshPort ni conecte el coordinador al cliente HTTP real, y make feedback, make verify-week-06 y make public-test-week-06 no se habian ejecutado al momento de este registro.",
+      "explanation": "Una sola promesa de refresh compartida mas una generacion de sesion evitan que varias solicitudes con 401 renueven la sesion una y otra vez, y permiten distinguir un 401 viejo de uno de la sesion vigente: logout invalida la generacion y una respuesta tardia no vuelve a persistir la sesion. El costo aceptado es mas estado compartido y mas complejidad que renovar de forma independiente. Ayuda de IA: use un asistente de IA (Claude) para planear los pasos, redactar el codigo y las pruebas y armar este registro. La verifique corriendo yo misma las pruebas y revisando git diff --cached y git diff --check antes del commit, y comprobando el autor y el SHA con git log -1 --format=fuller."
+    }
+  ]
+}
