@@ -1,0 +1,50 @@
+# Week 06 current-commit checks for secure session lifecycle and concurrency.
+name: Week 06 Secure Session Feedback
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: week-06-session-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  current-tests:
+    name: Current commit - Week 06 session tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout current commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - name: Use Node.js 22.22.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - name: Reproducible setup
+        run: make setup
+      - name: Verify current toolchain
+        run: make verify-week-06
+      - name: Run session, authorization and public Week 06 tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports/week-06/logs
+          npm test -- --ci --runInBand --runTestsByPath tests/session-refresh.test.ts course-tests/public/week-06.test.ts 2>&1 | tee reports/week-06/logs/ci-current-tests.txt
+      - name: Upload current commit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week-06-current-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: warn
+          path: |
+            reports/week-06/**
+            evidence/week-06/**
