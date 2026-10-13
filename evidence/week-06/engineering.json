@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "68fe3fb21278dd8341580ea0eb48f5491f817f06",
+  "decision": "La sesión se representa en createSessionCoordinator y coordina solicitudes concurrentes con una sola promesa de refresh por época de sesión. Un 401 permite un solo reintento por solicitud; expiración usa un reloj inyectado; logout o refresh fallido invalidan la época, vuelven a anonymous y limpian el almacenamiento. Las comprobaciones de rol se aplican en las políticas de dominio y el backend valida también sus operaciones.",
+  "alternatives": [
+    "Renovar por separado desde cada petición 401: reduce coordinación interna, pero produce refresh duplicados cuando varias solicitudes expiran juntas y facilita carreras con logout.",
+    "Repetir la renovación hasta obtener éxito: puede tolerar una falla temporal, pero ante invalid_grant crea bucles y deja viva una sesión que ya no es válida.",
+    "Confiar en que la interfaz oculte las acciones de otros roles: es sencillo para la pantalla, pero no protege operaciones enviadas directamente al backend."
+  ],
+  "tradeoff": "La renovación compartida evita duplicados, limita cada solicitud a un reintento y permite descartar respuestas de una sesión obsoleta; el almacenamiento se limpia al fallar. El costo es coordinar generación/época y tratar un error transitorio de refresh como cierre seguro. Los actores de CampusOps son fixtures didácticas; no equivalen a autenticación de producción.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04",
+    "AC-05"
+  ],
+  "verification": [
+    {
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts tests/session-integration.test.tsx tests/security.test.ts course-tests/public/week-06.test.ts",
+      "result": "4 suites y 23 pruebas pasaron; cubren single-flight, expiración con reloj falso, refresh fallido, logout obsoleto, límite de reintento, redacción y persistencia segura.",
+      "evidence": "reports/week-06/logs/oscar-session-tests.txt"
+    },
+    {
+      "command": "npm run backend:self-test",
+      "result": "PASS: inicio de fixture, autorización por roles, reasignación, cierre/reapertura e idempotencia; el actor de prueba no es identidad de producción.",
+      "evidence": "reports/week-06/logs/oscar-backend-self-test.txt"
+    },
+    {
+      "command": "npm run typecheck; npm run lint; npm run test:smoke; npm run audit:ci; npm run bundle:release",
+      "result": "Todos terminan con código 0. audit:ci mantiene su umbral crítico original; el reporte contiene 28 vulnerabilidades no críticas (5 moderadas y 23 altas). Expo exportó Android con 609 módulos.",
+      "evidence": "reports/week-06/logs/oscar-typecheck.txt; reports/week-06/logs/oscar-lint.txt; reports/week-06/logs/oscar-smoke.txt; reports/week-06/logs/oscar-audit-ci.txt; reports/week-06/logs/oscar-bundle.txt"
+    },
+    {
+      "command": "python tools/course_public_evaluator.py --week 06 --mode public --execute-toolchain",
+      "result": "PASS bajo Node.js 22.22.0. El evaluador aceptó los 6 casos de auth, los 6 de concurrencia y la evidencia de tres integrantes; ejecutó typecheck, lint, audit:ci y las 2 pruebas públicas de Week 06. Resultado status=pass.",
+      "evidence": "reports/week-06/public-tests.json"
+    },
+    {
+      "command": "python tools/course_public_evaluator.py --week 06 --mode verify --execute-toolchain",
+      "result": "PASS bajo Node.js 22.22.0. Instalación/perfil, scripts, integridad de workflow, escaneo de secretos, typecheck, lint, audit:ci, smoke y backend:self-test terminaron correctamente.",
+      "evidence": "reports/week-06/verify.json"
+    }
+  ]
+}

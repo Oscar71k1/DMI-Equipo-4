@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "teamId": "4",
+  "status": "partial",
+  "notes": "Se conservaron las aportaciones y SHAs originales de Fernanda y Jarumi. Los commits de Jarumi son de su rama previa; la integración final de sesión y permisos está registrada en el commit de Oscar. Los resultados de esta versión se enlazan a logs reproducidos aquí; la autenticación de actores sigue siendo una fixture didáctica.",
+  "members": [
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "aea46f371919eb4698bbe1bb0a6833555bc5357c"
+      ],
+      "files": [
+        "src/application/createSessionCoordinator.ts",
+        "src/domain/incidentAuthorization.ts",
+        "src/infrastructure/CourseSessionAdapter.ts",
+        "src/composition/createCampusOps.ts",
+        "src/ui/SessionPanel.tsx",
+        "docs/session-state-machine.mmd"
+      ],
+      "tests": [
+        "Verificación asistida sobre el SHA actualizado: 4 suites y 23 pruebas (refresh, integración SecureStore, políticas y prueba pública semana 6) pasaron; salida reports/week-06/logs/oscar-session-tests.txt.",
+        "npm run backend:self-test, typecheck, lint, smoke, audit:ci y bundle:release pasaron; logs bajo reports/week-06/logs/oscar-*.txt."
+      ],
+      "reviews": [
+        "Contrasté permisos de dominio y backend: reportante no cierra; técnico sólo opera la asignación vigente; coordinación asigna, cierra y reabre. El selector X-Course-Actor queda identificado como fixture, no autenticación de producción."
+      ],
+      "prediction": "Al integrar la coordinación, esperaba que un logout durante una renovación invalidara la generación de sesión y que la respuesta tardía no persistiera tokens; también que un 401 posterior al único reintento no iniciara otro refresh.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts tests/session-integration.test.tsx tests/security.test.ts course-tests/public/week-06.test.ts",
+      "observedResult": "4 suites/23 pruebas aprobadas, incluyendo SES-03 y SES-05; typecheck, lint, audit:ci, smoke, backend:self-test y bundle también finalizaron con código 0.",
+      "explanation": "El commit de integración aea46f3 conecta el coordinador de sesión con la composición y el cliente de incidencias, y aplica políticas de permiso en la capa de aplicación además de la validación del backend. El agente asistió a la edición y ejecución actual; no se modificaron pruebas, worker, workflow ni evaluador. La lista de actor del backend es ficticia y no se presenta como autenticación de producción."
+    },
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "b2b335428931be0c7d38d2d5a8fe93af28386f26",
+        "50cb742bddf137a05820d1d56216cae96280ad16",
+        "2e0aeeacb61b74a2f747a26b3c3588a89d0e6b85",
+        "9ad3c30e4adc0b556312bc42e9004d99058ea28e",
+        "eab0c850569f757a1f7208f56db588c425bd48b2"
+      ],
+      "files": [
+        "src/domain/incidentAuthorization.ts",
+        "src/application/createSessionManager.ts",
+        "src/course-evaluation/index.ts",
+        "docs/session-state-machine.mmd",
+        "reports/week-06/auth-tests.json",
+        "reports/week-06/logs/jarumi-nota-engineering.json"
+      ],
+      "tests": [
+        "En la revisión de su rama previa registró 2 pruebas públicas de coordinateRefresh aprobadas y 15 pruebas de políticas; su reporte explícita que login/conexión aún no estaban integrados en esa versión.",
+        "Observó login válido de technician-1 y rechazo 401 de fantasma-1; la prueba usaba actor didáctico, no autenticación real."
+      ],
+      "reviews": [
+        "Su nota técnica comparó renovación individual y reintentos ilimitados, y documentó el límite de la fixture. La coordinación final actualizó la implementación y volvió a ejecutar 23 pruebas sobre el SHA de integración."
+      ],
+      "prediction": "Antes de las pruebas de backend predijo que un actor inexistente sería rechazado y que reporter-1 no podría cerrar campus-inc-001 ni cambiar su estado.",
+      "command": "npx jest course-tests/public/week-06.test.ts; npm test (políticas en su rama); backend login/resolve según reports/week-06/logs/jarumi-login-observado.txt",
+      "observedResult": "En su rama previa quedaron registradas 2 pruebas de coordinateRefresh y 15 pruebas de autorización aprobadas; reporter-1 recibió 403 sin modificar la incidencia. Los logs separan esa observación previa de las comprobaciones actuales de integración.",
+      "explanation": "Sus commits aportaron una primera coordinación de refresh, reglas por acción y el diseño inicial del diagrama. Son evidencia histórica de su contribución en origin/semana-06-jarumi; la solución final consolidó el ciclo real en createSessionCoordinator y volvió a verificarlo, sin atribuirle como actual el resultado anterior."
+    },
+    {
+      "studentId": "3523110496",
+      "commitShas": [
+        "966e73cd9b25d2c214373834dc45de31b19299fc"
+      ],
+      "files": [
+        "src/domain/sessionRefresh.ts",
+        "src/domain/SessionRefreshPort.ts",
+        "src/application/createSessionCoordinator.ts",
+        "src/course-evaluation/index.ts",
+        "tests/session-refresh.test.ts",
+        "reports/week-06/concurrency.json",
+        "reports/week-06/logs/fernanda-sesion-antes.txt",
+        "reports/week-06/logs/fernanda-sesion-prueba-floja.txt",
+        "reports/week-06/logs/fernanda-sesion-despues.txt",
+        "reports/week-06/logs/fernanda-concurrencia.txt",
+        "reports/week-06/logs/fernanda-regresiones.txt"
+      ],
+      "tests": [
+        "tests/session-refresh.test.ts (archivo nuevo, SES-01 a SES-06): single-flight con 3 solicitudes, refresh rechazado, logout durante el refresh, expiracion con reloj falso, limite de reintentos y logs sin valores de token.",
+        "course-tests/public/week-06.test.ts: 2/2 aprobadas con coordinateRefresh implementado sobre reduceSession.",
+        "Regresiones de 11 archivos: 64 pasaron y 3 fallaron en 2 archivos (detalle en observedResult). tsc y lint sin errores."
+      ],
+      "reviews": [],
+      "prediction": "SES-01: 3 solicitudes con 401 comparten 1 refresh, las 3 terminan ok y hay 6 envios (3 mas 3 reintentos). SES-02: con refresh rechazado las 3 terminan unauthenticated, hay 1 refresh, el token persistido queda en null y una solicitud nueva no dispara otro refresh. SES-03: un logout durante el refresh deja la sesion anonima sin escribir el token nuevo. SES-04: con el reloj avanzado 61 s la primera llamada ya usa el token nuevo y hay 1 solo envio. SES-05: un segundo 401 devuelve unauthorized con 1 refresh y exactamente 2 envios. SES-06: los logs traen eventos tecnicos pero ningun valor de token. Estas predicciones estan escritas como comentarios en tests/session-refresh.test.ts.",
+      "command": "npx jest tests/session-refresh.test.ts --verbose",
+      "observedResult": "tests/session-refresh.test.ts: 6 passed, 6 total, codigo de salida 0 (log reports/week-06/logs/fernanda-concurrencia.txt). La primera version de SES-06 fallo por una revision demasiado floja (buscaba refresh- y coincidia con nombres de eventos); se corrigio para buscar valores reales de tokens y la corrida fallida se conserva en reports/week-06/logs/fernanda-sesion-prueba-floja.txt. Regresiones: 64 pasaron y 3 fallaron. tests/architecture.test.ts falla por mi codigo: createSessionCoordinator importa createSessionStore y SessionRefreshPort y esas dos dependencias no estan en docs/architecture.mmd (archivo de Jarumi, pendiente de coordinar; no se modifico la prueba). tests/security-audit.test.ts (Hallazgo 3) falla con IncidentClientError http en src/api/incidentClient.ts; no modifique cliente ni composicion y el origen no esta confirmado: no se verifico en main limpio ni con el backend levantado. Limites: las pruebas usan un puerto de refresh y un reloj falsos; no cree el adaptador real de SessionRefreshPort ni conecte el coordinador al cliente HTTP real, y make feedback, make verify-week-06 y make public-test-week-06 no se habian ejecutado al momento de este registro.",
+      "explanation": "Una sola promesa de refresh compartida mas una generacion de sesion evitan que varias solicitudes con 401 renueven la sesion una y otra vez, y permiten distinguir un 401 viejo de uno de la sesion vigente: logout invalida la generacion y una respuesta tardia no vuelve a persistir la sesion. El costo aceptado es mas estado compartido y mas complejidad que renovar de forma independiente. Ayuda de IA: use un asistente de IA (Claude) para planear los pasos, redactar el codigo y las pruebas y armar este registro. La verifique corriendo yo misma las pruebas y revisando git diff --cached y git diff --check antes del commit, y comprobando el autor y el SHA con git log -1 --format=fuller."
+    }
+  ]
+}

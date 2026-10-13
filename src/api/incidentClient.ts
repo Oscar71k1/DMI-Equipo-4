@@ -1,6 +1,8 @@
 import { parseIncidentCreate, parseIncidentList, mapRemoteIncident, IncidentMappingError } from '../infrastructure/IncidentMapper';
 import type { IncidentMapping } from '../infrastructure/IncidentMapper';
 import type { HttpTransport } from '../domain/HttpTransport';
+import type { AuthenticatedRequestPort, AuthenticatedHttpOutcome } from '../domain/AuthenticatedRequestPort';
+import type { IncidentAction } from '../domain/incidentAuthorization';
 
 export type IncidentClientErrorKind = 'timeout' | 'network' | 'server' | 'http' | 'contract' | 'decode' | 'domain' | 'unavailable';
 export class IncidentClientError extends Error {
@@ -21,12 +23,22 @@ export type IncidentClientConfig = Readonly<{
   timeoutMs?: number;
   fetchImpl?: typeof fetch;
   transport?: HttpTransport;
+  session?: AuthenticatedRequestPort;
   acceptMissingOperationIdForAdapter?: boolean;
 }>;
 export type IncidentCreateInput = Readonly<{ category: string; description: string; location: string }>;
 export type IncidentListResult = readonly IncidentMapping[];
 export type IncidentDetailResult = IncidentMapping | null;
 export type IncidentCreateResult = ReturnType<typeof parseIncidentCreate>;
+export type IncidentActionInput = Readonly<{
+  action: IncidentAction;
+  baseVersion: number;
+  technicianId?: string;
+  priority?: 'low' | 'medium' | 'high';
+  diagnosis?: string;
+  text?: string;
+  evidenceId?: string;
+}>;
 
 const defaultBaseUrl = process.env.EXPO_PUBLIC_COURSE_BACKEND_URL ?? 'http://127.0.0.1:4310';
 
@@ -37,8 +49,9 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
   const timeoutMs = config.timeoutMs ?? 5000;
   const actorId = config.actorId ?? 'reporter-1';
   const token = config.token ?? 'course-valid-token';
+  let requestSequence = 0;
 
-  async function request(path: string, init: RequestInit = {}): Promise<unknown> {
+  async function send(path: string, init: RequestInit, accessToken: string): Promise<AuthenticatedHttpOutcome> {
     const controller = new AbortController();
     let timedOut = false;
     const timeoutSignal = () => { timedOut = true; controller.abort(); };
@@ -47,8 +60,8 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
       let response: Readonly<{ ok: boolean; status: number; json: () => Promise<unknown> }>;
       try {
         const headers: Record<string, string> = {
-          Authorization: `Bearer ${token}`,
-          'X-Course-Actor': actorId,
+          Authorization: `Bearer ${accessToken}`,
+          'X-Course-Actor': config.session?.getActorId() ?? actorId,
         };
         if (init.headers && typeof init.headers === 'object' && !('forEach' in init.headers)) {
           Object.assign(headers, init.headers);
@@ -81,18 +94,32 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
         if (controller.signal.aborted) throw new IncidentClientError(timedOut ? 'timeout' : 'network');
         throw new IncidentClientError(timedOut ? 'timeout' : 'network');
       }
-      if (!response.ok) {
-        if (response.status >= 500) throw new IncidentClientError('server', response.status);
-        throw new IncidentClientError('http', response.status);
-      }
+      if (!response.ok) return { status: response.status };
       try {
-        return await response.json();
+        return { status: response.status, body: await response.json() };
       } catch {
         throw new IncidentClientError('decode');
       }
     } finally {
       clearTimeout(timeoutHandle);
     }
+  }
+
+  async function request(path: string, init: RequestInit = {}): Promise<unknown> {
+    const requestId = `${init.method ?? 'GET'}:${path}:${++requestSequence}`;
+    let outcome: AuthenticatedHttpOutcome;
+    if (config.session) {
+      const result = await config.session.run(requestId, (accessToken) => send(path, init, accessToken));
+      if (result.kind !== 'ok') throw new IncidentClientError('http', 401);
+      outcome = result.outcome;
+    } else {
+      outcome = await send(path, init, token);
+    }
+    if (outcome.status < 200 || outcome.status >= 300) {
+      if (outcome.status >= 500) throw new IncidentClientError('server', outcome.status);
+      throw new IncidentClientError('http', outcome.status);
+    }
+    return outcome.body;
   }
 
   return {
@@ -130,6 +157,23 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
           response = { ...response, operationId: idempotencyKey };
         }
         return parseIncidentCreate(response);
+      } catch (error) {
+        if (error instanceof IncidentClientError) throw error;
+        if (error instanceof IncidentMappingError) throw new IncidentClientError(error.kind);
+        throw new IncidentClientError('contract');
+      }
+    },
+    async performIncidentAction(id: string, input: IncidentActionInput, idempotencyKey: string) {
+      if (!/^[\x21-\x7E]{8,}$/.test(idempotencyKey) || !Number.isInteger(input.baseVersion) || input.baseVersion < 0) {
+        throw new IncidentClientError('contract');
+      }
+      try {
+        const value = await request(`/v1/incidents/${encodeURIComponent(id)}/actions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify(input),
+        });
+        return mapRemoteIncident(value);
       } catch (error) {
         if (error instanceof IncidentClientError) throw error;
         if (error instanceof IncidentMappingError) throw new IncidentClientError(error.kind);

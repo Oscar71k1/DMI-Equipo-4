@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "68fe3fb21278dd8341580ea0eb48f5491f817f06",
+  "generatedAt": "2026-10-13T04:56:30Z",
+  "checks": [
+    {
+      "id": "AUTH-01-login-fixture",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm run backend:self-test",
+      "evidence": "La prueba del backend obtiene role=technician al iniciar con technician-1 y rechaza not-a-student con 401. Es una fixture didáctica; el selector de actor no representa autenticación de producción. Log: reports/week-06/logs/oscar-backend-self-test.txt."
+    },
+    {
+      "id": "AUTH-02-expiration",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts tests/session-integration.test.tsx tests/security.test.ts course-tests/public/week-06.test.ts",
+      "evidence": "SES-04 avanzó el reloj falso 61000 ms frente a una expiración de 60 s: se renovó antes de enviar, con una renovación y un envío. Resultado general: 4 suites/23 pruebas aprobadas. Log: reports/week-06/logs/oscar-session-tests.txt."
+    },
+    {
+      "id": "AUTH-03-role-authorization",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm run backend:self-test; npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/security.test.ts",
+      "evidence": "El backend rechaza con 403 el cierre del reportante y la acción del técnico ya no asignado; la coordinación reasigna, cierra y reabre. Las políticas unitarias comprueban consultas por propietario/asignación y denegación sin mutar. La validación del backend es independiente de ocultar botones. Log: reports/week-06/logs/oscar-backend-self-test.txt y reports/week-06/logs/oscar-session-tests.txt."
+    },
+    {
+      "id": "AUTH-04-refresh-failure",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts",
+      "evidence": "SES-02: un refresh rechazado con tres solicitudes concurrentes produce una sola renovación, todas terminan unauthenticated, el estado queda anonymous, el token persistido queda null y una solicitud posterior no inicia otro refresh. Incluida en las 4 suites/23 pruebas aprobadas. Log: reports/week-06/logs/oscar-session-tests.txt."
+    },
+    {
+      "id": "AUTH-05-logout-and-storage",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts tests/session-integration.test.tsx",
+      "evidence": "SES-03 descarta la respuesta de refresh que llega después del logout y conserva el almacenamiento vacío; la prueba de integración también comprueba guardar, restaurar tras remontaje y borrar SecureStore simulado. Log: reports/week-06/logs/oscar-session-tests.txt."
+    },
+    {
+      "id": "AUTH-06-no-token-logs",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose tests/session-refresh.test.ts",
+      "evidence": "SES-06 confirma que los eventos incluyen session-refresh-success pero no incluyen access-0, access-1, refresh-0 ni refresh-1. Log: reports/week-06/logs/oscar-session-tests.txt."
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import type {
   SyncRecord,
 } from './contracts';
 import type { IncidentLocation } from '../campusops/contracts';
+import { initialSessionState, reduceSession } from '../domain/sessionRefresh';
 
 function pending(name: string): never {
   throw new Error(`${name} must be implemented in the assigned week`);
@@ -40,14 +41,21 @@ export function parseRemoteResource(input: unknown): ParseResult {
   };
 }
 
-export function coordinateRefresh(_events: readonly AuthEvent[]): Readonly<{
+export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   status: 'anonymous' | 'authenticated';
   activeGeneration: number | null;
   refreshCalls: number;
   retriedRequestIds: readonly string[];
   persistedToken: string | null;
 }> {
-  return pending('coordinateRefresh');
+  const final = events.reduce(reduceSession, initialSessionState);
+  return {
+    status: final.status,
+    activeGeneration: final.activeGeneration,
+    refreshCalls: final.refreshCalls,
+    retriedRequestIds: final.retriedRequestIds,
+    persistedToken: final.persistedToken,
+  };
 }
 
 export function resolveSync(
