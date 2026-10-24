@@ -30,6 +30,7 @@ flowchart TD
     F_src_domain_HttpTransport_ts["src/domain/HttpTransport.ts"]
     F_src_domain_Incident_ts["src/domain/Incident.ts"]
     F_src_domain_IncidentAssignmentPort_ts["src/domain/IncidentAssignmentPort.ts"]
+    F_src_domain_IncidentQueueRecord_ts["src/domain/IncidentQueueRecord.ts"]
     F_src_domain_incidentAuthorization_ts["src/domain/incidentAuthorization.ts"]
     F_src_domain_IncidentRemoteMapper_ts["src/domain/IncidentRemoteMapper.ts"]
     F_src_domain_IncidentRepository_ts["src/domain/IncidentRepository.ts"]
@@ -118,6 +119,7 @@ flowchart TD
   F_src_domain_Incident_ts --> F_src_campusops_contracts_ts
   F_src_domain_IncidentAssignmentPort_ts --> F_src_domain_Incident_ts
   F_src_domain_IncidentAssignmentPort_ts --> F_src_domain_IncidentRepository_ts
+  F_src_domain_IncidentQueueRecord_ts --> F_src_campusops_contracts_ts
   F_src_domain_IncidentRemoteMapper_ts --> F_src_campusops_contracts_ts
   F_src_domain_IncidentRemoteMapper_ts --> F_src_domain_Incident_ts
   F_src_domain_IncidentRepository_ts --> F_src_domain_Incident_ts
