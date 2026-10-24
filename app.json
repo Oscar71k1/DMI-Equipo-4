@@ -6,7 +6,15 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "plugins": [["expo-secure-store", { "configureAndroidBackup": true }]],
+    "plugins": [
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true
+        }
+      ],
+      "expo-sqlite"
+    ],
     "android": {
       "package": "mx.edu.dmi.engineeringapp"
     },
