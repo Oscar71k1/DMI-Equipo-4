@@ -1,77 +1,108 @@
-export type SyncFields = Readonly<Record<string, unknown>>;
+import type { SyncRecord } from '../course-evaluation/contracts';
 
-export type SyncSnapshot = Readonly<{
-  id: string;
-  version: number;
-  fields: SyncFields;
-}>;
-
-export type SyncResolution =
-  | Readonly<{ kind: 'merged'; fields: SyncFields }>
+export type SyncResult =
+  | Readonly<{ kind: 'merged'; fields: Record<string, unknown> }>
   | Readonly<{ kind: 'conflict'; fields: readonly string[] }>;
 
-// Marca interna para "el campo no existe". No es lo mismo que null.
-const ABSENT = Symbol('absent');
-
-function read(fields: SyncFields, key: string): unknown {
-  return Object.prototype.hasOwnProperty.call(fields, key) ? fields[key] : ABSENT;
-}
-
-// Igualdad por contenido JSON. El orden de las claves no importa, el de los arrays sí.
-export function jsonEqual(a: unknown, b: unknown): boolean {
+/**
+ * Compara dos valores JSON por contenido estructural.
+ * Los objetos son iguales sin importar el orden de inserción de sus claves.
+ * Los arreglos son estrictos en longitud y posición.
+ */
+export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
-  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
-  if (Array.isArray(a) !== Array.isArray(b)) return false;
-  if (Array.isArray(a) && Array.isArray(b)) {
-    return a.length === b.length && a.every((item, index) => jsonEqual(item, b[index]));
+
+  if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') {
+    return false;
   }
-  const left = a as Record<string, unknown>;
-  const right = b as Record<string, unknown>;
-  const leftKeys = Object.keys(left);
-  if (leftKeys.length !== Object.keys(right).length) return false;
-  return leftKeys.every(
-    (key) => Object.prototype.hasOwnProperty.call(right, key) && jsonEqual(left[key], right[key]),
-  );
-}
 
-function copy<T>(value: T): T {
-  return value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);
-}
+  if (Array.isArray(a) !== Array.isArray(b)) {
+    return false;
+  }
 
-// Cada campo se compara completo. Por eso "work" (técnico + estado) es indivisible.
-export function resolveSyncRecords(
-  base: SyncSnapshot,
-  local: SyncSnapshot,
-  remote: SyncSnapshot,
-): SyncResolution {
-  const keys = new Set([
-    ...Object.keys(base.fields),
-    ...Object.keys(local.fields),
-    ...Object.keys(remote.fields),
-  ]);
-  const merged: Record<string, unknown> = {};
-  const conflicts: string[] = [];
-
-  for (const key of [...keys].sort()) {
-    const baseValue = read(base.fields, key);
-    const localValue = read(local.fields, key);
-    const remoteValue = read(remote.fields, key);
-    const localChanged = !jsonEqual(baseValue, localValue);
-    const remoteChanged = !jsonEqual(baseValue, remoteValue);
-
-    let chosen: unknown;
-    if (!localChanged && !remoteChanged) chosen = baseValue;
-    else if (localChanged && !remoteChanged) chosen = localValue;
-    else if (!localChanged && remoteChanged) chosen = remoteValue;
-    else if (jsonEqual(localValue, remoteValue)) chosen = localValue;
-    else {
-      conflicts.push(key);
-      continue;
+  if (Array.isArray(a)) {
+    const bArr = b as readonly unknown[];
+    if (a.length !== bArr.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], bArr[i])) return false;
     }
-    if (chosen !== ABSENT) merged[key] = copy(chosen);
+    return true;
   }
 
-  return conflicts.length > 0
-    ? { kind: 'conflict', fields: conflicts }
-    : { kind: 'merged', fields: merged };
+  const aObj = a as Record<string, unknown>;
+  const bObj = b as Record<string, unknown>;
+  const aKeys = Object.keys(aObj);
+  const bKeys = Object.keys(bObj);
+
+  if (aKeys.length !== bKeys.length) return false;
+
+  for (const key of aKeys) {
+    if (!Object.prototype.hasOwnProperty.call(bObj, key)) return false;
+    if (!deepEqual(aObj[key], bObj[key])) return false;
+  }
+
+  return true;
+}
+
+/**
+ * Resuelve la combinación de 3 versiones (base, local, remote).
+ * No muta ninguno de los objetos de entrada.
+ * Si existen conflictos, devuelve la lista ordenada alfabéticamente.
+ */
+export function resolveSync(
+  base: SyncRecord,
+  local: SyncRecord,
+  remote: SyncRecord
+): SyncResult {
+  const baseFields = base?.fields ?? {};
+  const localFields = local?.fields ?? {};
+  const remoteFields = remote?.fields ?? {};
+
+  const allKeys = Array.from(
+    new Set([
+      ...Object.keys(baseFields),
+      ...Object.keys(localFields),
+      ...Object.keys(remoteFields),
+    ])
+  );
+
+  const conflicts: string[] = [];
+  const merged: Record<string, unknown> = {};
+
+  for (const key of allKeys) {
+    const valBase = baseFields[key];
+    const valLocal = localFields[key];
+    const valRemote = remoteFields[key];
+
+    const localChanged = !deepEqual(valBase, valLocal);
+    const remoteChanged = !deepEqual(valBase, valRemote);
+
+    if (!localChanged && !remoteChanged) {
+      if (valBase !== undefined) merged[key] = valBase;
+    } else if (localChanged && !remoteChanged) {
+      if (valLocal !== undefined) merged[key] = valLocal;
+    } else if (!localChanged && remoteChanged) {
+      if (valRemote !== undefined) merged[key] = valRemote;
+    } else {
+      // Ambos modificaron el campo respecto a la base
+      if (deepEqual(valLocal, valRemote)) {
+        if (valLocal !== undefined) merged[key] = valLocal;
+      } else {
+        conflicts.push(key);
+      }
+    }
+  }
+
+  if (conflicts.length > 0) {
+    conflicts.sort();
+    return {
+      kind: 'conflict',
+      fields: conflicts,
+    };
+  }
+
+  return {
+    kind: 'merged',
+    fields: merged,
+  };
 }

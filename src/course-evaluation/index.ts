@@ -1,3 +1,5 @@
+import { resolveSync as resolveSyncRecords } from '../domain/incidentSync';
+import { deduplicateOperations as dedupeOperationsById } from '../domain/deduplicateOperations';
 import type {
   AuthEvent,
   JsonObject,
@@ -8,8 +10,6 @@ import type {
 } from './contracts';
 import type { IncidentLocation } from '../campusops/contracts';
 import { initialSessionState, reduceSession } from '../domain/sessionRefresh';
-import { dedupeOperationsById } from '../domain/deduplicateOperations';
-import { resolveSyncRecords } from '../domain/incidentSync';
 
 function pending(name: string): never {
   throw new Error(`${name} must be implemented in the assigned week`);
