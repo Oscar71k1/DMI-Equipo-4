@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "4748b902c4a012a3f2491ac0a7df531e67087f3b",
+  "generatedAt": "2026-10-26T23:39:04.206187+00:00",
+  "automaticChecksPassed": true,
+  "nativeValidationPending": true,
+  "testSummary": {
+    "numTotalTests": 156,
+    "numPassedTests": 156,
+    "numFailedTests": 0,
+    "numTotalTestSuites": 27,
+    "success": true
+  },
+  "checks": [
+    {
+      "id": "typecheck",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "\"C:\\Program Files\\nodejs\\npm.CMD\" run typecheck",
+      "evidence": "reports/week-08/logs/current-typecheck.txt; exit=0"
+    },
+    {
+      "id": "lint",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "\"C:\\Program Files\\nodejs\\npm.CMD\" run lint",
+      "evidence": "reports/week-08/logs/current-lint.txt; exit=0"
+    },
+    {
+      "id": "tests",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "C:/Users/oscar/AppData/Local/Temp/campusops-node-22.22.0/node-v22.22.0-win-x64\\node.EXE node_modules/jest/bin/jest.js --ci --runInBand --no-watchman --cacheDirectory .jest-cache --json --outputFile C:\\Users\\oscar\\.codex\\worktrees\\revision-semana-08\\DMI-Equipo-4\\reports\\week-08\\generated-jest.json --testPathIgnorePatterns course-tests/public/week-(09|10|11|12|13)",
+      "evidence": "reports/week-08/logs/current-tests.txt; exit=0"
+    },
+    {
+      "id": "migration-states",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "C:/Users/oscar/AppData/Local/Temp/campusops-node-22.22.0/node-v22.22.0-win-x64\\node.EXE --experimental-strip-types lab/week8-real-db.mjs",
+      "evidence": "reports/week-08/logs/current-migration-states.txt; exit=0"
+    },
+    {
+      "id": "backend",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "\"C:\\Program Files\\nodejs\\npm.CMD\" run backend:self-test",
+      "evidence": "reports/week-08/logs/current-backend.txt; exit=0"
+    },
+    {
+      "id": "audit",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "\"C:\\Program Files\\nodejs\\npm.CMD\" run audit:ci",
+      "evidence": "reports/week-08/logs/current-audit.txt; exit=0"
+    },
+    {
+      "id": "bundle",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "\"C:\\Program Files\\nodejs\\npm.CMD\" run bundle:release",
+      "evidence": "reports/week-08/logs/current-bundle.txt; exit=0"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization lost response after commit, reopen, same request, one server effect, then dependent note",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization lost response after commit, reopen, same request, one server effect, then dependent note; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization reassignment yields 403, persists blocked intention and keeps dependent note",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization reassignment yields 403, persists blocked intention and keeps dependent note; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization compatible remote priority is preserved and uses the current version only before first send",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization compatible remote priority is preserved and uses the current version only before first send; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization explicit resolution after reassignment retains both intentions across reopen without replay",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization explicit resolution after reassignment retains both intentions across reopen without replay; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization resolution rolls back the whole dependency chain and refuses uncertain requests",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization resolution rolls back the whole dependency chain and refuses uncertain requests; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization HTTP 500 preserves pending payload and no confirmation",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization HTTP 500 preserves pending payload and no confirmation; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization wrong confirmation cannot remove an operation",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization wrong confirmation cannot remove an operation; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization 409 compares real remote notes, never invents a work conflict",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization 409 compares real remote notes, never invents a work conflict; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-idempotency.test.ts: Week 8: real backend + durable queue synchronization logout during preparation prevents sending, and concurrent sync is single-flight",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "evidence": "Jest passed: Week 8: real backend + durable queue synchronization logout during preparation prevents sending, and concurrent sync is single-flight; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "course-tests/public/week-08.test.ts: CampusOps detects offline start versus remote reassignment without mutating either record",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
+      "evidence": "Jest passed: CampusOps detects offline start versus remote reassignment without mutating either record; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "course-tests/public/week-08.test.ts: merges independent field changes and reports same-field conflict",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
+      "evidence": "Jest passed: merges independent field changes and reports same-field conflict; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "course-tests/public/week-08.test.ts: deduplicates a replayed operation by stable identity",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
+      "evidence": "Jest passed: deduplicates a replayed operation by stable identity; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite preserves incident snapshot, ID and note; absent original base is quarantined, not fabricated for sending",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-migrations.test.ts",
+      "evidence": "Jest passed: Week 8: populated migration and rollback on real SQLite preserves incident snapshot, ID and note; absent original base is quarantined, not fabricated for sending; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite failure after rows-copied restores old schema and data after reopening, then recovers",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-migrations.test.ts",
+      "evidence": "Jest passed: Week 8: populated migration and rollback on real SQLite failure after rows-copied restores old schema and data after reopening, then recovers; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite failure after legacy-dropped restores old schema and data after reopening, then recovers",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-migrations.test.ts",
+      "evidence": "Jest passed: Week 8: populated migration and rollback on real SQLite failure after legacy-dropped restores old schema and data after reopening, then recovers; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite failure after version-updated restores old schema and data after reopening, then recovers",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-migrations.test.ts",
+      "evidence": "Jest passed: Week 8: populated migration and rollback on real SQLite failure after version-updated restores old schema and data after reopening, then recovers; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite rejects invalid or future schema without overwriting data",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-migrations.test.ts",
+      "evidence": "Jest passed: Week 8: populated migration and rollback on real SQLite rejects invalid or future schema without overwriting data; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite repairs the earlier v2 minimal queue without losing its intent or incident",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-migrations.test.ts",
+      "evidence": "Jest passed: Week 8: populated migration and rollback on real SQLite repairs the earlier v2 minimal queue without losing its intent or incident; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-ui.test.tsx: recovered cached incident and note are usable without a remote detail screen",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-ui.test.tsx",
+      "evidence": "Jest passed: recovered cached incident and note are usable without a remote detail screen; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-ui.test.tsx: failed local save never reports success or discards the entered note",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-ui.test.tsx",
+      "evidence": "Jest passed: failed local save never reports success or discards the entered note; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-ui.test.tsx: conflict requires explicit acceptance and preserves local text on resolution failure",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-ui.test.tsx",
+      "evidence": "Jest passed: conflict requires explicit acceptance and preserves local text on resolution failure; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-persistence.test.ts: Week 8: SQLite port, actual close/reopen and atomic confirmation persists full record, base, note and frozen request across reopen",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-persistence.test.ts",
+      "evidence": "Jest passed: Week 8: SQLite port, actual close/reopen and atomic confirmation persists full record, base, note and frozen request across reopen; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-persistence.test.ts: Week 8: SQLite port, actual close/reopen and atomic confirmation first identity is stable and prepared payload cannot be replaced",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-persistence.test.ts",
+      "evidence": "Jest passed: Week 8: SQLite port, actual close/reopen and atomic confirmation first identity is stable and prepared payload cannot be replaced; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-persistence.test.ts: Week 8: SQLite port, actual close/reopen and atomic confirmation confirmation and snapshot rollback together, then only confirmed operation leaves active queue",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-persistence.test.ts",
+      "evidence": "Jest passed: Week 8: SQLite port, actual close/reopen and atomic confirmation confirmation and snapshot rollback together, then only confirmed operation leaves active queue; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-persistence.test.ts: Week 8: SQLite port, actual close/reopen and atomic confirmation rejects wrong acknowledgement and unconfirmed dependency, serializes concurrent writes",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-persistence.test.ts",
+      "evidence": "Jest passed: Week 8: SQLite port, actual close/reopen and atomic confirmation rejects wrong acknowledgement and unconfirmed dependency, serializes concurrent writes; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: application queues ordered offline work and isolates cached data by actor",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: application queues ordered offline work and isolates cached data by actor; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: logout during cache download never persists the previous session response",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: logout during cache download never persists the previous session response; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: accepting a readable remote conflict permits a new independent proposal without changing the old one",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: accepting a readable remote conflict permits a new independent proposal without changing the old one; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-01 nominal: acepta el sobre y conserva versión, identidad de la operación y duplicate:false",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-01 nominal: acepta el sobre y conserva versión, identidad de la operación y duplicate:false; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-02 boundary: replay con duplicate:true es una confirmación válida, no un error",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-02 boundary: replay con duplicate:true es una confirmación válida, no un error; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-03 la solicitud conserva clave, ruta, método y baseVersion",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-03 la solicitud conserva clave, ruta, método y baseVersion; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-04 failure: un sobre sin operationId no se toma como confirmación",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-04 failure: un sobre sin operationId no se toma como confirmación; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-05 failure: la confirmación de OTRA operación no se acepta",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-05 failure: la confirmación de OTRA operación no se acepta; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-06 failure: la incidencia de la respuesta debe ser la solicitada",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-06 failure: la incidencia de la respuesta debe ser la solicitada; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 403 se distingue como \"http\" y conserva el status",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 403 se distingue como \"http\" y conserva el status; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 409 se distingue como \"http\" y conserva el status",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 409 se distingue como \"http\" y conserva el status; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 500 se distingue como \"server\" y conserva el status",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
+      "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 500 se distingue como \"server\" y conserva el status; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura deepEqual compara objetos como iguales ignorando el orden de las propiedades",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura deepEqual compara objetos como iguales ignorando el orden de las propiedades; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura deepEqual es estricto con el orden en los arreglos",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura deepEqual es estricto con el orden en los arreglos; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) conserva la base si nadie realizó cambios",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) conserva la base si nadie realizó cambios; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) conserva el cambio unilateral local",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) conserva el cambio unilateral local; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) conserva cambios unilaterales independientes en campos distintos",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) conserva cambios unilaterales independientes en campos distintos; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) marca conflicto en el campo compuesto work ante reasignación concurrente",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) marca conflicto en el campo compuesto work ante reasignación concurrente; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) ordena alfabéticamente múltiples campos en conflicto",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura resolveSync (3-way merge) ordena alfabéticamente múltiples campos en conflicto; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura deduplicateOperations conserva la primera aparición y mantiene el orden relativo",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura deduplicateOperations conserva la primera aparición y mantiene el orden relativo; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura deduplicateOperations no muta el arreglo original",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts",
+      "evidence": "Jest passed: Week 8 - Sincronización y Deduplicación Pura deduplicateOperations no muta el arreglo original; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "android-app-force-stop-reopen",
+      "status": "fail",
+      "scenarioType": "boundary",
+      "command": "adb devices; ejecutar el procedimiento de docs/sync-policy.md en Android",
+      "evidence": "Pendiente: adb no mostró dispositivos; no hay AVD configurado. El usuario pidió continuar dejando esta prueba pendiente. SQLite en Node y un bundle no prueban el reinicio de la app nativa."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "teamId": "4",
+  "status": "requires_member_review",
+  "notes": "Compilación asistida a partir del historial Git y logs ya existentes. Los IDs provienen de evidence/week-06/individual.json. No atribuye a Jarumi o Fernanda las ejecuciones nuevas de Codex. Cada integrante debe corroborar su registro y explicar la versión integrada; no se presume validación personal por completar este JSON.",
+  "members": [
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "be1c7aaa26d1ad85695263267177c3ad65e3c589",
+        "7200a380cbca3113f619920a53fd81a355e29cbf",
+        "4748b902c4a012a3f2491ac0a7df531e67087f3b"
+      ],
+      "files": [
+        "src/infrastructure/SQLiteIncidentStore.ts",
+        "src/application/createIncidentSyncService.ts",
+        "src/application/createOfflineIncidentActions.ts",
+        "src/ui/OfflineWorkPanel.tsx",
+        "tests/week8-idempotency.test.ts"
+      ],
+      "tests": [
+        "tests/week8-idempotency.test.ts: backend real, petición perdida, recuperación y resolución explícita",
+        "tests/week8-offline-ui.test.tsx: aceptación explícita, cancelación y error de disco"
+      ],
+      "reviews": [
+        "Integración de los puertos de Jarumi y Fernanda; corrección de capas, versiones, respuestas e idempotencia. Commits locales de integración realizados con asistencia de Codex a solicitud de Oscar."
+      ],
+      "prediction": "Objetivo explicitado antes de añadir las pruebas: aceptar el estado del servidor debe conservar inicio y notas, evitar reenvíos y no sobrescribir la reasignación. Un timeout o acuse inválido debe impedir cerrar una operación cuyo efecto todavía es incierto.",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts tests/week8-offline-actions.test.ts tests/week8-offline-ui.test.tsx tests/architecture.test.ts",
+      "observedResult": "Ejecución asistida de la continuación: 4 suites, 19 pruebas aprobadas. La ejecución completa del mismo código y sus logs quedan indexados en reports/week-08/migration-tests.json; no se ejecutó la prueba en Android.",
+      "explanation": "Codex editó y ejecutó las comprobaciones por solicitud de Oscar. La corrección mantiene las nueve firmas canónicas, añade una decisión explícita persistente y comprueba atomicidad y restricciones de actor. Este registro no equivale a una defensa personal ni a una ejecución manual de Oscar.",
+      "requiresMemberReview": true
+    },
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "a7ca31a3f688dbcdda7fef4e8dc1eae854282f9a",
+        "12fcfabc8a52d6700d45ad950de31ea1f697d472",
+        "366cd15a18c05162a39965923045a7f63deb1526"
+      ],
+      "files": [
+        "src/infrastructure/SQLiteIncidentStore.ts",
+        "src/infrastructure/incidentMigrations.ts",
+        "src/infrastructure/ExpoSqliteAdapter.ts",
+        "tests/week8-migrations.test.ts",
+        "tests/week8-persistence.test.ts",
+        "lab/week8-real-db.mjs"
+      ],
+      "tests": [
+        "Prueba histórica de recuperación con nueva instancia en 366cd15:tests/week8-persistence.test.ts",
+        "Estados M01/M02 reales en reports/week-08/logs/jarumi-migraciones-real-db.txt"
+      ],
+      "reviews": [
+        "Aporte verificable de almacenamiento, migración y dependencia expo-sqlite. La integración posterior reemplazó el puerto mínimo por el canónico, conservando el historial original."
+      ],
+      "prediction": "Expectativa documentada en sus pruebas versionadas: recuperar el mismo operationId tras cerrar/reabrir SQLite y mantener schema_version=1 ante rollback. No se encontró una declaración personal separada y previa; esta expectativa se cita desde las aserciones de 366cd15, no se presenta como un testimonio nuevo de Jarumi.",
+      "command": "node --experimental-strip-types lab/week8-real-db.mjs (reproducción actual; el log histórico contiene la invocación original y EXIT_CODE=0)",
+      "observedResult": "El log histórico de Jarumi registra M01/M02 correctos, conservación de dos IDs, esquema anterior intacto tras la falla, recuperación y EXIT_CODE=0. Corresponde al esquema 2 de su rama; el esquema integrado ahora es 3 y sus resultados nuevos están separados en current-migration-states.txt.",
+      "explanation": "Sus commits aportan SQLite y la transacción de migración. No se atribuye a la rama inicial la resolución completa del contrato, el aislamiento ni la prueba nativa. La revisión posterior conserva intenciones antiguas incompletas para revisión en vez de reenviarlas con una base inventada.",
+      "requiresMemberReview": true
+    },
+    {
+      "studentId": "3523110496",
+      "commitShas": [
+        "b5e5a6d85379b53724c688d483f3a75351e76d48",
+        "cab1d5982ad5efbd89f9eaf2d8c10a079c955fb6",
+        "77cceae540e8b44c89af9fd522950ea84d350530",
+        "12321506e15d34d1157465d0f656df0525999960"
+      ],
+      "files": [
+        "src/domain/incidentSync.ts",
+        "src/domain/deduplicateOperations.ts",
+        "src/domain/IncidentQueueRecord.ts",
+        "src/application/createIncidentSyncService.ts",
+        "src/api/incidentClient.ts",
+        "tests/week8-sync.test.ts",
+        "tests/week8-action-client.test.ts"
+      ],
+      "tests": [
+        "reports/week-08/logs/fernanda-sync-antes.txt y fernanda-sync-despues.txt",
+        "reports/week-08/logs/fernanda-acciones-despues.txt",
+        "reports/week-08/logs/fernanda-regresiones.txt"
+      ],
+      "reviews": [
+        "Aporte verificable del contrato canónico, comparación por contenido JSON, deduplicación y validación del sobre de acciones. Se conservan también sus logs de falla; no se reporta como correcto lo que falló en su rama."
+      ],
+      "prediction": "En b5e5a6d:tests/week8-sync.test.ts escribió antes de las pruebas que cambios independientes combinan, la reasignación frente a inicio produce conflict en [work], los campos incompatibles salen ordenados y la deduplicación conserva la primera operación sin mutación.",
+      "command": "npm test -- tests/week8-sync.test.ts; npm test -- tests/week8-action-client.test.ts (logs históricos)",
+      "observedResult": "Los logs originales registran 12/12 pruebas de comparación/deduplicación y 9/9 del cliente. Su regresión histórica registra 69 aprobadas y 2 fallidas, EXIT_CODE=1. Esos resultados describen su versión, no sustituyen los resultados de la integración actual.",
+      "explanation": "La comparación usa base/local/remoto y mantiene work como campo compuesto. La integración corrigió imports de dominio, deduplicación del lote y confirmaciones del servicio, y añadió backend/SQLite reales; no se atribuyen esas correcciones posteriores a los commits iniciales de Fernanda.",
+      "requiresMemberReview": true
+    }
+  ]
+}
