@@ -23,7 +23,7 @@ export function createRemoteIncidentRepository(config: IncidentClientConfig = {}
       return requireIncident((await client.createIncident(input, idempotencyKey)).incident);
     },
     async performAction(incidentId: string, input: IncidentActionInput, idempotencyKey: string) {
-      return requireIncident(await client.performIncidentAction(incidentId, input, idempotencyKey));
+      return requireIncident((await client.performIncidentAction(incidentId, input, idempotencyKey)).incident);
     },
   };
 }
