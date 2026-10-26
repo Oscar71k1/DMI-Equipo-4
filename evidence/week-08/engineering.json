@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "4748b902c4a012a3f2491ac0a7df531e67087f3b",
+  "commitSha": "877c6a17dada896761b54da98f3af2e73ae305b2",
   "decision": "Persistir cada intención con su base, proyección, dependencias e identidad estable en SQLite. Preparar la petición una sola vez y conservarla en reintentos. Comparar base/local/remoto por contenido JSON y mantener work como unidad: una reasignación concurrente no se combina automáticamente con un inicio local. La resolución explícita conserva el estado del servidor y guarda las intenciones dependientes como historial local, sin borrar trabajo ni inventar confirmaciones.",
   "alternatives": [
     "Última escritura gana: simplifica el envío, pero podría restaurar una asignación antigua y perder una decisión de coordinación; se descarta.",
@@ -44,5 +44,6 @@
     "audit:ci pasa su umbral crítico pero reporta cinco vulnerabilidades altas en dependencias de Expo.",
     "No se considera esta revisión una entrega final completa mientras falte la validación nativa."
   ],
-  "aiAssistance": "Codex ayudó a revisar, integrar, escribir código/pruebas, ejecutar comprobaciones y estructurar evidencias por solicitud de Oscar. Los logs históricos de otros integrantes se conservan separados. Los integrantes deben comprobar y explicar lo que entregan."
+  "aiAssistance": "Codex ayudó a revisar, integrar, escribir código/pruebas, ejecutar comprobaciones y estructurar evidencias por solicitud de Oscar. Los logs históricos de otros integrantes se conservan separados. Los integrantes deben comprobar y explicar lo que entregan.",
+  "ciRouting": "Las regresiones actuales se ejecutan una vez en cada PR y en pushes a main. Las evaluaciones históricas de semanas 1 a 5 se conservan con checkout de sus tags, disparadas por el tag o manualmente. Semana 6 ya tenía evaluación final separada. El control final de semana 8 no se omite y sigue requiriendo week-08-final."
 }

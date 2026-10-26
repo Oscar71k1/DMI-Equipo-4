@@ -10,7 +10,9 @@
       "commitShas": [
         "be1c7aaa26d1ad85695263267177c3ad65e3c589",
         "7200a380cbca3113f619920a53fd81a355e29cbf",
-        "4748b902c4a012a3f2491ac0a7df531e67087f3b"
+        "4748b902c4a012a3f2491ac0a7df531e67087f3b",
+        "f8c7d6e2c1976758715db56ddfcc2f89305cde02",
+        "877c6a17dada896761b54da98f3af2e73ae305b2"
       ],
       "files": [
         "src/infrastructure/SQLiteIncidentStore.ts",
@@ -24,7 +26,8 @@
         "tests/week8-offline-ui.test.tsx: aceptación explícita, cancelación y error de disco"
       ],
       "reviews": [
-        "Integración de los puertos de Jarumi y Fernanda; corrección de capas, versiones, respuestas e idempotencia. Commits locales de integración realizados con asistencia de Codex a solicitud de Oscar."
+        "Integración de los puertos de Jarumi y Fernanda; corrección de capas, versiones, respuestas e idempotencia. Commits locales de integración realizados con asistencia de Codex a solicitud de Oscar.",
+        "Ajuste de CI asistido: conservó los jobs históricos, retiró su ejecución fuera de la entrega correspondiente y evitó duplicar push/PR. No se borraron pruebas ni se desactivó la validación final de semana 8."
       ],
       "prediction": "Objetivo explicitado antes de añadir las pruebas: aceptar el estado del servidor debe conservar inicio y notas, evitar reenvíos y no sobrescribir la reasignación. Un timeout o acuse inválido debe impedir cerrar una operación cuyo efecto todavía es incierto.",
       "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts tests/week8-offline-actions.test.ts tests/week8-offline-ui.test.tsx tests/architecture.test.ts",

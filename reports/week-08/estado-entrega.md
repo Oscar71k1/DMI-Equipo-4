@@ -1,6 +1,6 @@
 # Estado de la revisión de semana 8
 
-Código comprobado: `4748b902c4a012a3f2491ac0a7df531e67087f3b`.
+Código comprobado: `877c6a17dada896761b54da98f3af2e73ae305b2`.
 Rama: `codex/revision-semana-08`. `main` no se ha modificado.
 
 ## Pendientes corregidos
@@ -36,3 +36,5 @@ Título: `Semana 8: integrar persistencia y resolver conflictos sin perder traba
 El PR debe permanecer en borrador mientras falte la prueba nativa y la corroboración individual. Reúne las ramas de Jarumi y Fernanda, corrige su integración y añade la resolución explícita. Las comprobaciones automáticas pasan; la entrega académica completa sigue pendiente. Abrir un PR no autoriza fusionarlo a main.
 
 Oscar autorizó explícitamente subir la rama y abrir este PR en borrador con esos pendientes visibles, sin fusionarlo.
+
+La revisión de duplicados de CI conserva las pruebas y las evaluaciones históricas. Ver `ci-duplicados.md`; los fallos antiguos permanecen en el historial de Actions, sin atribuirlos al código actual.

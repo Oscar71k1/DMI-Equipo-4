@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "4748b902c4a012a3f2491ac0a7df531e67087f3b",
-  "generatedAt": "2026-10-26T23:39:04.206187+00:00",
+  "commitSha": "877c6a17dada896761b54da98f3af2e73ae305b2",
+  "generatedAt": "2026-10-26T23:51:39.945765+00:00",
   "automaticChecksPassed": true,
   "nativeValidationPending": true,
   "testSummary": {
@@ -238,27 +238,6 @@
       "evidence": "Jest passed: Week 8: SQLite port, actual close/reopen and atomic confirmation rejects wrong acknowledgement and unconfirmed dependency, serializes concurrent writes; reports/week-08/logs/current-tests.txt"
     },
     {
-      "id": "tests/week8-offline-actions.test.ts: application queues ordered offline work and isolates cached data by actor",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
-      "evidence": "Jest passed: application queues ordered offline work and isolates cached data by actor; reports/week-08/logs/current-tests.txt"
-    },
-    {
-      "id": "tests/week8-offline-actions.test.ts: logout during cache download never persists the previous session response",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
-      "evidence": "Jest passed: logout during cache download never persists the previous session response; reports/week-08/logs/current-tests.txt"
-    },
-    {
-      "id": "tests/week8-offline-actions.test.ts: accepting a readable remote conflict permits a new independent proposal without changing the old one",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
-      "evidence": "Jest passed: accepting a readable remote conflict permits a new independent proposal without changing the old one; reports/week-08/logs/current-tests.txt"
-    },
-    {
       "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-01 nominal: acepta el sobre y conserva versión, identidad de la operación y duplicate:false",
       "status": "pass",
       "scenarioType": "boundary",
@@ -320,6 +299,27 @@
       "scenarioType": "failure",
       "command": "npm test -- --runInBand --runTestsByPath tests/week8-action-client.test.ts",
       "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 500 se distingue como \"server\" y conserva el status; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: application queues ordered offline work and isolates cached data by actor",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: application queues ordered offline work and isolates cached data by actor; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: logout during cache download never persists the previous session response",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: logout during cache download never persists the previous session response; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: accepting a readable remote conflict permits a new independent proposal without changing the old one",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: accepting a readable remote conflict permits a new independent proposal without changing the old one; reports/week-08/logs/current-tests.txt"
     },
     {
       "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura deepEqual compara objetos como iguales ignorando el orden de las propiedades",

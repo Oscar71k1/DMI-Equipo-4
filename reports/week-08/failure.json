@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "week": 8,
   "mode": "evidence",
-  "commitSha": "4748b902c4a012a3f2491ac0a7df531e67087f3b",
-  "evaluatedAt": "2026-10-26T23:42:11.079270+00:00",
+  "commitSha": "877c6a17dada896761b54da98f3af2e73ae305b2",
+  "evaluatedAt": "2026-10-26T23:54:29.503012+00:00",
   "status": "fail",
   "checks": [
     {
@@ -54,7 +54,7 @@
     {
       "id": "frozen_sha",
       "status": "fail",
-      "detail": "tag=week-08-final tagSha=fatal: ambiguous argument 'week-08-final': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]' head=4748b902c4a012a3f2491ac0a7df531e67087f3b"
+      "detail": "tag=week-08-final tagSha=fatal: ambiguous argument 'week-08-final': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]' head=877c6a17dada896761b54da98f3af2e73ae305b2"
     }
   ]
 }

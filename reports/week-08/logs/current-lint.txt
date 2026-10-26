@@ -1,4 +1,4 @@
-COMMIT=4748b902c4a012a3f2491ac0a7df531e67087f3b
+COMMIT=877c6a17dada896761b54da98f3af2e73ae305b2
 COMMAND="C:\Program Files\nodejs\npm.CMD" run lint
 
 > dmi-react-native-starter@1.0.0 lint

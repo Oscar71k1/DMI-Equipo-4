@@ -1,4 +1,4 @@
-COMMIT=4748b902c4a012a3f2491ac0a7df531e67087f3b
+COMMIT=877c6a17dada896761b54da98f3af2e73ae305b2
 COMMAND=C:/Users/oscar/AppData/Local/Temp/campusops-node-22.22.0/node-v22.22.0-win-x64\node.EXE --experimental-strip-types lab/week8-real-db.mjs
 
 --- M01 antes (esquema 1) ---
@@ -146,9 +146,9 @@ CHECK OK    M02 sin la falla la migracion termina con las mismas operaciones
 
 RESULTADO: todas las comprobaciones OK
 
-(node:18240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:15808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node.EXE --trace-warnings ...` to show where the warning was created)
-(node:18240) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/oscar/.codex/worktrees/revision-semana-08/DMI-Equipo-4/src/infrastructure/incidentMigrations.ts is not specified and it doesn't parse as CommonJS.
+(node:15808) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/oscar/.codex/worktrees/revision-semana-08/DMI-Equipo-4/src/infrastructure/incidentMigrations.ts is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to C:\Users\oscar\.codex\worktrees\revision-semana-08\DMI-Equipo-4\package.json.
 
