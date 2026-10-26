@@ -57,7 +57,7 @@ export class SQLiteIncidentStore implements IncidentQueuePort {
     if (!/^[\x21-\x7E]{8,}$/.test(record.operation.operationId) || !record.operation.actorId.trim() ||
         record.operation.baseVersion !== record.base.version || record.base.id !== record.operation.incidentId ||
         !deepEqual(projectOperation(record.base, record.operation), record.local) ||
-        record.status !== 'pendiente' || record.preparedRequest !== null || record.confirmation !== null) {
+        record.status !== 'pendiente' || record.preparedRequest !== null || record.confirmation !== null || record.resolution) {
       throw new Error('Invalid pending record');
     }
     return this.atomic(async () => {
@@ -71,7 +71,7 @@ export class SQLiteIncidentStore implements IncidentQueuePort {
       const sequence = (rows[0]?.maxSeq ?? 0) + 1;
       for (const dependency of record.dependsOn) {
         const parent = await this.require(dependency, record.operation.actorId);
-        if (parent.operation.incidentId !== record.operation.incidentId) throw new Error('Invalid dependency');
+        if (parent.operation.incidentId !== record.operation.incidentId || parent.resolution) throw new Error('Invalid dependency');
       }
       const saved = { ...record, sequence };
       await this.db.run(
@@ -105,6 +105,7 @@ export class SQLiteIncidentStore implements IncidentQueuePort {
   prepareRequest(id: string, actor: string, request: PreparedRequest): Promise<PreparedRequest> {
     return this.atomic(async () => {
       const record = await this.require(id, actor);
+      if (record.resolution) throw new Error('Reviewed operation is immutable');
       if (record.preparedRequest) {
         if (!deepEqual(record.preparedRequest, request)) throw new Error('Prepared request is immutable');
         return record.preparedRequest;
@@ -126,14 +127,14 @@ export class SQLiteIncidentStore implements IncidentQueuePort {
   markSending(id: string, actor: string): Promise<void> {
     return this.atomic(async () => {
       const record = await this.require(id, actor);
-      if (!record.preparedRequest || record.status !== 'pendiente') throw new Error('Operation not ready');
+      if (record.resolution || !record.preparedRequest || record.status !== 'pendiente') throw new Error('Operation not ready');
       await this.write({ ...record, status: 'enviando', issue: null });
     });
   }
   markIssue(id: string, actor: string, issue: NonNullable<IncidentQueueRecord['issue']>): Promise<void> {
     return this.atomic(async () => {
       const record = await this.require(id, actor);
-      if (record.status === 'confirmada') throw new Error('Confirmed operation is immutable');
+      if (record.status === 'confirmada' || record.resolution) throw new Error('Closed operation is immutable');
       const status = issue.kind === 'conflict' || issue.kind === 'contract' ? 'conflicto' :
         issue.kind === 'forbidden' ? 'bloqueada' : 'pendiente';
       await this.write({ ...record, status, issue });
@@ -143,6 +144,7 @@ export class SQLiteIncidentStore implements IncidentQueuePort {
     assertSnapshot(ack.incident);
     return this.atomic(async () => {
       const record = await this.require(id, actor);
+      if (record.resolution) throw new Error('Reviewed operation cannot be confirmed');
       if (!record.preparedRequest || ack.operationId !== id || ack.incident.id !== record.operation.incidentId ||
           ack.incident.version <= record.preparedRequest.base.version || typeof ack.duplicate !== 'boolean') {
         throw new Error('Invalid confirmation');
@@ -163,6 +165,43 @@ export class SQLiteIncidentStore implements IncidentQueuePort {
         const record = JSON.parse(row.record_json) as IncidentQueueRecord;
         await this.write({ ...record, status: 'pendiente' });
       }
+    });
+  }
+
+  acceptRemote(id: string, actor: string, remote: QueueSyncRecord | null, decidedAt: string): Promise<void> {
+    return this.atomic(async () => {
+      const root = await this.require(id, actor);
+      if (root.resolution) return;
+      if (!['conflicto', 'bloqueada'].includes(root.status) || !Number.isFinite(Date.parse(decidedAt))) {
+        throw new Error('Operation does not have a reviewable conflict');
+      }
+      if (remote) {
+        assertSnapshot(remote);
+        if (remote.id !== root.operation.incidentId || remote.version < root.base.version) throw new Error('Invalid remote snapshot');
+      } else if (root.issue?.kind !== 'forbidden' || root.issue.httpStatus !== 403) {
+        throw new Error('Remote state must be checked before resolution');
+      }
+      // Only a definite rejection may close a previously attempted request.
+      // A timeout or malformed acknowledgement still needs its original replay.
+      const rows = await this.db.all<{ record_json: string }>(
+        'SELECT record_json FROM queue_operations WHERE actor_id = ? AND incident_id = ? ORDER BY sequence',
+        [actor, root.operation.incidentId]);
+      const records = rows.map(row => JSON.parse(row.record_json) as IncidentQueueRecord);
+      const affected = new Set([id]);
+      for (const record of records) {
+        if (record.dependsOn.some(parent => affected.has(parent))) affected.add(record.operation.operationId);
+      }
+      for (const record of records.filter(item => affected.has(item.operation.operationId))) {
+        if (record.status === 'confirmada' || record.status === 'enviando' || record.resolution ||
+            (record.preparedRequest && ![403, 409].includes(record.issue?.httpStatus ?? 0))) {
+          throw new Error('Uncertain operation must be reconciled before resolution');
+        }
+        await this.write({ ...record, resolution: { decision: 'keep_remote', actorId: actor,
+          decidedAt, rootOperationId: id, remote } });
+      }
+      if (remote) await this.cache(actor, remote);
+      else await this.db.run('DELETE FROM incident_snapshots WHERE incident_id = ? AND actor_id = ?',
+        [root.operation.incidentId, actor]);
     });
   }
 }

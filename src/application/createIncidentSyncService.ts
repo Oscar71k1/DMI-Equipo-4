@@ -35,7 +35,7 @@ export function createIncidentSyncService(options: SyncServiceOptions) {
         for (const listed of records) {
           if (!active()) break;
           const record = await queue.getRecord(listed.operation.operationId, actor);
-          if (!record || record.status === 'confirmada') continue;
+          if (!record || record.status === 'confirmada' || record.resolution) continue;
           const { operation } = record;
           if (record.status === 'conflicto' || record.status === 'bloqueada') {
             stopped.add(operation.incidentId);

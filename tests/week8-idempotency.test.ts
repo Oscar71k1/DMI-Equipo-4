@@ -5,6 +5,7 @@ import { SQLiteIncidentStore } from '../src/infrastructure/SQLiteIncidentStore';
 import { migrateIncidentStore } from '../src/infrastructure/incidentMigrations';
 import { createIncidentSyncService, type IncidentActionClient } from '../src/application/createIncidentSyncService';
 import { createIncidentClient } from '../src/api/incidentClient';
+import { createOfflineIncidentActions } from '../src/application/createOfflineIncidentActions';
 import { openDb, record, base, prepared, startBackend, syncClient, transport } from './helpers/week8';
 
 describe('Week 8: real backend + durable queue synchronization', () => {
@@ -75,6 +76,52 @@ describe('Week 8: real backend + durable queue synchronization', () => {
     const snapshot = await coordinator.getIncidentSnapshot(base.id);
     expect(snapshot.fields.priority).toBe('high');
     expect(snapshot.version).toBe(3);
+  });
+  test('explicit resolution after reassignment retains both intentions across reopen without replay', async () => {
+    const r = record();
+    const note = record('operation-note-002', 'comment', [r.operation.operationId]);
+    await queue.enqueue(r); await queue.enqueue(note);
+    const coordinator = createIncidentClient({ baseUrl: backend.url, actorId: 'coordinator-1', transport: transport() });
+    await coordinator.performIncidentAction(base.id, { action: 'assign', baseVersion: 1, technicianId: 'technician-2' }, 'reassign-operation-001');
+    await service().syncPending();
+    const before = await queue.listPending('technician-1');
+    const app = createOfflineIncidentActions({ store: queue, client: syncClient(backend.url),
+      getActor: () => ({ id: 'technician-1', role: 'technician' }), getSessionKey: () => 1,
+      newId: () => 'unused-operation' });
+    await app.acceptRemote(r.operation.operationId);
+    db.close(); db = openDb(join(dir, 'queue.sqlite')); queue = new SQLiteIncidentStore(db);
+    const after = await queue.listPending('technician-1');
+    expect(after.map(item => item.operation)).toEqual(before.map(item => item.operation));
+    expect(after).toHaveLength(2);
+    expect(after.every(item => item.resolution?.decision === 'keep_remote' &&
+      item.resolution.remote === null && item.confirmation === null)).toBe(true);
+    expect(await queue.getConfirmed(base.id, 'technician-1')).toBeNull();
+    expect(await service().syncPending()).toEqual({ processed: 0, issues: 0 });
+    const remote = await coordinator.getIncidentSnapshot(base.id);
+    expect(remote.version).toBe(2);
+    expect(remote.fields.work).toEqual({ status: 'assigned', assignedTechnicianId: 'technician-2' });
+    expect(remote.fields.notes).toEqual([]);
+    await expect(queue.markSending(r.operation.operationId, 'technician-1')).rejects.toThrow();
+    await expect(queue.acceptRemote(r.operation.operationId, 'technician-2', remote, new Date().toISOString())).rejects.toThrow();
+  });
+
+  test('resolution rolls back the whole dependency chain and refuses uncertain requests', async () => {
+    const r = record();
+    const note = record('operation-note-002', 'comment', [r.operation.operationId]);
+    await queue.enqueue(r); await queue.enqueue(note);
+    await queue.markIssue(r.operation.operationId, 'technician-1', { kind: 'conflict', fields: ['work'] });
+    db.raw.exec(`CREATE TRIGGER fail_review BEFORE UPDATE ON queue_operations
+      WHEN NEW.operation_id = 'operation-note-002'
+      BEGIN SELECT RAISE(ABORT, 'injected storage failure'); END`);
+    await expect(queue.acceptRemote(r.operation.operationId, 'technician-1', base, new Date().toISOString())).rejects.toThrow();
+    expect((await queue.listPending('technician-1')).every(item => !item.resolution)).toBe(true);
+    db.raw.exec('DROP TRIGGER fail_review');
+    await queue.markIssue(r.operation.operationId, 'technician-1', { kind: 'network' });
+    await queue.prepareRequest(r.operation.operationId, 'technician-1', prepared(r));
+    await queue.markIssue(r.operation.operationId, 'technician-1', { kind: 'contract' });
+    await expect(queue.acceptRemote(r.operation.operationId, 'technician-1', base, new Date().toISOString()))
+      .rejects.toThrow('Uncertain operation');
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.preparedRequest).toEqual(prepared(r));
   });
   test('HTTP 500 preserves pending payload and no confirmation', async () => {
     const r = record('operation-note-001', 'comment'); await queue.enqueue(r);

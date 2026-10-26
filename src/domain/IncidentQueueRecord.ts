@@ -24,6 +24,13 @@ export type PreparedRequest = Readonly<{
 }>;
 
 export type IncidentQueueRecord = Readonly<{
+  resolution?: Readonly<{
+    decision: 'keep_remote';
+    actorId: string;
+    decidedAt: string;
+    rootOperationId: string;
+    remote: SyncRecord | null;
+  }>;
   operation: PendingIncidentOperation;
   base: SyncRecord;
   local: SyncRecord;

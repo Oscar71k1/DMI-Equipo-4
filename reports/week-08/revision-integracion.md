@@ -1,5 +1,7 @@
 # Revisión de las ramas de Jarumi y Fernanda
 
+Registro histórico de la revisión inicial be1c7aa. La continuación incorpora resolución explícita y reportes estructurados; consultar docs/sync-policy.md y los JSON de semana 8 para el estado actualizado.
+
 Fecha: 2026-10-26. Rama local de correcciones: `codex/revision-semana-08`.
 
 ## Base revisada

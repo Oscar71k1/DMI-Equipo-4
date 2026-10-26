@@ -13,6 +13,7 @@ export function OfflineWorkPanel({ actions, incidentId }: {
   const [text, setText] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [reviewing, setReviewing] = useState<string | null>(null);
   const live = useRef(true);
   useEffect(() => {
     live.current = true;
@@ -63,11 +64,32 @@ export function OfflineWorkPanel({ actions, incidentId }: {
     {busy && <Text>Procesando…</Text>}
     <Text accessibilityLiveRegion="polite">{message}</Text>
     {pending.map(record => <View key={record.operation.operationId}>
-      <Text>{record.operation.incidentId}: {record.operation.action} — {record.status}</Text>
+      <Text>{record.operation.incidentId}: {record.operation.action} — {record.resolution ? 'conservada como historial local' : record.status}</Text>
       {record.operation.action === 'comment' && <Text>{String(record.operation.payload.text)}</Text>}
-      {record.issue?.kind === 'dependency' && <Text>Espera la confirmación de la acción anterior.</Text>}
-      {(record.status === 'conflicto' || record.status === 'bloqueada') &&
-        <Text>Tu intención sigue guardada. Requiere revisión con coordinación; no se sobrescribió la asignación.</Text>}
+      <Text>Operación: {record.operation.operationId}</Text>
+      {record.resolution ? <Text>Se aceptó el estado del servidor. Esta intención y sus notas siguen guardadas y no se reenviarán.</Text> : <>
+        {record.issue?.kind === 'dependency' && <Text>Espera la confirmación de la acción anterior.</Text>}
+        {(record.status === 'conflicto' || record.status === 'bloqueada') && <>
+          <Text>Tu intención sigue guardada. Revisa el caso con coordinación; no se sobrescribió la asignación.</Text>
+          {!!record.issue?.fields?.length && <Text>Campos en conflicto: {record.issue.fields.join(', ')}</Text>}
+          {record.issue?.kind === 'forbidden' && <Text>Ya no tienes permiso para consultar el estado remoto de esta incidencia.</Text>}
+          <Pressable disabled={busy} accessibilityRole="button" onPress={() => setReviewing(record.operation.operationId)}>
+            <Text>Revisar conflicto</Text>
+          </Pressable>
+          {reviewing === record.operation.operationId && <>
+            <Text>Al aceptar, se conserva el estado del servidor. Este cambio y sus notas dependientes quedarán como historial local, sin enviarse ni borrarse. Para proponer trabajo nuevo necesitarás permiso vigente y una copia actualizada.</Text>
+            <Pressable disabled={busy} accessibilityRole="button" onPress={() => void run(async () => {
+              await actions.acceptRemote(record.operation.operationId);
+              if (live.current) setReviewing(null);
+            }, 'Estado del servidor aceptado; contenido local conservado para consulta.')}>
+              <Text>Aceptar estado del servidor</Text>
+            </Pressable>
+            <Pressable disabled={busy} accessibilityRole="button" onPress={() => setReviewing(null)}>
+              <Text>Seguir revisando con coordinación</Text>
+            </Pressable>
+          </>}
+        </>}
+      </>}
     </View>)}
   </View>;
 }

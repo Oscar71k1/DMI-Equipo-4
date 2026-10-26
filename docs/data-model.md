@@ -19,9 +19,10 @@
 El snapshot conserva id, versión, campos de negocio y work compuesto. Notes/evidence conservan arrays completos; historial remoto y metadatos de la cola se mantienen fuera de los campos comparados. El mapper valida antes de descartar información de negocio para la UI.
 
 ## Registro
-Cada intención conserva operation (ID, incidencia, actor, acción, payload y baseVersion conocida), base, local, sequence, dependsOn, status, preparedRequest, confirmation e issue.
+Cada intención conserva operation (ID, incidencia, actor, acción, payload y baseVersion conocida), base, local, sequence, dependsOn, status, preparedRequest, confirmation e issue. Opcionalmente resolution conserva decision=keep_remote, actorId, decidedAt, rootOperationId y remote autorizado o null. Es una extensión compatible del JSON del esquema 3; las filas anteriores sin resolution conservan su conducta.
 Estados: pendiente, enviando, confirmada, conflicto y bloqueada.
 Una confirmada sale del listado activo, pero mantiene su recibo para las dependencias.
+Una resolución explícita conserva el registro completo como historial local consultable, sin fingir confirmación ni volverlo a enviar. Si un 403 revocó acceso se elimina solamente la caché obsoleta; base/local permanecen en la intención original.
 No hay API de borrado incondicional ni actualización por ID sin actor.
 
 ## Atomicidad e identidad

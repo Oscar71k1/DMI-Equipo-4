@@ -3,6 +3,7 @@ import { SQLiteIncidentStore } from '../src/infrastructure/SQLiteIncidentStore';
 import { migrateIncidentStore } from '../src/infrastructure/incidentMigrations';
 import { base, openDb } from './helpers/week8';
 import type { Actor } from '../src/domain/Actor';
+import { record } from './helpers/week8';
 
 test('application queues ordered offline work and isolates cached data by actor', async () => {
   const db = openDb(':memory:');
@@ -55,5 +56,30 @@ test('logout during cache download never persists the previous session response'
     finish(base);
     await expect(caching).rejects.toThrow('Session changed');
     expect(await store.listConfirmed('technician-1')).toEqual([]);
+  } finally { db.close(); }
+});
+
+test('accepting a readable remote conflict permits a new independent proposal without changing the old one', async () => {
+  const db = openDb(':memory:');
+  try {
+    await migrateIncidentStore(db);
+    const store = new SQLiteIncidentStore(db);
+    const original = record('original-note-001', 'comment');
+    await store.enqueue(original);
+    await store.markIssue(original.operation.operationId, 'technician-1', { kind: 'conflict', fields: ['notes'] });
+    const remote = { ...base, version: 2, fields: { ...base.fields,
+      notes: [{ actorId: 'coordinator-1', text: 'Nota del servidor' }] } };
+    const send = jest.fn(async () => ({ operationId: 'new-note-operation', duplicate: false,
+      incident: { ...remote, version: 3 } }));
+    const actions = createOfflineIncidentActions({ store, getActor: () => ({ id: 'technician-1', role: 'technician' }),
+      getSessionKey: () => 1, newId: () => 'new-note-operation',
+      client: { getIncidentSnapshot: async () => remote, performIncidentAction: send } });
+    await actions.acceptRemote(original.operation.operationId);
+    const next = await actions.queueAction(base.id, 'comment', { text: 'Propuesta nueva' });
+    expect(await store.getRecord(next, 'technician-1')).toEqual(expect.objectContaining({ base: remote, dependsOn: [] }));
+    expect((await store.getRecord(original.operation.operationId, 'technician-1'))?.operation).toEqual(original.operation);
+    expect(await actions.syncPending()).toEqual({ processed: 1, issues: 0 });
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send).toHaveBeenCalledWith(base.id, { action: 'comment', baseVersion: 2, text: 'Propuesta nueva' }, next);
   } finally { db.close(); }
 });

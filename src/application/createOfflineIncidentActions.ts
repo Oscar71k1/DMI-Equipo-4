@@ -9,6 +9,7 @@ import { createIncidentSyncService, type IncidentActionClient } from './createIn
 export interface LocalIncidentPort extends IncidentQueuePort {
   saveConfirmed(actor: string, snapshot: QueueSyncRecord): Promise<void>;
   listConfirmed(actor: string): Promise<readonly QueueSyncRecord[]>;
+  acceptRemote(id: string, actor: string, remote: QueueSyncRecord | null, decidedAt: string): Promise<void>;
 }
 export type OfflineActions = Readonly<{
   cacheIncident(id: string): Promise<void>;
@@ -16,6 +17,7 @@ export type OfflineActions = Readonly<{
   listPending(): Promise<readonly IncidentQueueRecord[]>;
   listCached(): Promise<readonly QueueSyncRecord[]>;
   syncPending(): Promise<{ processed: number; issues: number }>;
+  acceptRemote(operationId: string): Promise<void>;
 }>;
 export function createOfflineIncidentActions(options: {
   store: LocalIncidentPort;
@@ -55,7 +57,7 @@ export function createOfflineIncidentActions(options: {
           operationId: options.newId(), incidentId: id, actorId: actor.id,
           baseVersion: base.version, action, payload,
         };
-        const pending = (await store.listPending(actor.id)).filter(r => r.operation.incidentId === id);
+        const pending = (await store.listPending(actor.id)).filter(r => r.operation.incidentId === id && !r.resolution);
         const last = pending[pending.length - 1];
         if (action === 'start' && pending.some(r => r.operation.action === 'start')) throw new Error('Ya hay un inicio pendiente');
         if (getActor().id !== actor.id || generation !== getSessionKey()) throw new Error('Session changed');
@@ -69,6 +71,21 @@ export function createOfflineIncidentActions(options: {
     },
     async listPending() { return store.listPending(getActor().id); },
     async listCached() { return store.listConfirmed(getActor().id); },
+    async acceptRemote(operationId) {
+      const actor = getActor();
+      const generation = getSessionKey();
+      const record = await store.getRecord(operationId, actor.id);
+      if (!record) throw new Error('Operation unavailable for actor');
+      let remote: QueueSyncRecord | null;
+      try { remote = await client.getIncidentSnapshot(record.operation.incidentId); }
+      catch (error) {
+        if (!error || typeof error !== 'object' || !('status' in error) || error.status !== 403) throw error;
+        // A 403 does not authorize exposing the new assignment to the old technician.
+        remote = null;
+      }
+      if (getActor().id !== actor.id || generation !== getSessionKey()) throw new Error('Session changed');
+      await store.acceptRemote(operationId, actor.id, remote, new Date().toISOString());
+    },
     syncPending: sync.syncPending,
   };
 }

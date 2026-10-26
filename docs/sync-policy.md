@@ -43,12 +43,27 @@ Un 409 compatible sin campos incompatibles sigue requiriendo revisión: esta ver
 
 ## Resolución y límites
 El panel informa conflictos/bloqueos y conserva el texto local. No implementa un botón para forzar asignaciones ni para borrar pendientes.
-La revisión y resolución por coordinación debe realizarse explícitamente, conservar la intención original y crear una nueva propuesta identificable cuando corresponda. La interfaz de resolución asistida completa no se declara implementada en esta revisión.
+La resolución explícita está en el panel: Revisar conflicto → Aceptar estado del servidor. Antes de confirmar se explica que también afecta las notas dependientes. Cancelar mantiene todo pendiente.
+El actor propietario consulta de nuevo el servidor con su sesión. Si conserva permisos, se guarda el snapshot autorizado; ante 403 no se expone la nueva asignación y se retira únicamente la caché obsoleta. Coordinación consulta el estado vigente en su propia sesión; no se suplantan perfiles para recuperar datos.
+acceptRemote guarda una decisión keep_remote con actor, fecha, operación raíz y snapshot autorizado (o null ante 403), junto con sus dependientes, en una transacción. Conserva íntegramente operation/base/local/request/status/issue; no inventa confirmaciones y no borra operaciones. Los registros siguen consultables como historial local y el sincronizador ya no los reenvía.
+Si una petición fue preparada, sólo se acepta el cierre tras un rechazo inequívoco 403/409. Un timeout o una confirmación malformada no permiten suponer que no hubo efecto: se conserva la petición original para reconciliarla. Un fallo de almacenamiento revierte la decisión para toda la cadena.
+Para trabajo nuevo se exige una copia actualizada accesible con el perfil vigente; se crea otra identidad sin reutilizar el cuerpo anterior. No existe resolución automática que imponga la asignación antigua ni transferencia automática de notas a otro actor.
 La app ofrece copia local, inicio, nota y sincronización manual. add_evidence tiene contrato/proyección, no carga binaria implementada.
 
 ## Verificación reproducible
 npm test -- --ci --runInBand tests/week8-sync.test.ts tests/week8-action-client.test.ts tests/week8-idempotency.test.ts tests/week8-persistence.test.ts tests/week8-migrations.test.ts tests/week8-offline-ui.test.tsx course-tests/public/week-08.test.ts
 
 La suite de idempotencia inicia un backend real en puerto efímero y usa archivos SQLite temporales. Provoca timeout de 300 ms frente a respuesta retrasada 1500 ms, verifica commit remoto, reabre el archivo y repite el cuerpo original. Comprueba un solo evento remoto y una sola nota.
-También verifica reasignación/403 con intención intacta, modificación remota independiente, 500, confirmación incorrecta, conflicto de notes, logout y single-flight.
+También verifica reasignación/403 con intención intacta, modificación remota independiente, 500, confirmación incorrecta, conflicto de notes, logout, single-flight, aceptación explícita del estado remoto con conservación de intención, rollback de resolución y rechazo de confirmaciones inciertas.
 Los tests de UI usan dobles de aplicación; no sustituyen la ejecución en Android. Consultar el informe de revisión para los resultados observados.
+
+## Prueba nativa pendiente (no ejecutada)
+
+1. Usar una instalación Android que incluya expo-sqlite (`npm run android`) y el backend didáctico. Configurar EXPO_PUBLIC_COURSE_BACKEND_URL con una dirección accesible desde el dispositivo; no usar localhost del teléfono para referirse al equipo.
+2. Iniciar sesión con technician-1 y abrir campus-inc-001 mientras todavía está asignada a ese actor. Pulsar Guardar copia local. Cortar la conexión al backend y guardar inicio y nota; anotar los dos IDs que muestra el panel y el texto.
+3. Ejecutar `adb shell am force-stop mx.edu.dmi.engineeringapp` y reabrir la app desde su icono, todavía sin conexión. Registrar los mismos IDs, base/estado local y texto. Un relanzamiento que requiera Metro o reautenticación no demuestra por sí solo este caso: registrar el resultado real y el límite observado.
+4. En otra sesión autorizada como coordinator-1, reasignar esa misma incidencia a technician-2. Volver al técnico original, restablecer conexión y pulsar Sincronizar pendientes. Esperar bloqueo/conflicto y conservación de inicio/nota, sin alterar la reasignación.
+5. Revisar el caso con coordinación. Pulsar Revisar conflicto, leer el alcance y confirmar Aceptar estado del servidor. Verificar que ambas intenciones quedan como historial, con sus mismos IDs y contenido. Cerrar y reabrir otra vez; Sincronizar pendientes no debe aplicar el inicio ni la nota retenidos.
+6. Guardar pasos, hora, build/SHA, actor ficticio, IDs, resultados y logs sin tokens. Sustituir el check pendiente en migration-tests.json sólo después de observar estos resultados. La carga de fotos no es necesaria para este caso porque se usa una nota.
+
+Para reproducir los reportes automáticos: Node 22.22.0 en PATH y `python -B tools/generate_week08_reports.py`. El script conserva la prueba nativa como pendiente; no la infiere de los tests de Node.

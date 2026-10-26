@@ -91,6 +91,7 @@ export function createCampusOps(): CampusOpsActions {
       listPending: () => withOffline(actions => actions.listPending()),
       listCached: () => withOffline(actions => actions.listCached()),
       syncPending: () => withOffline(actions => actions.syncPending()),
+      acceptRemote: id => withOffline(actions => actions.acceptRemote(id)),
     },
     session,
     auth,
