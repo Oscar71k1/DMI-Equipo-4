@@ -5,6 +5,7 @@ name: Week 08 Academic Feedback
 on:
   push:
     branches: [main]
+    tags: [week-08-final]
   pull_request:
   workflow_dispatch:
 
