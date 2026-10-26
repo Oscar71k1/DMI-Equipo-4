@@ -1,6 +1,6 @@
 import type { SqlDatabase } from './SqlDatabase';
 
-export const LATEST_SCHEMA_VERSION = 2;
+export const LATEST_SCHEMA_VERSION = 3;
 
 export type MigrationStep =
   | 'schema-created'
@@ -23,7 +23,7 @@ type LegacyRow = {
   base_version: number;
 };
 
-const QUEUE_TABLE_SQL = `CREATE TABLE queue_operations (
+const QUEUE_TABLE_SQL = `CREATE TABLE IF NOT EXISTS queue_operations (
   operation_id TEXT PRIMARY KEY NOT NULL,
   actor_id TEXT NOT NULL,
   incident_id TEXT NOT NULL,
@@ -32,7 +32,7 @@ const QUEUE_TABLE_SQL = `CREATE TABLE queue_operations (
   record_json TEXT NOT NULL
 )`;
 
-const SNAPSHOT_TABLE_SQL = `CREATE TABLE incident_snapshots (
+const SNAPSHOT_TABLE_SQL = `CREATE TABLE IF NOT EXISTS incident_snapshots (
   incident_id TEXT NOT NULL,
   actor_id TEXT NOT NULL,
   version INTEGER NOT NULL,
@@ -49,7 +49,9 @@ async function readSchemaVersion(db: SqlDatabase): Promise<number> {
     "SELECT value FROM schema_meta WHERE key = 'schema_version'",
   );
   const first = rows[0];
-  return first ? Number(first.value) : 0;
+  const version = first ? Number(first.value) : NaN;
+  if (!Number.isInteger(version) || version < 0) throw new Error('Version de esquema invalida');
+  return version;
 }
 
 async function copyLegacyOperations(db: SqlDatabase): Promise<void> {
@@ -73,14 +75,16 @@ async function copyLegacyOperations(db: SqlDatabase): Promise<void> {
       local: base,
       sequence,
       dependsOn: [] as string[],
-      status: 'pendiente',
+      // Legacy data does not include its original snapshot. Preserve the intent
+      // but require review instead of fabricating a base and automatically sending.
+      status: 'conflicto',
       preparedRequest: null,
       confirmation: null,
-      issue: null,
+      issue: { kind: 'contract' },
     };
     await db.run(
       'INSERT INTO queue_operations (operation_id, actor_id, incident_id, sequence, status, record_json) VALUES (?, ?, ?, ?, ?, ?)',
-      [row.operation_id, row.actor_id, row.incident_id, sequence, 'pendiente', JSON.stringify(record)],
+      [row.operation_id, row.actor_id, row.incident_id, sequence, 'conflicto', JSON.stringify(record)],
     );
   }
 }
@@ -108,6 +112,22 @@ export async function migrateIncidentStore(
       step('rows-copied');
       await db.exec('DROP TABLE operations');
       step('legacy-dropped');
+    }
+
+    if (from === 2) {
+      const rows = await db.all<{ record_json: string }>('SELECT record_json FROM queue_operations ORDER BY sequence');
+      for (const row of rows) {
+        const record = JSON.parse(row.record_json);
+        if (!record.operation || !record.operation.operationId) throw new Error('Registro de cola invalido');
+        if (!record.base || !record.local || !Array.isArray(record.dependsOn)) {
+          const base = { id: record.operation.incidentId, version: record.operation.baseVersion, fields: {} };
+          Object.assign(record, { base, local: base, dependsOn: [], status: 'conflicto',
+            preparedRequest: null, confirmation: null, issue: { kind: 'contract' } });
+        }
+        await db.run('UPDATE queue_operations SET status = ?, record_json = ? WHERE operation_id = ?',
+          [record.status, JSON.stringify(record), record.operation.operationId]);
+      }
+      step('rows-copied');
     }
 
     await db.run(

@@ -7,6 +7,7 @@ import { IncidentCreateForm } from './IncidentCreateForm';
 import { IncidentListScreen } from './IncidentListScreen';
 import { SessionStoragePanel } from './SessionStoragePanel';
 import { SessionPanel } from './SessionPanel';
+import { OfflineWorkPanel } from './OfflineWorkPanel';
 
 type BackendStatus = 'checking' | 'available' | 'offline';
 
@@ -45,8 +46,11 @@ export function CampusOpsScreen({ actions }: Props) {
         <Text testID="backend-status">Backend: {backendStatus}</Text>
         {actions.auth ? <SessionPanel auth={actions.auth} /> : actions.session && <SessionStoragePanel session={actions.session} />}
       </View>
+      {actions.offline && sessionSnapshot?.status === 'authenticated' &&
+        <OfflineWorkPanel key={sessionSnapshot.generation} actions={actions.offline} incidentId={selectedId} />}
       {actions.auth && sessionSnapshot?.status !== 'authenticated' ? null : selectedId !== null ? (
         <IncidentDetailScreen
+          key={sessionSnapshot?.generation}
           incidentId={selectedId}
           getIncidentDetail={actions.getIncidentDetail}
           onBack={() => setSelectedId(null)}
@@ -56,7 +60,7 @@ export function CampusOpsScreen({ actions }: Props) {
           <Pressable accessibilityRole="button" testID="incident-create-back" onPress={() => setCreating(false)}>
             <Text>← Volver a la lista</Text>
           </Pressable>
-          <IncidentCreateForm createIncident={actions.createIncident} />
+          <IncidentCreateForm key={sessionSnapshot?.generation} createIncident={actions.createIncident} />
         </View>
       ) : (
         <View style={styles.content}>
@@ -65,7 +69,7 @@ export function CampusOpsScreen({ actions }: Props) {
               <Text>Nueva incidencia</Text>
             </Pressable>
           )}
-          <IncidentListScreen listIncidents={actions.listIncidents} onSelect={setSelectedId} />
+          <IncidentListScreen key={sessionSnapshot?.generation} listIncidents={actions.listIncidents} onSelect={setSelectedId} />
         </View>
       )}
     </View>

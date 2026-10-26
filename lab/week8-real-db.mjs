@@ -2,7 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { migrateIncidentStore } from '../src/infrastructure/incidentMigrations.ts';
+import { migrateIncidentStore, LATEST_SCHEMA_VERSION } from '../src/infrastructure/incidentMigrations.ts';
 
 function openDb(file) {
   const raw = new DatabaseSync(file);
@@ -83,10 +83,10 @@ try {
   console.log('\nM01 segunda migracion:', JSON.stringify(r2));
   db.close();
 
-  check('M01 version nueva y tabla antigua retirada', m01Despues.schemaVersion === '2' && m01Despues.legacy === null);
+  check('M01 version nueva y tabla antigua retirada', m01Despues.schemaVersion === String(LATEST_SCHEMA_VERSION) && m01Despues.legacy === null);
   check('M01 conserva IDs y orden de las operaciones',
     JSON.stringify((m01Despues.queue ?? []).map((q) => q.operation_id)) === JSON.stringify(['op-start-0001', 'op-note-0002']));
-  check('M01 segunda migracion no repite ni duplica', r2.from === 2 && (m01Segunda.queue ?? []).length === 2);
+  check('M01 segunda migracion no repite ni duplica', r2.from === LATEST_SCHEMA_VERSION && (m01Segunda.queue ?? []).length === 2);
 
   const fileB = join(dir, 'm02.sqlite');
   db = openDb(fileB);
@@ -125,7 +125,7 @@ try {
   check('M02 tras la falla no quedo esquema nuevo (DDL revertido)', !trasFalla.tables.includes('queue_operations'));
   check('M02 tras la falla los datos viejos estan intactos', JSON.stringify(trasFalla.legacy) === JSON.stringify(antes.legacy));
   check('M02 reabierto sigue igual que antes', reabierto.schemaVersion === '1' && JSON.stringify(reabierto.legacy) === JSON.stringify(antes.legacy));
-  check('M02 sin la falla la migracion termina con las mismas operaciones', recuperado.schemaVersion === '2' && (recuperado.queue ?? []).length === 2);
+  check('M02 sin la falla la migracion termina con las mismas operaciones', recuperado.schemaVersion === String(LATEST_SCHEMA_VERSION) && (recuperado.queue ?? []).length === 2);
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

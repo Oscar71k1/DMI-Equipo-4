@@ -1,210 +1,132 @@
-import type {
-  IncidentQueuePort,
-  PreparedRequest,
-  PreparedActionBody,
-} from '../domain/IncidentQueueRecord';
-import { projectOperation } from '../domain/IncidentQueueRecord';
+import type { IncidentQueuePort, PreparedActionBody, QueueSyncRecord } from '../domain/IncidentQueueRecord';
+import { assertSnapshot, makeActionBody, projectOperation } from '../domain/IncidentQueueRecord';
 import { deduplicateOperations } from '../domain/deduplicateOperations';
 import { resolveSync } from '../domain/incidentSync';
 
 export interface IncidentActionClient {
-  performIncidentAction(
-    incidentId: string,
-    input: Record<string, unknown>,
-    idempotencyKey: string
-  ): Promise<{
-    operationId: string;
-    incident: unknown;
-    duplicate: boolean;
-  }>;
+  getIncidentSnapshot(incidentId: string): Promise<QueueSyncRecord>;
+  performIncidentAction(incidentId: string, input: PreparedActionBody, idempotencyKey: string):
+    Promise<{ operationId: string; incident: QueueSyncRecord; duplicate: boolean }>;
 }
-
 export type SyncServiceOptions = {
   queuePort: IncidentQueuePort;
   incidentClient: IncidentActionClient;
   getCurrentActor: () => string | null;
-  onRefreshSession?: () => Promise<boolean>;
+  getSessionKey?: () => unknown;
 };
-
 export function createIncidentSyncService(options: SyncServiceOptions) {
-  const { queuePort, incidentClient, getCurrentActor, onRefreshSession } = options;
-  let isSyncing = false;
-
+  const { queuePort: queue, incidentClient: client, getCurrentActor } = options;
+  let running = false;
   return {
     async syncPending(): Promise<{ processed: number; issues: number }> {
-      if (isSyncing) {
-        return { processed: 0, issues: 0 };
-      }
-
-      const actorId = getCurrentActor();
-      if (!actorId) {
-        return { processed: 0, issues: 0 };
-      }
-
-      isSyncing = true;
-      let processedCount = 0;
-      let issuesCount = 0;
-
+      const actor = getCurrentActor();
+      if (running || !actor) return { processed: 0, issues: 0 };
+      const sessionKey = options.getSessionKey?.();
+      const active = () => getCurrentActor() === actor && options.getSessionKey?.() === sessionKey;
+      running = true;
+      let processed = 0;
+      let issues = 0;
       try {
-        await queuePort.recoverInterrupted();
-
-        const pendingRecords = await queuePort.listPending(actorId);
-        if (pendingRecords.length === 0) {
-          return { processed: 0, issues: 0 };
-        }
-
-        const uniqueOps = deduplicateOperations(
-          pendingRecords.map((r) => r.operation)
-        );
-        const uniqueOpIds = new Set(uniqueOps.map((o) => o.operationId));
-        const activeRecords = pendingRecords.filter((r) =>
-          uniqueOpIds.has(r.operation.operationId)
-        );
-
-        for (const record of activeRecords) {
-          if (getCurrentActor() !== actorId) {
-            break;
+        await queue.recoverInterrupted();
+        const records = deduplicateOperations((await queue.listPending(actor))
+          .map(record => ({ operationId: record.operation.operationId, record })))
+          .map(item => item.record).sort((a, b) => a.sequence - b.sequence);
+        const stopped = new Set<string>();
+        for (const listed of records) {
+          if (!active()) break;
+          const record = await queue.getRecord(listed.operation.operationId, actor);
+          if (!record || record.status === 'confirmada') continue;
+          const { operation } = record;
+          if (record.status === 'conflicto' || record.status === 'bloqueada') {
+            stopped.add(operation.incidentId);
+            continue;
           }
-
-          if (record.dependsOn.length > 0) {
-            let hasUnresolvedDependency = false;
-            for (const depId of record.dependsOn) {
-              const depRecord = await queuePort.getRecord(depId, actorId);
-              if (!depRecord || depRecord.status !== 'confirmada') {
-                hasUnresolvedDependency = true;
-                break;
-              }
-            }
-            if (hasUnresolvedDependency) {
-              await queuePort.markIssue(record.operation.operationId, actorId, {
-                kind: 'dependency',
-              });
-              issuesCount++;
-              continue;
-            }
+          if (stopped.has(operation.incidentId)) {
+            await queue.markIssue(operation.operationId, actor, { kind: 'dependency' });
+            issues++;
+            continue;
           }
-
           let prepared = record.preparedRequest;
-          if (!prepared) {
-            const confirmedBase =
-              (await queuePort.getConfirmed(record.operation.incidentId, actorId)) ??
-              record.base;
-            const projectedLocal = projectOperation(confirmedBase, record.operation);
-
-            let body: PreparedActionBody;
-            if (record.operation.action === 'start') {
-              body = { action: 'start', baseVersion: confirmedBase.version };
-            } else if (record.operation.action === 'comment') {
-              body = {
-                action: 'comment',
-                baseVersion: confirmedBase.version,
-                text: String(record.operation.payload?.text ?? ''),
-              };
-            } else if (record.operation.action === 'add_evidence') {
-              body = {
-                action: 'add_evidence',
-                baseVersion: confirmedBase.version,
-                evidenceId: String(record.operation.payload?.evidenceId ?? ''),
-              };
-            } else {
-              continue;
-            }
-
-            const requestToPrepare: PreparedRequest = {
-              actorId,
-              path: `/v1/incidents/${record.operation.incidentId}/actions`,
-              idempotencyKey: record.operation.operationId,
-              body,
-              base: confirmedBase,
-              local: projectedLocal,
-            };
-
-            prepared = await queuePort.prepareRequest(
-              record.operation.operationId,
-              actorId,
-              requestToPrepare
-            );
-          }
-
-          await queuePort.markSending(record.operation.operationId, actorId);
-
+          let phase: 'contract' | 'network' = 'contract';
           try {
-            const response = await incidentClient.performIncidentAction(
-              record.operation.incidentId,
-              prepared.body as unknown as Record<string, unknown>,
-              prepared.idempotencyKey
-            );
-
-            const confirmedIncidentDto = response.incident as
-              | { kind: 'unavailable'; id: string }
-              | { kind: 'available'; incident: { id: string; version: number; payload: Record<string, unknown> } };
-
-            const confirmedRecord = {
-              id:
-                confirmedIncidentDto.kind === 'unavailable'
-                  ? confirmedIncidentDto.id
-                  : confirmedIncidentDto.incident.id,
-              version:
-                confirmedIncidentDto.kind === 'unavailable'
-                  ? 0
-                  : confirmedIncidentDto.incident.version ?? 1,
-              fields:
-                confirmedIncidentDto.kind === 'unavailable'
-                  ? {}
-                  : confirmedIncidentDto.incident.payload ?? {},
-            };
-
-            await queuePort.confirm(record.operation.operationId, actorId, {
-              operationId: response.operationId,
-              incident: confirmedRecord,
-              duplicate: response.duplicate,
-            });
-
-            processedCount++;
-          } catch (error: unknown) {
-            issuesCount++;
-            const httpStatus =
-              error && typeof error === 'object' && 'status' in error
-                ? Number((error as { status: unknown }).status)
-                : undefined;
-
-            if (httpStatus === 401 && onRefreshSession) {
-              const refreshed = await onRefreshSession();
-              if (!refreshed) {
-                break;
+            let base = record.base;
+            for (const dependency of record.dependsOn) {
+              const previous = await queue.getRecord(dependency, actor);
+              if (!previous?.confirmation || previous.status !== 'confirmada' ||
+                  previous.operation.incidentId !== operation.incidentId) {
+                throw Object.assign(new Error('Dependency pending'), { dependency: true });
               }
-            } else if (httpStatus === 403) {
-              await queuePort.markIssue(record.operation.operationId, actorId, {
-                kind: 'forbidden',
-                httpStatus: 403,
-              });
-            } else if (httpStatus === 409) {
-              const syncComparison = resolveSync(
-                prepared.base,
-                prepared.local,
-                prepared.base
-              );
-              const conflictFields =
-                syncComparison.kind === 'conflict' ? syncComparison.fields : ['work'];
-
-              await queuePort.markIssue(record.operation.operationId, actorId, {
-                kind: 'conflict',
-                fields: conflictFields,
-                httpStatus: 409,
-              });
+              base = previous.confirmation.incident;
+            }
+            if (!prepared) {
+              const local = projectOperation(base, operation);
+              phase = 'network';
+              const remote = await client.getIncidentSnapshot(operation.incidentId);
+              phase = 'contract';
+              assertSnapshot(remote);
+              if (remote.id !== base.id || remote.version < base.version) throw new Error('Invalid remote base');
+              const comparison = resolveSync(base, local, remote);
+              if (comparison.kind === 'conflict') {
+                await queue.markIssue(operation.operationId, actor, { kind: 'conflict', fields: comparison.fields });
+                stopped.add(operation.incidentId);
+                issues++;
+                continue;
+              }
+              phase = 'contract';
+              const request = {
+                actorId: actor,
+                path: `/v1/incidents/${encodeURIComponent(operation.incidentId)}/actions`,
+                idempotencyKey: operation.operationId,
+                body: makeActionBody(operation, remote.version),
+                base: remote,
+                local: projectOperation(remote, operation),
+              };
+              if (!active()) break;
+              prepared = await queue.prepareRequest(operation.operationId, actor, request);
+            }
+            if (!active()) break;
+            await queue.markSending(operation.operationId, actor);
+            if (!active()) break;
+            phase = 'network';
+            const response = await client.performIncidentAction(operation.incidentId, prepared.body, prepared.idempotencyKey);
+            phase = 'contract';
+            assertSnapshot(response.incident);
+            if (response.operationId !== operation.operationId || response.incident.id !== operation.incidentId ||
+                response.incident.version <= prepared.base.version || typeof response.duplicate !== 'boolean') {
+              throw new Error('Invalid acknowledgement');
+            }
+            if (!active()) break;
+            await queue.confirm(operation.operationId, actor, response);
+            processed++;
+          } catch (error: unknown) {
+            issues++;
+            stopped.add(operation.incidentId);
+            const detail = error && typeof error === 'object' ? error as Record<string, unknown> : {};
+            const status = typeof detail.status === 'number' ? detail.status : undefined;
+            if (detail.dependency) {
+              await queue.markIssue(operation.operationId, actor, { kind: 'dependency' });
+            } else if (status === 403) {
+              await queue.markIssue(operation.operationId, actor, { kind: 'forbidden', httpStatus: 403 });
+            } else if (status === 409) {
+              let fields: readonly string[] = [];
+              try {
+                if (!active()) break;
+                const remote = await client.getIncidentSnapshot(operation.incidentId);
+                const comparison = resolveSync(prepared?.base ?? record.base, prepared?.local ?? record.local, remote);
+                if (comparison.kind === 'conflict') fields = comparison.fields;
+              } catch { /* Preserve the request for authorized review if remote data is unavailable. */ }
+              await queue.markIssue(operation.operationId, actor, { kind: 'conflict', fields, httpStatus: 409 });
             } else {
-              await queuePort.markIssue(record.operation.operationId, actorId, {
-                kind: 'network',
-                ...(httpStatus !== undefined ? { httpStatus } : {}),
+              const invalid = phase === 'contract' || ['contract', 'decode', 'domain', 'unavailable'].includes(String(detail.kind));
+              await queue.markIssue(operation.operationId, actor, {
+                kind: invalid ? 'contract' : 'network', ...(status === undefined ? {} : { httpStatus: status }),
               });
+              if (status === 401) break; // Session HTTP port already performs bounded refresh.
             }
           }
         }
-
-        return { processed: processedCount, issues: issuesCount };
-      } finally {
-        isSyncing = false;
-      }
+        return { processed, issues };
+      } finally { running = false; }
     },
   };
 }

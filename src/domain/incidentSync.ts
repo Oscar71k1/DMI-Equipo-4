@@ -1,4 +1,5 @@
-import type { SyncRecord } from '../course-evaluation/contracts';
+import type { QueueSyncRecord as SyncRecord } from './IncidentQueueRecord';
+import { assertSnapshot } from './IncidentQueueRecord';
 
 export type SyncResult =
   | Readonly<{ kind: 'merged'; fields: Record<string, unknown> }>
@@ -54,6 +55,8 @@ export function resolveSync(
   local: SyncRecord,
   remote: SyncRecord
 ): SyncResult {
+  [base, local, remote].forEach(assertSnapshot);
+  if (base.id !== local.id || base.id !== remote.id) throw new Error('Mismatched incidents');
   const baseFields = base?.fields ?? {};
   const localFields = local?.fields ?? {};
   const remoteFields = remote?.fields ?? {};
@@ -67,7 +70,7 @@ export function resolveSync(
   );
 
   const conflicts: string[] = [];
-  const merged: Record<string, unknown> = {};
+  const merged: Record<string, unknown> = Object.create(null);
 
   for (const key of allKeys) {
     const valBase = baseFields[key];

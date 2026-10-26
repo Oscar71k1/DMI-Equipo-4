@@ -1,28 +1,29 @@
 flowchart TD
-
-  subgraph UI["UI - presentación"]
+  %% Imports internos del código; regenerar: node tools/update_architecture.cjs
+  subgraph ui["ui"]
     F_App_tsx["App.tsx"]
     F_src_ui_CampusOpsScreen_tsx["src/ui/CampusOpsScreen.tsx"]
     F_src_ui_IncidentCreateForm_tsx["src/ui/IncidentCreateForm.tsx"]
     F_src_ui_IncidentDetailScreen_tsx["src/ui/IncidentDetailScreen.tsx"]
-    F_src_ui_incidentLabels_ts["src/ui/incidentLabels.ts"]
     F_src_ui_IncidentListScreen_tsx["src/ui/IncidentListScreen.tsx"]
+    F_src_ui_OfflineWorkPanel_tsx["src/ui/OfflineWorkPanel.tsx"]
     F_src_ui_SessionPanel_tsx["src/ui/SessionPanel.tsx"]
     F_src_ui_SessionStoragePanel_tsx["src/ui/SessionStoragePanel.tsx"]
+    F_src_ui_incidentLabels_ts["src/ui/incidentLabels.ts"]
   end
-
-  subgraph APPLICATION["application - casos de uso"]
+  subgraph application["application"]
     F_src_application_CampusOpsActions_ts["src/application/CampusOpsActions.ts"]
     F_src_application_createAssignIncidentUseCase_ts["src/application/createAssignIncidentUseCase.ts"]
     F_src_application_createAuthorizedIncidentAction_ts["src/application/createAuthorizedIncidentAction.ts"]
     F_src_application_createAuthorizedIncidentQueries_ts["src/application/createAuthorizedIncidentQueries.ts"]
     F_src_application_createHealthQuery_ts["src/application/createHealthQuery.ts"]
     F_src_application_createIncidentQueries_ts["src/application/createIncidentQueries.ts"]
+    F_src_application_createIncidentSyncService_ts["src/application/createIncidentSyncService.ts"]
+    F_src_application_createOfflineIncidentActions_ts["src/application/createOfflineIncidentActions.ts"]
     F_src_application_createSessionCoordinator_ts["src/application/createSessionCoordinator.ts"]
     F_src_application_createSessionStore_ts["src/application/createSessionStore.ts"]
   end
-
-  subgraph DOMAIN["domain - modelo y puertos"]
+  subgraph domain["domain"]
     F_src_campusops_contracts_ts["src/campusops/contracts.ts"]
     F_src_domain_Actor_ts["src/domain/Actor.ts"]
     F_src_domain_AuthenticatedRequestPort_ts["src/domain/AuthenticatedRequestPort.ts"]
@@ -31,42 +32,43 @@ flowchart TD
     F_src_domain_Incident_ts["src/domain/Incident.ts"]
     F_src_domain_IncidentAssignmentPort_ts["src/domain/IncidentAssignmentPort.ts"]
     F_src_domain_IncidentQueueRecord_ts["src/domain/IncidentQueueRecord.ts"]
-    F_src_domain_incidentAuthorization_ts["src/domain/incidentAuthorization.ts"]
     F_src_domain_IncidentRemoteMapper_ts["src/domain/IncidentRemoteMapper.ts"]
     F_src_domain_IncidentRepository_ts["src/domain/IncidentRepository.ts"]
     F_src_domain_PreferencesStorage_ts["src/domain/PreferencesStorage.ts"]
-    F_src_domain_redactForTelemetry_ts["src/domain/redactForTelemetry.ts"]
     F_src_domain_SecureTokenStorage_ts["src/domain/SecureTokenStorage.ts"]
     F_src_domain_SecurityLogger_ts["src/domain/SecurityLogger.ts"]
-    F_src_domain_sessionRefresh_ts["src/domain/sessionRefresh.ts"]
     F_src_domain_SessionRefreshPort_ts["src/domain/SessionRefreshPort.ts"]
+    F_src_domain_deduplicateOperations_ts["src/domain/deduplicateOperations.ts"]
+    F_src_domain_incidentAuthorization_ts["src/domain/incidentAuthorization.ts"]
+    F_src_domain_incidentSync_ts["src/domain/incidentSync.ts"]
+    F_src_domain_redactForTelemetry_ts["src/domain/redactForTelemetry.ts"]
+    F_src_domain_sessionRefresh_ts["src/domain/sessionRefresh.ts"]
   end
-
-  subgraph INFRASTRUCTURE["infrastructure - adaptadores"]
+  subgraph infrastructure["infrastructure"]
     F_src_api_courseBackend_ts["src/api/courseBackend.ts"]
     F_src_api_incidentClient_ts["src/api/incidentClient.ts"]
-    F_src_infrastructure_copyIncident_ts["src/infrastructure/copyIncident.ts"]
     F_src_infrastructure_CourseBackendHealthAdapter_ts["src/infrastructure/CourseBackendHealthAdapter.ts"]
     F_src_infrastructure_CourseSessionAdapter_ts["src/infrastructure/CourseSessionAdapter.ts"]
     F_src_infrastructure_ExpoSecureTokenStorage_ts["src/infrastructure/ExpoSecureTokenStorage.ts"]
-    F_src_infrastructure_IncidentMapper_ts["src/infrastructure/IncidentMapper.ts"]
+    F_src_infrastructure_ExpoSqliteAdapter_ts["src/infrastructure/ExpoSqliteAdapter.ts"]
     F_src_infrastructure_InMemoryIncidentAssignmentPort_ts["src/infrastructure/InMemoryIncidentAssignmentPort.ts"]
     F_src_infrastructure_InMemoryIncidentRepository_ts["src/infrastructure/InMemoryIncidentRepository.ts"]
     F_src_infrastructure_InMemorySecurityLogger_ts["src/infrastructure/InMemorySecurityLogger.ts"]
+    F_src_infrastructure_IncidentMapper_ts["src/infrastructure/IncidentMapper.ts"]
     F_src_infrastructure_RemoteIncidentClient_ts["src/infrastructure/RemoteIncidentClient.ts"]
     F_src_infrastructure_RemoteIncidentRepository_ts["src/infrastructure/RemoteIncidentRepository.ts"]
+    F_src_infrastructure_SQLiteIncidentStore_ts["src/infrastructure/SQLiteIncidentStore.ts"]
+    F_src_infrastructure_SqlDatabase_ts["src/infrastructure/SqlDatabase.ts"]
+    F_src_infrastructure_copyIncident_ts["src/infrastructure/copyIncident.ts"]
+    F_src_infrastructure_incidentMigrations_ts["src/infrastructure/incidentMigrations.ts"]
   end
-
-  subgraph COMPOSITION["composition - ensamblado"]
+  subgraph composition["composition"]
     F_src_composition_createCampusOps_ts["src/composition/createCampusOps.ts"]
   end
-
-  subgraph UNCLASSIFIED["Contratos compartidos y evaluación"]
+  subgraph course_evaluation["course-evaluation"]
     F_src_course_evaluation_contracts_ts["src/course-evaluation/contracts.ts"]
     F_src_course_evaluation_index_ts["src/course-evaluation/index.ts"]
   end
-
-  %% Flechas continuas: imports internos reales analizados por tests/architecture.test.ts.
   F_App_tsx --> F_src_composition_createCampusOps_ts
   F_App_tsx --> F_src_ui_CampusOpsScreen_tsx
   F_src_api_incidentClient_ts --> F_src_domain_AuthenticatedRequestPort_ts
@@ -75,6 +77,7 @@ flowchart TD
   F_src_api_incidentClient_ts --> F_src_infrastructure_IncidentMapper_ts
   F_src_application_CampusOpsActions_ts --> F_src_application_createAuthorizedIncidentAction_ts
   F_src_application_CampusOpsActions_ts --> F_src_application_createHealthQuery_ts
+  F_src_application_CampusOpsActions_ts --> F_src_application_createOfflineIncidentActions_ts
   F_src_application_CampusOpsActions_ts --> F_src_application_createSessionCoordinator_ts
   F_src_application_CampusOpsActions_ts --> F_src_application_createSessionStore_ts
   F_src_application_CampusOpsActions_ts --> F_src_domain_Incident_ts
@@ -96,6 +99,15 @@ flowchart TD
   F_src_application_createHealthQuery_ts --> F_src_domain_BackendHealthPort_ts
   F_src_application_createIncidentQueries_ts --> F_src_domain_Incident_ts
   F_src_application_createIncidentQueries_ts --> F_src_domain_IncidentRepository_ts
+  F_src_application_createIncidentSyncService_ts --> F_src_domain_IncidentQueueRecord_ts
+  F_src_application_createIncidentSyncService_ts --> F_src_domain_deduplicateOperations_ts
+  F_src_application_createIncidentSyncService_ts --> F_src_domain_incidentSync_ts
+  F_src_application_createOfflineIncidentActions_ts --> F_src_application_createIncidentSyncService_ts
+  F_src_application_createOfflineIncidentActions_ts --> F_src_campusops_contracts_ts
+  F_src_application_createOfflineIncidentActions_ts --> F_src_domain_Actor_ts
+  F_src_application_createOfflineIncidentActions_ts --> F_src_domain_IncidentQueueRecord_ts
+  F_src_application_createOfflineIncidentActions_ts --> F_src_domain_IncidentRemoteMapper_ts
+  F_src_application_createOfflineIncidentActions_ts --> F_src_domain_incidentAuthorization_ts
   F_src_application_createSessionCoordinator_ts --> F_src_application_createSessionStore_ts
   F_src_application_createSessionCoordinator_ts --> F_src_domain_SessionRefreshPort_ts
   F_src_application_createSessionStore_ts --> F_src_domain_PreferencesStorage_ts
@@ -106,6 +118,7 @@ flowchart TD
   F_src_composition_createCampusOps_ts --> F_src_application_createAuthorizedIncidentAction_ts
   F_src_composition_createCampusOps_ts --> F_src_application_createAuthorizedIncidentQueries_ts
   F_src_composition_createCampusOps_ts --> F_src_application_createHealthQuery_ts
+  F_src_composition_createCampusOps_ts --> F_src_application_createOfflineIncidentActions_ts
   F_src_composition_createCampusOps_ts --> F_src_application_createSessionCoordinator_ts
   F_src_composition_createCampusOps_ts --> F_src_application_createSessionStore_ts
   F_src_composition_createCampusOps_ts --> F_src_domain_Actor_ts
@@ -113,8 +126,11 @@ flowchart TD
   F_src_composition_createCampusOps_ts --> F_src_infrastructure_CourseBackendHealthAdapter_ts
   F_src_composition_createCampusOps_ts --> F_src_infrastructure_CourseSessionAdapter_ts
   F_src_composition_createCampusOps_ts --> F_src_infrastructure_ExpoSecureTokenStorage_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_ExpoSqliteAdapter_ts
   F_src_composition_createCampusOps_ts --> F_src_infrastructure_InMemorySecurityLogger_ts
   F_src_composition_createCampusOps_ts --> F_src_infrastructure_RemoteIncidentRepository_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_SQLiteIncidentStore_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_incidentMigrations_ts
   F_src_domain_Actor_ts --> F_src_campusops_contracts_ts
   F_src_domain_Incident_ts --> F_src_campusops_contracts_ts
   F_src_domain_IncidentAssignmentPort_ts --> F_src_domain_Incident_ts
@@ -126,10 +142,12 @@ flowchart TD
   F_src_domain_IncidentRepository_ts --> F_src_domain_incidentAuthorization_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Actor_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Incident_ts
+  F_src_domain_incidentSync_ts --> F_src_domain_IncidentQueueRecord_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_api_courseBackend_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_domain_BackendHealthPort_ts
   F_src_infrastructure_CourseSessionAdapter_ts --> F_src_domain_SessionRefreshPort_ts
   F_src_infrastructure_ExpoSecureTokenStorage_ts --> F_src_domain_SecureTokenStorage_ts
+  F_src_infrastructure_ExpoSqliteAdapter_ts --> F_src_infrastructure_SqlDatabase_ts
   F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_domain_IncidentAssignmentPort_ts
   F_src_infrastructure_InMemoryIncidentAssignmentPort_ts --> F_src_infrastructure_copyIncident_ts
@@ -141,6 +159,7 @@ flowchart TD
   F_src_infrastructure_IncidentMapper_ts --> F_src_course_evaluation_contracts_ts
   F_src_infrastructure_IncidentMapper_ts --> F_src_course_evaluation_index_ts
   F_src_infrastructure_IncidentMapper_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_IncidentMapper_ts --> F_src_domain_IncidentQueueRecord_ts
   F_src_infrastructure_IncidentMapper_ts --> F_src_domain_IncidentRemoteMapper_ts
   F_src_infrastructure_RemoteIncidentClient_ts --> F_src_api_incidentClient_ts
   F_src_infrastructure_RemoteIncidentClient_ts --> F_src_domain_HttpTransport_ts
@@ -149,11 +168,16 @@ flowchart TD
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_api_incidentClient_ts
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_Incident_ts
   F_src_infrastructure_RemoteIncidentRepository_ts --> F_src_domain_IncidentRepository_ts
+  F_src_infrastructure_SQLiteIncidentStore_ts --> F_src_domain_IncidentQueueRecord_ts
+  F_src_infrastructure_SQLiteIncidentStore_ts --> F_src_domain_incidentSync_ts
+  F_src_infrastructure_SQLiteIncidentStore_ts --> F_src_infrastructure_SqlDatabase_ts
   F_src_infrastructure_copyIncident_ts --> F_src_domain_Incident_ts
+  F_src_infrastructure_incidentMigrations_ts --> F_src_infrastructure_SqlDatabase_ts
   F_src_ui_CampusOpsScreen_tsx --> F_src_application_CampusOpsActions_ts
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentCreateForm_tsx
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentDetailScreen_tsx
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_IncidentListScreen_tsx
+  F_src_ui_CampusOpsScreen_tsx --> F_src_ui_OfflineWorkPanel_tsx
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_SessionPanel_tsx
   F_src_ui_CampusOpsScreen_tsx --> F_src_ui_SessionStoragePanel_tsx
   F_src_ui_IncidentCreateForm_tsx --> F_src_application_CampusOpsActions_ts
@@ -161,8 +185,8 @@ flowchart TD
   F_src_ui_IncidentDetailScreen_tsx --> F_src_ui_incidentLabels_ts
   F_src_ui_IncidentListScreen_tsx --> F_src_domain_Incident_ts
   F_src_ui_IncidentListScreen_tsx --> F_src_ui_incidentLabels_ts
+  F_src_ui_OfflineWorkPanel_tsx --> F_src_application_createOfflineIncidentActions_ts
+  F_src_ui_OfflineWorkPanel_tsx --> F_src_domain_IncidentQueueRecord_ts
   F_src_ui_SessionPanel_tsx --> F_src_application_createSessionCoordinator_ts
   F_src_ui_SessionStoragePanel_tsx --> F_src_application_createSessionStore_ts
   F_src_ui_incidentLabels_ts --> F_src_campusops_contracts_ts
-
-  %% Semana 6: el grafo refleja los imports ejecutables del checkout actual.

@@ -8,6 +8,12 @@ import type { Incident } from '../src/domain/Incident';
 import { createInMemoryIncidentAssignmentPort } from '../src/infrastructure/InMemoryIncidentAssignmentPort';
 import { createInMemoryIncidentRepository } from '../src/infrastructure/InMemoryIncidentRepository';
 import { createInMemorySecurityLogger } from '../src/infrastructure/InMemorySecurityLogger';
+import * as remoteRepository from '../src/infrastructure/RemoteIncidentRepository';
+
+jest.mock('expo-secure-store', () => ({
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'device-only',
+  setItemAsync: jest.fn(), getItemAsync: jest.fn(), deleteItemAsync: jest.fn(),
+}));
 
 const root = path.resolve(__dirname, '..');
 const incident: Incident = {
@@ -76,15 +82,37 @@ describe('Hallazgo 2 — minimización de datos en memoria', () => {
 });
 
 describe('Hallazgo 3 — autorización conectada a la app', () => {
-  test('la composición muestra solamente los reportes del actor ficticio activo', async () => {
+  beforeEach(() => {
+    jest.spyOn(remoteRepository, 'createRemoteIncidentRepository').mockReturnValue(
+      createInMemoryIncidentRepository([
+        { ...incident, id: 'inc-001' },
+        { ...incident, id: 'inc-002', reporterId: 'reporter-2' },
+      ]),
+    );
+  });
+  afterEach(() => jest.restoreAllMocks());
+  async function authenticatedActions() {
     const actions = createCampusOps();
+    await actions.auth!.login(
+      { accessToken: 'synthetic-access', refreshToken: 'synthetic-refresh', expiresInSeconds: 300 },
+      { actorId: 'reporter-1', role: 'reporter' },
+    );
+    return actions;
+  }
+  test('sin sesión no permite consultar incidencias', () => {
+    const actions = createCampusOps();
+    expect(() => actions.listIncidents()).toThrow();
+    expect(() => actions.getIncidentDetail('inc-001')).toThrow();
+  });
+  test('la composición muestra solamente los reportes del actor ficticio activo', async () => {
+    const actions = await authenticatedActions();
     const visible = await actions.listIncidents();
     expect(visible.map((item) => item.id)).toEqual(['inc-001']);
     expect(visible.every((item) => item.reporterId === 'reporter-1')).toBe(true);
   });
 
   test('la composición no permite abrir un reporte ajeno conociendo su ID', async () => {
-    const actions = createCampusOps();
+    const actions = await authenticatedActions();
     expect((await actions.getIncidentDetail('inc-001'))?.reporterId).toBe('reporter-1');
     expect(await actions.getIncidentDetail('inc-002')).toBeNull();
     expect(await actions.getIncidentDetail('no-existe')).toBeNull();

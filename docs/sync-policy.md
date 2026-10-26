@@ -1,117 +1,54 @@
-# Política de Sincronización, Idempotencia y Resolución de Conflictos — Semana 8
+# Política de sincronización — semana 8, revisión integrada
 
-**Responsable:** María Fernanda Fuentes Abascal
-**Fecha:** 25 de octubre de 2026  
-**Alcance:** Protocolo de sincronización offline-first, resolución de 3 versiones, deduplicación e idempotencia de acciones en CampusOps.
+## Contrato y capas
+El contrato canónico está en src/domain/IncidentQueueRecord.ts. QueueSyncRecord tiene la misma estructura pública de SyncRecord sin dependencia de domain hacia course-evaluation.
+Los adaptadores evaluables delegan a incidentSync y deduplicateOperations, usados por el servicio real.
+El cliente de sincronización entrega snapshots completos validados. No confundir IncidentMapping (kind=mapped, versión junto al incidente) con un DTO que tenga payload dentro del incidente de dominio.
 
----
+## Comparación
+Se compara base/local/remoto por contenido JSON. Un cambio unilateral se conserva; cambios en campos independientes se combinan; cambios iguales en ambos lados no chocan. Campos incompatibles se devuelven ordenados.
+work agrupa estado y técnico: un inicio offline frente a reasignación remota es conflicto.
+notes y evidence se comparan como arrays por contenido/orden, sin unión automática por texto.
+Los IDs de los tres snapshots deben coincidir. No se modifica ninguna entrada.
 
-## 1. Alcance, rutas del servicio y relación con el almacenamiento
+## Envío
+Se captura actor y generación de sesión. El sincronizador permite una sola ejecución activa y ordena por sequence.
+Opera únicamente sobre pendientes elegibles; conflictos/bloqueadas no se reintentan automáticamente.
+La deduplicación conserva la primera aparición; la lista de registros también se deduplica, evitando el filtro anterior que volvía a incluir duplicados.
+Para una intención sin request, toma la base original o el recibo confirmado de su dependencia. Consulta el estado remoto autorizado y compara tres versiones.
+Sólo tras comprobar compatibilidad se prepara y persiste la request sobre la versión remota real. No se cambia un payload ya preparado.
+Para una request existente se repite directamente el mismo cuerpo/clave; no se hace una consulta previa que convertiría el propio efecto en un conflicto falso.
 
-El subsistema de sincronización conecta las intenciones locales capturadas offline con el backend remoto a través del puerto durable provisto por SQLite (`IncidentQueuePort`).
+## Dependencias e idempotencia
+start A offline y comment B quedan persistidos con B dependiendo de A.
+Al confirmar A, B puede prepararse usando el snapshot de su recibo y la versión actual compatible del servidor.
+Nunca se anticipa la versión sumando uno. Una request congelada mantiene actor, ruta, clave, acción, payload y versión en todo reintento.
+El backend didáctico deduplica por actor/ruta/clave y conserva su historial en memoria. No reiniciarlo entre primer envío y replay.
+El almacenamiento conserva los recibos confirmados para reconstruir dependencias después de un cierre.
 
-- **Módulos clave:**
-  - `src/domain/incidentSync.ts`: Motor puro de comparación estructural de 3 versiones (`resolveSync`) y detección de conflictos.
-  - `src/domain/deduplicateOperations.ts`: Deduplicación estable y sin mutación de arreglos de operaciones pendientes.
-  - `src/domain/IncidentQueueRecord.ts`: Contrato de colas, tipos de estados, proyecciones puras (`projectOperation`) e interfaz del puerto.
-  - `src/application/createIncidentSyncService.ts`: Orquestador de sincronización, serialización de envíos y manejo de respuestas.
-- **Relación con la cola:** El servicio jamás mantiene listas en memoria volátiles. Toda operación se lee de disco, se marca en estado `enviando` antes de abrir el socket de red, y solo se retira atómicamente cuando el backend devuelve un sobre válido con su identidad confirmada.
+## Respuestas y errores
+| Resultado | Conducta |
+|---|---|
+| 200/201 con identidad, versión y snapshot válidos | Confirmación transaccional individual; duplicate=true también confirma. |
+| DTO no disponible, JSON inválido o identidad incorrecta | No confirmar. Conservar para revisión de contrato. |
+| Timeout/red/500 | Pendiente con la misma request; detener acciones posteriores de esa incidencia en el lote. |
+| 401 | La capa HTTP usa el coordinador de sesión de semana 6 y su refresh acotado. Si persiste el 401, conservar cola y detener lote. |
+| 403 | Bloqueada, conservar intención y dependientes; no cambiar a coordinador para forzarla. |
+| 409 | Consultar remoto si hay permiso y comparar con base/local reales. Conservar request, campos incompatibles observados y status; no inventar work como conflicto. |
+| Dependencia sin confirmar | Mantener pendiente, sin enviar. |
+| Logout/cambio de generación durante un await | Detener antes de enviar o confirmar en una sesión distinta; la request sigue recuperable. |
 
----
+Un 403 después de reasignación puede ocurrir antes del chequeo de versión. El técnico no obtiene datos remotos que ya no puede ver; coordinación verifica la nueva asignación en su contexto.
+Un 409 compatible sin campos incompatibles sigue requiriendo revisión: esta versión no cambia automáticamente el cuerpo de una request ya congelada.
 
-## 2. Representación base/local/remoto y conservación de versiones
+## Resolución y límites
+El panel informa conflictos/bloqueos y conserva el texto local. No implementa un botón para forzar asignaciones ni para borrar pendientes.
+La revisión y resolución por coordinación debe realizarse explícitamente, conservar la intención original y crear una nueva propuesta identificable cuando corresponda. La interfaz de resolución asistida completa no se declara implementada en esta revisión.
+La app ofrece copia local, inicio, nota y sincronización manual. add_evidence tiene contrato/proyección, no carga binaria implementada.
 
-Cada registro en cola gestiona tres representaciones de datos tipadas (`SyncRecord`):
-- `base`: Último snapshot confirmado por el servidor conocido al momento de la captura offline.
-- `local`: Resultado de proyectar la intención del técnico sobre la base (`projectOperation`).
-- `remote`: Snapshot remoto actual autorizado obtenido del servidor.
+## Verificación reproducible
+npm test -- --ci --runInBand tests/week8-sync.test.ts tests/week8-action-client.test.ts tests/week8-idempotency.test.ts tests/week8-persistence.test.ts tests/week8-migrations.test.ts tests/week8-offline-ui.test.tsx course-tests/public/week-08.test.ts
 
-**Conservación de versión:** `baseVersion` en `PreparedRequest` refleja exactamente la versión numérica confirmada por el servidor (`base.version`). Nunca se proyecta un incremento preventivo (`version + 1`) en la solicitud HTTP; el servidor es la única autoridad de secuencia.
-
----
-
-## 3. Reglas de combinación, igualdad JSON, campo compuesto `work` y conflictos
-
-La función `resolveSync(base, local, remote)` evalúa campo por campo:
-
-| Cambio Local vs Base | Cambio Remoto vs Base | Decisión |
-|---|---|---|
-| No | No | Conservar `base`. |
-| Sí | No | Conservar `local`. |
-| No | Sí | Conservar `remote`. |
-| Sí | Sí (igual contenido estructural) | Conservar contenido común, sin conflicto. |
-| Sí | Sí (distinto contenido) | Registrar campo en conflicto. |
-
-- **Igualdad Estructural (`deepEqual`):** Los objetos JSON son evaluados independientemente del orden de inserción de sus claves. Los arreglos (`notes`, `evidence`) son estrictos en longitud y posición.
-- **Campo Compuesto `work`:** `work` `{ assignedTechnicianId, status }` es indivisible. Si local transiciona el estado a `in_progress` pero el servidor reasignó a otro técnico (`technician-2`), la comparación evalúa el objeto `work` completo y declara `{ kind: 'conflict', fields: ['work'] }`. No se combinan recursivamente propiedades internas.
-- **Orden de Conflictos:** Cuando surgen múltiples campos incompatibles, la lista `fields` se entrega ordenada alfabéticamente.
-
----
-
-## 4. Identidad de operación y cuerpo inmutable en reintentos
-
-- Toda acción se identifica por un `operationId` único generado al capturarse offline.
-- Al prepararse la solicitud (`prepareRequest`), se congela el objeto `PreparedRequest` persistido con su encabezado `Idempotency-Key: operationId` y su cuerpo JSON.
-- **Inmutabilidad:** Ante interrupciones de red o timeouts, el cliente reintenta **exactamente el mismo cuerpo y clave**, sin alterar `baseVersion`. El servidor valida la clave persistida en su histórico; si la operación ya se aplicó, responde con `duplicate: true`, permitiendo confirmar la acción sin duplicar efectos en la base de datos.
-
----
-
-## 5. Orden y dependencias entre operaciones
-
-1. Las operaciones de una misma incidencia se procesan secuencialmente.
-2. Si una operación `B` (ej. `comment`) depende de una operación `A` (ej. `start`):
-   - `B.dependsOn = [A.operationId]`.
-   - Si `A` no ha alcanzado el estado `confirmada`, `B` se suspende con `issue.kind = 'dependency'` y no se envía.
-   - Una vez confirmada `A`, `B` adopta el snapshot confirmado de `A` como su base efectiva antes de preparar su envío.
-
----
-
-## 6. Tratamiento de códigos HTTP y errores
-
-- **200 / 201 (Confirmación válida):** Se valida que `response.operationId === request.idempotencyKey`. Se persiste la confirmación y se retira de pendientes. `duplicate: true` se trata como confirmación exitosa.
-- **Timeout / Error de Red / 500:** La operación se mantiene en disco con estado `pendiente` e `issue.kind = 'network'`. Al reiniciar la app, `recoverInterrupted()` devuelve operaciones `enviando` a `pendiente` para habilitar el reintento.
-- **401 Unauthorized:** Se invoca la renovación coordinada de sesión (`onRefreshSession`). Si la renovación falla, se detiene el lote sin borrar la cola.
-- **403 Forbidden:** La operación se marca como `bloqueada` (`issue.kind = 'forbidden'`). La intención no se elimina; queda retenida para revisión administrativa.
-- **409 Conflict:**
-  - *Por versión/transición:* Se marca como `conflicto` con los campos afectados.
-  - *Por clave reutilizada:* Indica inconsistencia del cliente; se preserva para auditoría sin regenerar IDs a ciegas.
-
----
-
-## 7. Condiciones de retiro de la cola
-
-Una operación **únicamente** se retira de la lista activa de pendientes si:
-1. El servidor respondió con status 200/201.
-2. El sobre contiene `operationId` idéntico al enviado.
-3. El DTO de la incidencia es válido y consistente.
-4. La transacción local en SQLite guardó el recibo y actualizó la caché de la incidencia.
-
-Bajo ninguna circunstancia se retira una operación dentro de un bloque `finally` o por límite de reintentos agotado.
-
----
-
-## 8. Flujo de resolución por actor autorizado
-
-Cuando una operación entra en conflicto (ej. técnico reasignado), el técnico anterior no puede sobreescribir los datos remotos. La intención se preserva localmente. La resolución requiere que coordinación (o el actor autorizado) revise la incidencia, decida la integración de las notas/diagnóstico pendientes y aplique la transición correspondiente.
-
----
-
-## 9. Recuperación tras cierre y límites de idempotencia
-
-Al reiniciar la aplicación:
-- `recoverInterrupted()` escanea la cola y restaura cualquier registro `enviando` a `pendiente`.
-- Los registros conservan su `preparedRequest` intacta; el próximo ciclo de sincronización reenvía la solicitud original sin generar un nuevo ID.
-- *Nota del entorno didáctico:* El backend de laboratorio almacena el historial de idempotencia en memoria. Reiniciar el proceso del backend borra ese historial; por tanto, las pruebas de idempotencia deben ejecutarse contra una misma instancia activa del servidor.
-
----
-
-## 10. Matriz de Requisitos vs Comprobaciones y Evidencias
-
-| Requisito | Escenario | Prueba / Comando | Resultado Esperado |
-|---|---|---|---|
-| AC-01 / W8-C02 | 3-way merge | `npm test -- tests/week8-sync.test.ts` | Conserva cambios independientes sin mutación. |
-| AC-01 / W8-C01 | Conflicto compuesto | `npm test -- tests/week8-sync.test.ts` | Conflicto en `work` ante reasignación. |
-| AC-02 / W8-D01 | Deduplicación | `npm test -- course-tests/public/week-08.test.ts` | Primera aparición conservada en orden relativo. |
-| AC-03 / W8-I01 | Respuesta perdida | `npm test -- tests/week8-idempotency.test.ts` | Reintento confirmado con `duplicate: true`. |
-| AC-03 / W8-I02 | Falla de red | `npm test -- tests/week8-idempotency.test.ts` | Operación conservada en disco tras error 500. |
-| AC-03 / Dependencias | Orden de cola | `npm test -- tests/week8-idempotency.test.ts` | `comment` espera confirmación de `start`. |
+La suite de idempotencia inicia un backend real en puerto efímero y usa archivos SQLite temporales. Provoca timeout de 300 ms frente a respuesta retrasada 1500 ms, verifica commit remoto, reabre el archivo y repite el cuerpo original. Comprueba un solo evento remoto y una sola nota.
+También verifica reasignación/403 con intención intacta, modificación remota independiente, 500, confirmación incorrecta, conflicto de notes, logout y single-flight.
+Los tests de UI usan dobles de aplicación; no sustituyen la ejecución en Android. Consultar el informe de revisión para los resultados observados.

@@ -1,4 +1,4 @@
-import { parseIncidentCreate, parseIncidentList, mapRemoteIncident, IncidentMappingError } from '../infrastructure/IncidentMapper';
+import { parseIncidentCreate, parseIncidentList, mapRemoteIncident, mapQueueSnapshot, IncidentMappingError } from '../infrastructure/IncidentMapper';
 import type { IncidentMapping } from '../infrastructure/IncidentMapper';
 import type { HttpTransport } from '../domain/HttpTransport';
 import type { AuthenticatedRequestPort, AuthenticatedHttpOutcome } from '../domain/AuthenticatedRequestPort';
@@ -123,6 +123,11 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
   }
 
   return {
+    async getIncidentSnapshot(id: string) {
+      const snapshot = mapQueueSnapshot(await request(`/v1/incidents/${encodeURIComponent(id)}`));
+      if (snapshot.id !== id) throw new IncidentClientError('contract');
+      return snapshot;
+    },
     async listIncidents(): Promise<IncidentListResult> {
       try { return parseIncidentList(await request('/v1/incidents')); }
       catch (error) {
@@ -182,7 +187,8 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
         if (confirmation.operationId !== idempotencyKey || confirmedId !== id) {
           throw new IncidentClientError('contract');
         }
-        return confirmation;
+        return { ...confirmation, snapshot: confirmation.incident.kind === 'mapped'
+          ? mapQueueSnapshot((value as { incident: unknown }).incident) : null };
       } catch (error) {
         if (error instanceof IncidentClientError) throw error;
         if (error instanceof IncidentMappingError) throw new IncidentClientError(error.kind);

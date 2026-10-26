@@ -1,273 +1,120 @@
-import { createIncidentSyncService } from '../src/application/createIncidentSyncService';
-import type { IncidentActionClient } from '../src/application/createIncidentSyncService';
-import type {
-  IncidentQueuePort,
-  IncidentQueueRecord,
-  PreparedRequest,
-  ConfirmationAcknowledgement,
-} from '../src/domain/IncidentQueueRecord';
-import type { SyncRecord } from '../src/course-evaluation/contracts';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { SQLiteIncidentStore } from '../src/infrastructure/SQLiteIncidentStore';
+import { migrateIncidentStore } from '../src/infrastructure/incidentMigrations';
+import { createIncidentSyncService, type IncidentActionClient } from '../src/application/createIncidentSyncService';
+import { createIncidentClient } from '../src/api/incidentClient';
+import { openDb, record, base, prepared, startBackend, syncClient, transport } from './helpers/week8';
 
-class InMemoryQueuePort implements IncidentQueuePort {
-  public records = new Map<string, IncidentQueueRecord>();
-  public confirmedRecords = new Map<string, SyncRecord>();
-  public calls = {
-    prepareRequest: [] as PreparedRequest[],
-    markSending: [] as string[],
-    confirm: [] as ConfirmationAcknowledgement[],
-    markIssue: [] as { operationId: string; issue: NonNullable<IncidentQueueRecord['issue']> }[],
-    recoverInterrupted: 0,
-  };
-
-  async enqueue(record: IncidentQueueRecord): Promise<void> {
-    this.records.set(record.operation.operationId, record);
-  }
-
-  async listPending(actorId: string): Promise<readonly IncidentQueueRecord[]> {
-    return Array.from(this.records.values()).filter(
-      (r) => r.operation.actorId === actorId && r.status !== 'confirmada'
-    );
-  }
-
-  async getRecord(operationId: string, actorId: string): Promise<IncidentQueueRecord | null> {
-    const rec = this.records.get(operationId);
-    return rec && rec.operation.actorId === actorId ? rec : null;
-  }
-
-  async getConfirmed(incidentId: string, _actorId: string): Promise<SyncRecord | null> {
-    return this.confirmedRecords.get(incidentId) ?? null;
-  }
-
-  async prepareRequest(
-    operationId: string,
-    actorId: string,
-    request: PreparedRequest
-  ): Promise<PreparedRequest> {
-    this.calls.prepareRequest.push(request);
-    const rec = await this.getRecord(operationId, actorId);
-    if (rec) {
-      this.records.set(operationId, { ...rec, preparedRequest: request });
-    }
-    return request;
-  }
-
-  async markSending(operationId: string, actorId: string): Promise<void> {
-    this.calls.markSending.push(operationId);
-    const rec = await this.getRecord(operationId, actorId);
-    if (rec) {
-      this.records.set(operationId, { ...rec, status: 'enviando' });
-    }
-  }
-
-  async markIssue(
-    operationId: string,
-    actorId: string,
-    issue: NonNullable<IncidentQueueRecord['issue']>
-  ): Promise<void> {
-    this.calls.markIssue.push({ operationId, issue });
-    const rec = await this.getRecord(operationId, actorId);
-    if (rec) {
-      const newStatus =
-        issue.kind === 'conflict'
-          ? 'conflicto'
-          : issue.kind === 'forbidden'
-          ? 'bloqueada'
-          : 'pendiente';
-      this.records.set(operationId, { ...rec, status: newStatus, issue });
-    }
-  }
-
-  async confirm(
-    operationId: string,
-    actorId: string,
-    ack: ConfirmationAcknowledgement
-  ): Promise<void> {
-    this.calls.confirm.push(ack);
-    const rec = await this.getRecord(operationId, actorId);
-    if (rec) {
-      this.records.set(operationId, {
-        ...rec,
-        status: 'confirmada',
-        confirmation: ack,
-      });
-      this.confirmedRecords.set(ack.incident.id, ack.incident);
-    }
-  }
-
-  async recoverInterrupted(): Promise<void> {
-    this.calls.recoverInterrupted++;
-    for (const [id, rec] of this.records.entries()) {
-      if (rec.status === 'enviando') {
-        this.records.set(id, { ...rec, status: 'pendiente' });
-      }
-    }
-  }
-}
-
-describe('Week 8 - Idempotencia y Resiliencia del Servicio de Sincronización', () => {
-  const actorId = 'tech-1';
-  const incidentId = 'campus-inc-001';
-
-  it('F-I01: reintento tras timeout confirma con duplicate: true sin duplicar la operación', async () => {
-    const queue = new InMemoryQueuePort();
-    const initialRecord: IncidentQueueRecord = {
-      operation: {
-        operationId: 'op-retry-001',
-        incidentId,
-        actorId,
-        baseVersion: 1,
-        action: 'start',
-        payload: {},
-      },
-      base: { id: incidentId, version: 1, fields: { work: { status: 'assigned' } } },
-      local: { id: incidentId, version: 1, fields: { work: { status: 'in_progress' } } },
-      sequence: 1,
-      dependsOn: [],
-      status: 'pendiente',
-      preparedRequest: null,
-      confirmation: null,
-      issue: null,
-    };
-    await queue.enqueue(initialRecord);
-
-    const client: IncidentActionClient = {
-      performIncidentAction: jest.fn().mockResolvedValue({
-        operationId: 'op-retry-001',
-        incident: {
-          kind: 'available',
-          incident: {
-            id: incidentId,
-            version: 2,
-            payload: { work: { status: 'in_progress', assignedTechnicianId: actorId } },
-          },
-        },
-        duplicate: true,
-      }),
-    };
-
-    const service = createIncidentSyncService({
-      queuePort: queue,
-      incidentClient: client,
-      getCurrentActor: () => actorId,
-    });
-
-    const result = await service.syncPending();
-
-    expect(result.processed).toBe(1);
-    expect(result.issues).toBe(0);
-    expect(client.performIncidentAction).toHaveBeenCalledTimes(1);
-
-    const updated = await queue.getRecord('op-retry-001', actorId);
-    expect(updated?.status).toBe('confirmada');
-    expect(updated?.confirmation?.duplicate).toBe(true);
-    expect(updated?.confirmation?.operationId).toBe('op-retry-001');
+describe('Week 8: real backend + durable queue synchronization', () => {
+  let dir: string;
+  let db: ReturnType<typeof openDb>;
+  let queue: SQLiteIncidentStore;
+  let backend: Awaited<ReturnType<typeof startBackend>>;
+  beforeEach(async () => {
+    dir = mkdtempSync(join(tmpdir(), 'campus-sync-'));
+    db = openDb(join(dir, 'queue.sqlite'));
+    await migrateIncidentStore(db);
+    queue = new SQLiteIncidentStore(db);
+    backend = await startBackend();
   });
-
-  it('F-I02: falla de red conserva la operación en disco como pendiente sin retirarla', async () => {
-    const queue = new InMemoryQueuePort();
-    const opId = 'op-net-fail-002';
-    await queue.enqueue({
-      operation: {
-        operationId: opId,
-        incidentId,
-        actorId,
-        baseVersion: 1,
-        action: 'comment',
-        payload: { text: 'Nota en offline' },
-      },
-      base: { id: incidentId, version: 1, fields: {} },
-      local: { id: incidentId, version: 1, fields: { notes: [{ actorId, text: 'Nota en offline' }] } },
-      sequence: 1,
-      dependsOn: [],
-      status: 'pendiente',
-      preparedRequest: null,
-      confirmation: null,
-      issue: null,
-    });
-
-    const client: IncidentActionClient = {
-      performIncidentAction: jest.fn().mockRejectedValue({
-        status: 500,
-        message: 'Internal Server Error',
-      }),
-    };
-
-    const service = createIncidentSyncService({
-      queuePort: queue,
-      incidentClient: client,
-      getCurrentActor: () => actorId,
-    });
-
-    const result = await service.syncPending();
-
-    expect(result.processed).toBe(0);
-    expect(result.issues).toBe(1);
-
-    const recordInQueue = await queue.getRecord(opId, actorId);
-    expect(recordInQueue?.status).toBe('pendiente');
-    expect(recordInQueue?.issue?.kind).toBe('network');
-    expect(recordInQueue?.issue?.httpStatus).toBe(500);
-    expect(queue.calls.confirm).toHaveLength(0);
+  afterEach(() => { backend?.close(); db.close(); rmSync(dir, { recursive: true, force: true }); });
+  function service(client: IncidentActionClient = syncClient(backend.url)) {
+    return createIncidentSyncService({ queuePort: queue, incidentClient: client,
+      getCurrentActor: () => 'technician-1' });
+  }
+  test('lost response after commit, reopen, same request, one server effect, then dependent note', async () => {
+    const r = record();
+    await queue.enqueue(r);
+    await queue.enqueue(record('operation-note-002', 'comment', [r.operation.operationId]));
+    let lost = true;
+    const client = syncClient(backend.url, transport(method =>
+      lost && method === 'POST' ? 'timeout_after_commit' : undefined), 300);
+    expect(await service(client).syncPending()).toEqual({ processed: 0, issues: 2 });
+    const requestBefore = (await queue.getRecord(r.operation.operationId, 'technician-1'))?.preparedRequest;
+    expect(requestBefore?.body.baseVersion).toBe(1);
+    const remoteClient = createIncidentClient({ baseUrl: backend.url, actorId: 'technician-1', transport: transport() });
+    expect((await remoteClient.getIncidentSnapshot(base.id)).version).toBe(2);
+    db.close(); db = openDb(join(dir, 'queue.sqlite')); queue = new SQLiteIncidentStore(db);
+    lost = false;
+    expect(await service(client).syncPending()).toEqual({ processed: 2, issues: 0 });
+    const ack = await queue.getRecord(r.operation.operationId, 'technician-1');
+    expect(ack?.preparedRequest).toEqual(requestBefore);
+    expect(ack?.confirmation?.duplicate).toBe(true);
+    const note = await queue.getRecord('operation-note-002', 'technician-1');
+    expect(note?.preparedRequest?.body).toEqual({ action: 'comment', baseVersion: 2, text: 'Nota ficticia' });
+    expect((await remoteClient.getIncidentSnapshot(base.id)).version).toBe(3);
+    expect((await remoteClient.getIncidentSnapshot(base.id)).fields.notes).toHaveLength(1);
+    const response = await transport().request({ method: 'GET', path: backend.url + '/v1/incidents/' + base.id,
+      headers: { Authorization: 'Bearer course-valid-token', 'X-Course-Actor': 'coordinator-1' } });
+    const dto = await response.json() as { payload: { history: { operationId: string }[] } };
+    expect(dto.payload.history.filter(h => h.operationId === r.operation.operationId)).toHaveLength(1);
+    expect(await queue.listPending('technician-1')).toEqual([]);
   });
-
-  it('Dependencias: la operación dependiente no se envía si la previa no está confirmada', async () => {
-    const queue = new InMemoryQueuePort();
-
-    await queue.enqueue({
-      operation: {
-        operationId: 'op-A',
-        incidentId,
-        actorId,
-        baseVersion: 1,
-        action: 'start',
-        payload: {},
-      },
-      base: { id: incidentId, version: 1, fields: {} },
-      local: { id: incidentId, version: 1, fields: {} },
-      sequence: 1,
-      dependsOn: [],
-      status: 'pendiente',
-      preparedRequest: null,
-      confirmation: null,
-      issue: null,
+  test('reassignment yields 403, persists blocked intention and keeps dependent note', async () => {
+    const r = record();
+    await queue.enqueue(r);
+    await queue.enqueue(record('operation-note-002', 'comment', [r.operation.operationId]));
+    const coordinator = createIncidentClient({ baseUrl: backend.url, actorId: 'coordinator-1', transport: transport() });
+    await coordinator.performIncidentAction(base.id, { action: 'assign', baseVersion: 1, technicianId: 'technician-2' }, 'reassign-operation-001');
+    expect(await service().syncPending()).toEqual({ processed: 0, issues: 2 });
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.status).toBe('bloqueada');
+    expect((await coordinator.getIncidentSnapshot(base.id)).fields.work).toEqual({
+      status: 'assigned', assignedTechnicianId: 'technician-2',
     });
-
-    await queue.enqueue({
-      operation: {
-        operationId: 'op-B',
-        incidentId,
-        actorId,
-        baseVersion: 1,
-        action: 'comment',
-        payload: { text: 'Nota posterior a start' },
-      },
-      base: { id: incidentId, version: 1, fields: {} },
-      local: { id: incidentId, version: 1, fields: {} },
-      sequence: 2,
-      dependsOn: ['op-A'],
-      status: 'pendiente',
-      preparedRequest: null,
-      confirmation: null,
-      issue: null,
-    });
-
+    db.close(); db = openDb(join(dir, 'queue.sqlite')); queue = new SQLiteIncidentStore(db);
+    expect(await queue.listPending('technician-1')).toHaveLength(2);
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.operation).toEqual(r.operation);
+  });
+  test('compatible remote priority is preserved and uses the current version only before first send', async () => {
+    await queue.enqueue(record());
+    const coordinator = createIncidentClient({ baseUrl: backend.url, actorId: 'coordinator-1', transport: transport() });
+    await coordinator.performIncidentAction(base.id, { action: 'prioritize', baseVersion: 1, priority: 'high' }, 'priority-operation-001');
+    expect(await service().syncPending()).toEqual({ processed: 1, issues: 0 });
+    const snapshot = await coordinator.getIncidentSnapshot(base.id);
+    expect(snapshot.fields.priority).toBe('high');
+    expect(snapshot.version).toBe(3);
+  });
+  test('HTTP 500 preserves pending payload and no confirmation', async () => {
+    const r = record('operation-note-001', 'comment'); await queue.enqueue(r);
+    expect(await service(syncClient(backend.url, transport(() => 'server_error'))).syncPending())
+      .toEqual({ processed: 0, issues: 1 });
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.confirmation).toBeNull();
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.status).toBe('pendiente');
+  });
+  test('wrong confirmation cannot remove an operation', async () => {
+    const r = record(); await queue.enqueue(r);
     const client: IncidentActionClient = {
-      performIncidentAction: jest.fn().mockRejectedValue({ status: 503 }),
+      getIncidentSnapshot: async () => base,
+      performIncidentAction: async () => ({ operationId: 'wrong-id', incident: { ...r.local, version: 2 }, duplicate: false }),
     };
-
-    const service = createIncidentSyncService({
-      queuePort: queue,
-      incidentClient: client,
-      getCurrentActor: () => actorId,
-    });
-
-    const result = await service.syncPending();
-
-    expect(result.processed).toBe(0);
-    expect(result.issues).toBe(2);
-
-    const opB = await queue.getRecord('op-B', actorId);
-    expect(opB?.issue?.kind).toBe('dependency');
-    expect(client.performIncidentAction).toHaveBeenCalledTimes(1);
+    expect(await service(client).syncPending()).toEqual({ processed: 0, issues: 1 });
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.status).toBe('conflicto');
+  });
+  test('409 compares real remote notes, never invents a work conflict', async () => {
+    const r = record('operation-note-001', 'comment'); await queue.enqueue(r);
+    await queue.prepareRequest(r.operation.operationId, 'technician-1', prepared(r));
+    const remote = { ...base, version: 2, fields: { ...base.fields, notes: [{ actorId: 'reporter-1', text: 'Otra nota' }] } };
+    const client: IncidentActionClient = { getIncidentSnapshot: async () => remote,
+      performIncidentAction: async () => { throw Object.assign(new Error('version_conflict'), { status: 409 }); } };
+    await service(client).syncPending();
+    expect((await queue.getRecord(r.operation.operationId, 'technician-1'))?.issue?.fields).toEqual(['notes']);
+  });
+  test('logout during preparation prevents sending, and concurrent sync is single-flight', async () => {
+    await queue.enqueue(record());
+    let actor: string | null = 'technician-1';
+    let release!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const send = jest.fn();
+    const client: IncidentActionClient = { getIncidentSnapshot: async () => { await gate; return base; },
+      performIncidentAction: send };
+    const sync = createIncidentSyncService({ queuePort: queue, incidentClient: client, getCurrentActor: () => actor });
+    const first = sync.syncPending();
+    expect(await sync.syncPending()).toEqual({ processed: 0, issues: 0 });
+    actor = null; release();
+    await first;
+    expect(send).not.toHaveBeenCalled();
+    expect(await queue.listPending('technician-1')).toHaveLength(1);
   });
 });
