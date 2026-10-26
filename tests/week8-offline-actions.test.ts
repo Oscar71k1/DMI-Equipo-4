@@ -1,9 +1,8 @@
 import { createOfflineIncidentActions } from '../src/application/createOfflineIncidentActions';
 import { SQLiteIncidentStore } from '../src/infrastructure/SQLiteIncidentStore';
 import { migrateIncidentStore } from '../src/infrastructure/incidentMigrations';
-import { base, openDb } from './helpers/week8';
+import { base, openDb, record } from './helpers/week8';
 import type { Actor } from '../src/domain/Actor';
-import { record } from './helpers/week8';
 
 test('application queues ordered offline work and isolates cached data by actor', async () => {
   const db = openDb(':memory:');

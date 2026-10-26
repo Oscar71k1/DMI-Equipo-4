@@ -42,7 +42,7 @@ git tag -a week-08-final -m "DMI week 08 final"
 make evidence-week-08
 ```
 
-`evidence` verifica los JSON y que la etiqueta corresponda a la versión actual; por eso se ejecuta **después de crearla**. Si falla, no envíen la entrega. El reporte generado en esta última comprobación se conserva localmente: no creen otro commit sólo para añadirlo después de fijar la etiqueta. 
+`evidence` verifica los JSON y que la etiqueta corresponda a la versión actual; por eso se ejecuta **después de crearla**. Si falla, no envíen la entrega. El reporte generado en esta última comprobación se conserva localmente: no creen otro commit sólo para añadirlo después de fijar la etiqueta.
 
 5. Cuando las comprobaciones pasen, suban el trabajo y consulten el SHA de entrega:
 
@@ -52,7 +52,7 @@ git push origin week-08-final
 git rev-list -n 1 week-08-final
 ```
 
-En Classroom entreguen **enlace del repositorio, etiqueta y el SHA completo del último comando**. Comprueben que la etiqueta y los archivos están en GitHub, no sólo en su computadora. No sobrescriban una etiqueta ya entregada sin autorización. Los cambios posteriores al SHA fijado no forman parte de esa entrega. 
+En Classroom entreguen **enlace del repositorio, etiqueta y el SHA completo del último comando**. Comprueben que la etiqueta y los archivos están en GitHub, no sólo en su computadora. No sobrescriban una etiqueta ya entregada sin autorización. Los cambios posteriores al SHA fijado no forman parte de esa entrega.
 
 ## Reglas que siguen vigentes
 
