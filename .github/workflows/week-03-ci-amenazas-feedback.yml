@@ -3,6 +3,7 @@ name: Week 03 Academic Feedback
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -87,53 +88,3 @@ jobs:
           name: week-03-current-${{ github.event.pull_request.head.sha || github.sha }}
           if-no-files-found: warn
           path: reports/week-03/**
-
-  frozen-delivery:
-    name: Official evaluation - week-03-final
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    steps:
-      - name: Checkout frozen delivery
-        uses: actions/checkout@v4
-        with:
-          ref: refs/tags/week-03-final
-          fetch-depth: 2
-      - name: Verify final tag identity
-        shell: bash
-        run: |
-          git fetch --no-tags --depth=2 origin refs/tags/week-03-final:refs/tags/week-03-final
-          test "$(git rev-list -n 1 refs/tags/week-03-final)" = "$(git rev-parse HEAD)"
-          echo "Evaluated delivery: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
-      - name: Use Node.js 22.22.0
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.22.0'
-          cache: npm
-      - name: Reproducible setup
-        id: setup
-        run: make setup
-      - name: Baseline feedback and Android export
-        run: make feedback
-      - name: Official reproducibility
-        run: make verify-week-03
-      - name: Frozen architecture and security regressions
-        run: npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incidents.test.tsx tests/security.test.ts
-      - name: Secret scanner positive and negative controls
-        id: scanner
-        shell: bash
-        run: |
-          mkdir -p reports/week-03/logs
-          python3 tests/secret_scanner_test.py 2>&1 | tee reports/week-03/logs/ci-secret-scanner.txt
-      - name: Official public behavior and evidence schemas
-        run: make public-test-week-03
-      - name: Official frozen evidence validation
-        run: make evidence-week-03
-      - name: Upload frozen delivery results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: week-03-frozen-delivery
-          if-no-files-found: warn
-          path: |
-            reports/week-03/**
-            evidence/week-03/**

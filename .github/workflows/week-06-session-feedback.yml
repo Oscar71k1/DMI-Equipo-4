@@ -3,6 +3,7 @@ name: Week 06 Secure Session Feedback
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

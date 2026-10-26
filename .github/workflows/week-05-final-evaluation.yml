@@ -1,0 +1,63 @@
+# Official evaluation runs on the final delivery tag, never as a skipped job on branch pushes.
+name: Week 05 Official Evaluation
+
+on:
+  push:
+    tags:
+      - week-05-final
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: week-05-final-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frozen-delivery:
+    name: Official evaluation - week-05-final
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout frozen delivery
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/week-05-final
+          fetch-depth: 2
+      - name: Verify final tag identity
+        shell: bash
+        run: |
+          git fetch --no-tags --depth=2 origin refs/tags/week-05-final:refs/tags/week-05-final
+          test "$(git rev-list -n 1 refs/tags/week-05-final)" = "$(git rev-parse HEAD)"
+          echo "Evaluated delivery: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Use Node.js 22.22.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - name: Reproducible setup
+        run: make setup
+      - name: Baseline feedback and Android export
+        run: make feedback
+      - name: Official reproducibility
+        run: make verify-week-05
+      - name: Run incident and public Week 05 tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports/week-05/logs
+          npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/remote-resource.test.ts tests/incident-client.test.ts tests/remote-incident-repository.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx course-tests/public/week-05.test.ts 2>&1 | tee reports/week-05/logs/ci-final-tests.txt
+      - name: Official public behavior and evidence schemas
+        run: make public-test-week-05
+      - name: Official frozen evidence validation
+        run: make evidence-week-05
+      - name: Upload frozen delivery results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week-05-frozen-delivery
+          if-no-files-found: warn
+          path: |
+            reports/week-05/**
+            evidence/week-05/**

@@ -4,6 +4,7 @@ name: Starter Public Feedback
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
