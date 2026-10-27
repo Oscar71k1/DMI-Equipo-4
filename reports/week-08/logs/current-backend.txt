@@ -1,4 +1,4 @@
-COMMIT=877c6a17dada896761b54da98f3af2e73ae305b2
+COMMIT=3117c057b7b18310fd687ef00d3b030e22b3a911
 COMMAND="C:\Program Files\nodejs\npm.CMD" run backend:self-test
 
 > dmi-react-native-starter@1.0.0 backend:self-test

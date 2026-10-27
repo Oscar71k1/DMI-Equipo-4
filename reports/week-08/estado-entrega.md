@@ -1,6 +1,6 @@
 # Estado de la revisión de semana 8
 
-Código comprobado: `877c6a17dada896761b54da98f3af2e73ae305b2`.
+Código y evidencias auditados: `3117c057b7b18310fd687ef00d3b030e22b3a911`.
 Rama: `codex/revision-semana-08`. `main` no se ha modificado.
 
 ## Pendientes corregidos
@@ -19,13 +19,13 @@ La auditoría todavía informa cinco vulnerabilidades altas en dependencias de E
 
 Los resultados oficiales de verificación técnica y pruebas públicas se conservan en `verify.json` y `public-tests.json`. Validar la estructura de un JSON no equivale a haber ejecutado una prueba nativa ni a una corroboración personal.
 
-Ambos verificadores oficiales terminaron con código 0 sobre el SHA indicado. El verificador `--mode evidence` acepta los tres JSON y falla únicamente en `frozen_sha` por ausencia de `week-08-final`; su salida real está en `failure.json`. El workflow conserva ese control y puede fallar en esa etapa mientras el PR siga siendo una revisión sin etiqueta final.
+Los verificadores oficiales verify/public y el chequeo evidence posterior a la publicación de week-08-final pasaron. La salida versionada de failure.json describe el diagnóstico anterior al etiquetado; los artefactos actuales de GitHub muestran los controles aprobados. Las comprobaciones de la corrección documental se registran con su SHA fuente correspondiente.
 
 ## Pendientes aceptados o que requieren al equipo
 
 1. Prueba de force-stop/reapertura en Android. No hay dispositivo conectado ni AVD configurado. Oscar indicó continuar y dejarla pendiente; `migration-tests.json` la conserva con status `fail`, y `docs/sync-policy.md` contiene los pasos. No se la marca como no aplicable.
-2. Cada integrante debe corroborar su registro en `individual.json`. Sus IDs, commits y logs son verificables; se distingue la expectativa escrita en pruebas de una declaración personal. Los resultados nuevos de Codex no se atribuyen a Jarumi o Fernanda.
-3. No se ha fijado `week-08-final`: la etiqueta corresponde al cierre de entrega, después de completar los pendientes reales. No debe usarse un tag para hacer pasar el verificador como sustituto de esa evidencia.
+2. Corroboración documental completada: `individual-audit.json` verifica tres integrantes, doce commits, archivos y cinco logs históricos. El contrato no exige una firma adicional ni el campo personalizado requiresMemberReview. La capacidad de explicar su trabajo se corrobora con cada integrante cuando lo solicite el docente; no se presenta como evaluada por Codex.
+3. `week-08-final` fue publicada sobre 3117c057b7b18310fd687ef00d3b030e22b3a911 por autorización explícita de Oscar con pendientes documentados. La corrección documental posterior requiere decidir la actualización de esa etiqueta para que incluya la nueva evidencia; no se mueve silenciosamente.
 
 Para cerrar después: completar la prueba nativa y la corroboración, volver a ejecutar las comprobaciones, registrar reportes/evidencias en un commit exclusivo y crear el tag sobre esa versión. Si cambia código o documentación, actualizar primero el SHA comprobado y los reportes. No publicar una etiqueta final sobre esta revisión parcial.
 
@@ -33,7 +33,7 @@ Para cerrar después: completar la prueba nativa y la corroboración, volver a e
 
 Título: `Semana 8: integrar persistencia y resolver conflictos sin perder trabajo`.
 
-El PR debe permanecer en borrador mientras falte la prueba nativa y la corroboración individual. Reúne las ramas de Jarumi y Fernanda, corrige su integración y añade la resolución explícita. Las comprobaciones automáticas pasan; la entrega académica completa sigue pendiente. Abrir un PR no autoriza fusionarlo a main.
+El PR conserva su condición de borrador; la prueba nativa sigue pendiente y la corroboración documental individual ya está completada. Reúne las ramas de Jarumi y Fernanda, corrige su integración y añade la resolución explícita. Las comprobaciones automáticas pasan; la entrega académica completa sigue pendiente. Abrir un PR no autoriza fusionarlo a main.
 
 Oscar autorizó explícitamente subir la rama y abrir este PR en borrador con esos pendientes visibles, sin fusionarlo.
 

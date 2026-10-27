@@ -1,4 +1,4 @@
-COMMIT=877c6a17dada896761b54da98f3af2e73ae305b2
+COMMIT=3117c057b7b18310fd687ef00d3b030e22b3a911
 COMMAND="C:\Program Files\nodejs\npm.CMD" run bundle:release
 
 > dmi-react-native-starter@1.0.0 bundle:release
@@ -6,7 +6,7 @@ COMMAND="C:\Program Files\nodejs\npm.CMD" run bundle:release
 
 Starting Metro Bundler
 
-Android Bundled 6326ms index.ts (652 modules)
+Android Bundled 9537ms index.ts (652 modules)
 
 › android bundles (1):
 _expo/static/js/android/index-429888247fa77e3a22306523ddeb11f3.hbc (1.7MB)

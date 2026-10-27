@@ -1,13 +1,13 @@
-COMMIT=877c6a17dada896761b54da98f3af2e73ae305b2
+COMMIT=3117c057b7b18310fd687ef00d3b030e22b3a911
 COMMAND=C:/Users/oscar/AppData/Local/Temp/campusops-node-22.22.0/node-v22.22.0-win-x64\node.EXE node_modules/jest/bin/jest.js --ci --runInBand --no-watchman --cacheDirectory .jest-cache --json --outputFile C:\Users\oscar\.codex\worktrees\revision-semana-08\DMI-Equipo-4\reports\week-08\generated-jest.json --testPathIgnorePatterns course-tests/public/week-(09|10|11|12|13)
 
-(node:4652) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:1228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node.EXE --trace-warnings ...` to show where the warning was created)
-PASS tests/week8-idempotency.test.ts
-PASS course-tests/smoke.test.tsx
+PASS tests/week8-idempotency.test.ts (8.127 s)
+PASS course-tests/smoke.test.tsx (6.024 s)
+PASS course-tests/public/week-08.test.ts
 PASS tests/architecture.test.ts
 PASS tests/incidents.test.tsx
-PASS course-tests/public/week-08.test.ts
 PASS tests/security-audit.test.ts
 PASS tests/session-integration.test.tsx
 PASS tests/incident-cloud-flow.test.tsx
@@ -16,25 +16,25 @@ PASS tests/week8-offline-ui.test.tsx
 PASS tests/week8-persistence.test.ts
 PASS tests/incident-client.test.ts
 PASS tests/week8-action-client.test.ts
-PASS tests/session-refresh.test.ts
 PASS tests/remote-incident-repository.test.ts
 PASS tests/week8-offline-actions.test.ts
-PASS tests/week8-sync.test.ts
-PASS course-tests/public/week-05.test.ts
-PASS tests/secure-storage.test.ts
-PASS course-tests/public/week-01.test.ts
-PASS course-tests/public/week-04.test.ts
-PASS tests/security.test.ts
-PASS course-tests/public/week-06.test.ts
+PASS tests/session-refresh.test.ts
 PASS tests/remote-resource.test.ts
 PASS course-tests/public/week-03.test.ts
+PASS tests/security.test.ts
+PASS course-tests/public/week-05.test.ts
 PASS tests/telemetry.test.ts
+PASS tests/secure-storage.test.ts
+PASS tests/week8-sync.test.ts
+PASS course-tests/public/week-01.test.ts
+PASS course-tests/public/week-04.test.ts
+PASS course-tests/public/week-06.test.ts
 PASS course-tests/public/week-02.test.ts
 
 Test Suites: 27 passed, 27 total
 Tests:       156 passed, 156 total
 Snapshots:   0 total
-Time:        15.867 s, estimated 17 s
+Time:        29.698 s
 Ran all test suites.
 Test results written to: reports\week-08\generated-jest.json
 

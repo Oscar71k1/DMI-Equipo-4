@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "3117c057b7b18310fd687ef00d3b030e22b3a911",
+  "generatedAt": "2026-10-27T01:55:32.895618+00:00",
+  "status": "pass",
+  "verificationScope": "Repository documentary audit, not personal attestation or native execution",
+  "checks": [
+    {
+      "id": "authorship-3523110017",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "git show -s --format=\"%H %an %aI %s\" <SHA>; git merge-base --is-ancestor <SHA> HEAD; git diff-tree --no-commit-id --name-only -r <SHA>",
+      "evidence": "5 commits reachable from 3117c057b7b18310fd687ef00d3b030e22b3a911, author=Oscar Flores Cerqueda; every declared technical file occurs in those commits. Exact SHAs and changedFiles are indexed in members."
+    },
+    {
+      "id": "authorship-3523110055",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "git show -s --format=\"%H %an %aI %s\" <SHA>; git merge-base --is-ancestor <SHA> HEAD; git diff-tree --no-commit-id --name-only -r <SHA>",
+      "evidence": "3 commits reachable from 3117c057b7b18310fd687ef00d3b030e22b3a911, author=Jarumi; every declared technical file occurs in those commits. Exact SHAs and changedFiles are indexed in members."
+    },
+    {
+      "id": "authorship-3523110496",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "git show -s --format=\"%H %an %aI %s\" <SHA>; git merge-base --is-ancestor <SHA> HEAD; git diff-tree --no-commit-id --name-only -r <SHA>",
+      "evidence": "4 commits reachable from 3117c057b7b18310fd687ef00d3b030e22b3a911, author=FerSalazar726; every declared technical file occurs in those commits. Exact SHAs and changedFiles are indexed in members."
+    }
+  ],
+  "members": [
+    {
+      "studentId": "3523110017",
+      "gitAuthor": "Oscar Flores Cerqueda",
+      "commits": [
+        {
+          "sha": "be1c7aaa26d1ad85695263267177c3ad65e3c589",
+          "author": "Oscar Flores Cerqueda",
+          "subject": "fix(week8): integrar cola persistente y sincronizacion recuperable",
+          "committedAt": "2026-10-26T17:23:58-06:00",
+          "changedFiles": [
+            "docs/architecture.mmd",
+            "docs/data-model.md",
+            "docs/sync-policy.md",
+            "lab/week8-real-db.mjs",
+            "reports/week-08/revision-integracion.md",
+            "src/api/incidentClient.ts",
+            "src/application/CampusOpsActions.ts",
+            "src/application/createIncidentSyncService.ts",
+            "src/application/createOfflineIncidentActions.ts",
+            "src/composition/createCampusOps.ts",
+            "src/domain/IncidentQueueRecord.ts",
+            "src/domain/incidentSync.ts",
+            "src/infrastructure/ExpoSqliteAdapter.ts",
+            "src/infrastructure/IncidentMapper.ts",
+            "src/infrastructure/SQLiteIncidentStore.ts",
+            "src/infrastructure/incidentMigrations.ts",
+            "src/ui/CampusOpsScreen.tsx",
+            "src/ui/OfflineWorkPanel.tsx",
+            "tests/helpers/week8.ts",
+            "tests/security-audit.test.ts",
+            "tests/week8-idempotency.test.ts",
+            "tests/week8-migrations.test.ts",
+            "tests/week8-offline-actions.test.ts",
+            "tests/week8-offline-ui.test.tsx",
+            "tests/week8-persistence.test.ts",
+            "tools/update_architecture.cjs"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/be1c7aaa26d1ad85695263267177c3ad65e3c589"
+        },
+        {
+          "sha": "7200a380cbca3113f619920a53fd81a355e29cbf",
+          "author": "Oscar Flores Cerqueda",
+          "subject": "fix(week8): resolver conflictos conservando intenciones locales",
+          "committedAt": "2026-10-26T17:35:55-06:00",
+          "changedFiles": [
+            ".github/workflows/week-08-persistencia-sincronizacion-feedback.yml",
+            "INSTALL.md",
+            "docs/assignments/week-08-repository.md",
+            "docs/assignments/week-08-rubric.md",
+            "docs/assignments/week-08.md",
+            "docs/data-model.md",
+            "docs/sync-policy.md",
+            "reports/week-08/revision-integracion.md",
+            "src/application/createIncidentSyncService.ts",
+            "src/application/createOfflineIncidentActions.ts",
+            "src/composition/createCampusOps.ts",
+            "src/domain/IncidentQueueRecord.ts",
+            "src/infrastructure/SQLiteIncidentStore.ts",
+            "src/ui/OfflineWorkPanel.tsx",
+            "tests/week8-idempotency.test.ts",
+            "tests/week8-offline-actions.test.ts",
+            "tests/week8-offline-ui.test.tsx",
+            "tools/generate_week08_reports.py"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/7200a380cbca3113f619920a53fd81a355e29cbf"
+        },
+        {
+          "sha": "4748b902c4a012a3f2491ac0a7df531e67087f3b",
+          "author": "Oscar Flores Cerqueda",
+          "subject": "chore(week8): limpiar imports y formato de documentacion",
+          "committedAt": "2026-10-26T17:39:03-06:00",
+          "changedFiles": [
+            "docs/assignments/week-08-repository.md",
+            "tests/week8-offline-actions.test.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/4748b902c4a012a3f2491ac0a7df531e67087f3b"
+        },
+        {
+          "sha": "f8c7d6e2c1976758715db56ddfcc2f89305cde02",
+          "author": "Oscar Flores Cerqueda",
+          "subject": "ci: evitar ejecuciones duplicadas y separar entregas historicas",
+          "committedAt": "2026-10-26T17:48:04-06:00",
+          "changedFiles": [
+            ".github/workflows/starter-feedback.yml",
+            ".github/workflows/week-01-feedback.yml",
+            ".github/workflows/week-01-final-evaluation.yml",
+            ".github/workflows/week-02-feedback.yml",
+            ".github/workflows/week-02-final-evaluation.yml",
+            ".github/workflows/week-03-ci-amenazas-feedback.yml",
+            ".github/workflows/week-03-final-evaluation.yml",
+            ".github/workflows/week-04-final-evaluation.yml",
+            ".github/workflows/week-04-seguridad-privacidad-feedback.yml",
+            ".github/workflows/week-05-final-evaluation.yml",
+            ".github/workflows/week-05-incidents-feedback.yml",
+            ".github/workflows/week-06-session-feedback.yml",
+            ".github/workflows/week-08-persistencia-sincronizacion-feedback.yml"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/f8c7d6e2c1976758715db56ddfcc2f89305cde02"
+        },
+        {
+          "sha": "877c6a17dada896761b54da98f3af2e73ae305b2",
+          "author": "Oscar Flores Cerqueda",
+          "subject": "ci: conservar validacion al publicar la etiqueta de semana 8",
+          "committedAt": "2026-10-26T17:51:00-06:00",
+          "changedFiles": [
+            ".github/workflows/week-08-persistencia-sincronizacion-feedback.yml"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/877c6a17dada896761b54da98f3af2e73ae305b2"
+        }
+      ],
+      "filesVerifiedAgainstOwnCommits": [
+        "src/infrastructure/SQLiteIncidentStore.ts",
+        "src/application/createIncidentSyncService.ts",
+        "src/application/createOfflineIncidentActions.ts",
+        "src/ui/OfflineWorkPanel.tsx",
+        "tests/week8-idempotency.test.ts"
+      ]
+    },
+    {
+      "studentId": "3523110055",
+      "gitAuthor": "Jarumi",
+      "commits": [
+        {
+          "sha": "a7ca31a3f688dbcdda7fef4e8dc1eae854282f9a",
+          "author": "Jarumi",
+          "subject": "build: agregar expo-sqlite para la cola local de semana 8",
+          "committedAt": "2026-10-24T00:49:49-06:00",
+          "changedFiles": [
+            "app.json",
+            "package-lock.json",
+            "package.json"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/a7ca31a3f688dbcdda7fef4e8dc1eae854282f9a"
+        },
+        {
+          "sha": "12fcfabc8a52d6700d45ad950de31ea1f697d472",
+          "author": "Jarumi",
+          "subject": "feat: agregar tipos del registro de cola local y actualizar diagrama",
+          "committedAt": "2026-10-24T01:13:30-06:00",
+          "changedFiles": [
+            "docs/architecture.mmd",
+            "src/domain/IncidentQueueRecord.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/12fcfabc8a52d6700d45ad950de31ea1f697d472"
+        },
+        {
+          "sha": "366cd15a18c05162a39965923045a7f63deb1526",
+          "author": "Jarumi",
+          "subject": "feat(week8): implementa persistencia sqlite, migraciones y pruebas de recuperacion",
+          "committedAt": "2026-10-26T11:37:43-06:00",
+          "changedFiles": [
+            "docs/data-model.md",
+            "lab/week8-real-db.mjs",
+            "reports/week-08/logs/jarumi-migraciones-real-db.txt",
+            "src/infrastructure/ExpoSqliteAdapter.ts",
+            "src/infrastructure/SQLiteIncidentStore.ts",
+            "src/infrastructure/SqlDatabase.ts",
+            "src/infrastructure/incidentMigrations.ts",
+            "tests/week8-migrations.test.ts",
+            "tests/week8-persistence.test.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/366cd15a18c05162a39965923045a7f63deb1526"
+        }
+      ],
+      "filesVerifiedAgainstOwnCommits": [
+        "src/infrastructure/SQLiteIncidentStore.ts",
+        "src/infrastructure/incidentMigrations.ts",
+        "src/infrastructure/ExpoSqliteAdapter.ts",
+        "tests/week8-migrations.test.ts",
+        "tests/week8-persistence.test.ts",
+        "lab/week8-real-db.mjs"
+      ]
+    },
+    {
+      "studentId": "3523110496",
+      "gitAuthor": "FerSalazar726",
+      "commits": [
+        {
+          "sha": "b5e5a6d85379b53724c688d483f3a75351e76d48",
+          "author": "FerSalazar726",
+          "subject": "feat(sync): comparar tres versiones y deduplicar operaciones por identidad",
+          "committedAt": "2026-10-23T23:17:14-06:00",
+          "changedFiles": [
+            "src/course-evaluation/index.ts",
+            "src/domain/deduplicateOperations.ts",
+            "src/domain/incidentSync.ts",
+            "tests/week8-sync.test.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/b5e5a6d85379b53724c688d483f3a75351e76d48"
+        },
+        {
+          "sha": "cab1d5982ad5efbd89f9eaf2d8c10a079c955fb6",
+          "author": "FerSalazar726",
+          "subject": "fix(client): validar el sobre de confirmacion de acciones con identidad de operacion",
+          "committedAt": "2026-10-24T09:25:39-06:00",
+          "changedFiles": [
+            "src/api/incidentClient.ts",
+            "src/infrastructure/RemoteIncidentRepository.ts",
+            "tests/week8-action-client.test.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/cab1d5982ad5efbd89f9eaf2d8c10a079c955fb6"
+        },
+        {
+          "sha": "77cceae540e8b44c89af9fd522950ea84d350530",
+          "author": "FerSalazar726",
+          "subject": "feat(sync): implementar resolveSync, deduplicateOperations y servicio de sincronizacion",
+          "committedAt": "2026-10-25T01:25:25-06:00",
+          "changedFiles": [
+            "src/application/createIncidentSyncService.ts",
+            "src/course-evaluation/index.ts",
+            "src/domain/IncidentQueueRecord.ts",
+            "src/domain/deduplicateOperations.ts",
+            "src/domain/incidentSync.ts",
+            "tests/week8-sync.test.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/77cceae540e8b44c89af9fd522950ea84d350530"
+        },
+        {
+          "sha": "12321506e15d34d1157465d0f656df0525999960",
+          "author": "FerSalazar726",
+          "subject": "feat(sync): resolver 3-way merge, idempotencia y politica de sincronizacion",
+          "committedAt": "2026-10-25T01:31:48-06:00",
+          "changedFiles": [
+            "docs/sync-policy.md",
+            "reports/week-08/logs/fernanda-acciones-antes.txt",
+            "reports/week-08/logs/fernanda-acciones-despues-con-error-de-tipos.txt",
+            "reports/week-08/logs/fernanda-acciones-despues.txt",
+            "reports/week-08/logs/fernanda-acciones-edicion-rota.txt",
+            "reports/week-08/logs/fernanda-public-tests.txt",
+            "reports/week-08/logs/fernanda-regresiones.txt",
+            "reports/week-08/logs/fernanda-sync-antes.txt",
+            "reports/week-08/logs/fernanda-sync-despues.txt",
+            "reports/week-08/logs/fernanda-sync-tests.txt",
+            "tests/week8-idempotency.test.ts"
+          ],
+          "url": "https://github.com/Oscar71k1/DMI-Equipo-4/commit/12321506e15d34d1157465d0f656df0525999960"
+        }
+      ],
+      "filesVerifiedAgainstOwnCommits": [
+        "src/domain/incidentSync.ts",
+        "src/domain/deduplicateOperations.ts",
+        "src/domain/IncidentQueueRecord.ts",
+        "src/application/createIncidentSyncService.ts",
+        "src/api/incidentClient.ts",
+        "tests/week8-sync.test.ts",
+        "tests/week8-action-client.test.ts"
+      ]
+    }
+  ],
+  "historicalLogs": [
+    {
+      "path": "reports/week-08/logs/jarumi-migraciones-real-db.txt",
+      "sha256": "248022269456412e9f2dcdf930b3b1be3dca4cc1e1c953c6dbca718e7c558081",
+      "lastChangedCommit": "366cd15a18c05162a39965923045a7f63deb1526",
+      "observedLines": [],
+      "gitBlobSha": "c52009f9c1ff7a3500f3667a4dd28346c73506e5",
+      "sha256Scope": "Bytes del archivo inspeccionado en Windows; gitBlobSha identifica el contenido versionado independientemente de conversiones CRLF."
+    },
+    {
+      "path": "reports/week-08/logs/fernanda-sync-antes.txt",
+      "sha256": "c9fb6425e7632b816f34434832fa32a6f67486f4b64ff65c0e64549ebd041422",
+      "lastChangedCommit": "12321506e15d34d1157465d0f656df0525999960",
+      "observedLines": [],
+      "gitBlobSha": "2b1908677765e82baf7e4bd2a5951722ce7d90b0",
+      "sha256Scope": "Bytes del archivo inspeccionado en Windows; gitBlobSha identifica el contenido versionado independientemente de conversiones CRLF."
+    },
+    {
+      "path": "reports/week-08/logs/fernanda-sync-despues.txt",
+      "sha256": "f2df456ce11c7deffb786969abba76bd4acad21dd22414e5bcd5090a86381a7d",
+      "lastChangedCommit": "12321506e15d34d1157465d0f656df0525999960",
+      "observedLines": [],
+      "gitBlobSha": "656308fb2527bea593ef9ac0fdf270ea5292fdb6",
+      "sha256Scope": "Bytes del archivo inspeccionado en Windows; gitBlobSha identifica el contenido versionado independientemente de conversiones CRLF."
+    },
+    {
+      "path": "reports/week-08/logs/fernanda-acciones-despues.txt",
+      "sha256": "b21ab9f8fdd54239aa7a267682e2034c818e626c4f0974cff99e2c3d1f2ed876",
+      "lastChangedCommit": "12321506e15d34d1157465d0f656df0525999960",
+      "observedLines": [],
+      "gitBlobSha": "2d116777978238e2fe1ca993d6058a566758e0ec",
+      "sha256Scope": "Bytes del archivo inspeccionado en Windows; gitBlobSha identifica el contenido versionado independientemente de conversiones CRLF."
+    },
+    {
+      "path": "reports/week-08/logs/fernanda-regresiones.txt",
+      "sha256": "a3737555ce4b0854ff87a3d30cb0c64e5df4265b85fbc3d5987841b1113180fe",
+      "lastChangedCommit": "12321506e15d34d1157465d0f656df0525999960",
+      "observedLines": [],
+      "gitBlobSha": "7d3d15273f976a6ab9e85679c9826562df087785",
+      "sha256Scope": "Bytes del archivo inspeccionado en Windows; gitBlobSha identifica el contenido versionado independientemente de conversiones CRLF."
+    }
+  ],
+  "predictionSources": [
+    {
+      "studentId": "3523110055",
+      "commitSha": "366cd15a18c05162a39965923045a7f63deb1526",
+      "file": "tests/week8-persistence.test.ts",
+      "lines": [
+        {
+          "line": 66,
+          "text": "expect(pending.length).toBe(1);"
+        },
+        {
+          "line": 67,
+          "text": "expect(pending[0]?.operation.operationId).toBe(opId);"
+        },
+        {
+          "line": 68,
+          "text": "expect(pending[0]?.status).toBe('pendiente');"
+        }
+      ],
+      "kind": "expectations_in_versioned_assertions"
+    },
+    {
+      "studentId": "3523110055",
+      "commitSha": "366cd15a18c05162a39965923045a7f63deb1526",
+      "file": "tests/week8-migrations.test.ts",
+      "lines": [
+        {
+          "line": 67,
+          "text": "expect(meta.value).toBe('1');"
+        }
+      ],
+      "kind": "expectations_in_versioned_assertions"
+    },
+    {
+      "studentId": "3523110496",
+      "commitSha": "b5e5a6d85379b53724c688d483f3a75351e76d48",
+      "file": "tests/week8-sync.test.ts",
+      "lines": [
+        {
+          "line": 18,
+          "text": "// Predicción: merged con los mismos campos, aunque la versión remota sea otra."
+        },
+        {
+          "line": 25,
+          "text": "// Predicción: gana el lado que sí cambió en cada campo."
+        },
+        {
+          "line": 34,
+          "text": "// Predicción: título viene del lado local y prioridad del remoto."
+        },
+        {
+          "line": 41,
+          "text": "// Predicción: igualdad por contenido, así que merged y no conflict."
+        },
+        {
+          "line": 49,
+          "text": "// Predicción: arrays con distinto orden se consideran distintos (conflicto);"
+        },
+        {
+          "line": 59,
+          "text": "// Predicción: quitar un campo localmente lo elimina del resultado;"
+        },
+        {
+          "line": 68,
+          "text": "// Predicción: ['a', 'b']; el campo c solo cambió en el remoto y no es conflicto."
+        },
+        {
+          "line": 75,
+          "text": "// Predicción: conflict en ['work'], sin mezclar \"técnico 2\" con \"en proceso\"."
+        },
+        {
+          "line": 85,
+          "text": "// Predicción: vacía devuelve vacía; distintos conserva el orden."
+        },
+        {
+          "line": 92,
+          "text": "// Predicción: [a1, b, a2] devuelve [a1, b]."
+        },
+        {
+          "line": 102,
+          "text": "// Predicción: se queda value 1 y se ignora value 99."
+        },
+        {
+          "line": 111,
+          "text": "// Predicción: la entrada congelada queda igual y el resultado no es el mismo arreglo."
+        }
+      ],
+      "kind": "explicit_prediction_comments"
+    }
+  ]
+}

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "week": 8,
   "teamId": "4",
-  "status": "requires_member_review",
-  "notes": "Compilación asistida a partir del historial Git y logs ya existentes. Los IDs provienen de evidence/week-06/individual.json. No atribuye a Jarumi o Fernanda las ejecuciones nuevas de Codex. Cada integrante debe corroborar su registro y explicar la versión integrada; no se presume validación personal por completar este JSON.",
+  "status": "documentary_evidence_verified",
+  "notes": "Auditoría documental realizada por Codex a solicitud de Oscar: se comprobaron autores Git, SHAs alcanzables, archivos modificados por esos autores y logs originales. Los IDs se conservaron desde la evidencia previa del equipo. Los resultados históricos y las reproducciones asistidas se distinguen explícitamente. El contrato oficial no exige requiresMemberReview ni una firma adicional; no se afirma que Codex haya evaluado la comprensión o recabado declaraciones personales de los integrantes.",
   "members": [
     {
       "studentId": "3523110017",
@@ -33,7 +33,27 @@
       "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts tests/week8-offline-actions.test.ts tests/week8-offline-ui.test.tsx tests/architecture.test.ts",
       "observedResult": "Ejecución asistida de la continuación: 4 suites, 19 pruebas aprobadas. La ejecución completa del mismo código y sus logs quedan indexados en reports/week-08/migration-tests.json; no se ejecutó la prueba en Android.",
       "explanation": "Codex editó y ejecutó las comprobaciones por solicitud de Oscar. La corrección mantiene las nueve firmas canónicas, añade una decisión explícita persistente y comprueba atomicidad y restricciones de actor. Este registro no equivale a una defensa personal ni a una ejecución manual de Oscar.",
-      "requiresMemberReview": true
+      "repositoryVerification": {
+        "status": "verified",
+        "auditedCommitSha": "3117c057b7b18310fd687ef00d3b030e22b3a911",
+        "report": "reports/week-08/individual-audit.json",
+        "gitAuthor": "Oscar Flores Cerqueda",
+        "identitySource": "evidence/week-06/individual.json",
+        "scope": "Autoría registrada en Git, pertenencia al historial, archivos técnicos y fuentes de resultados. No certifica quién ejecutó manualmente un comando ni comprensión personal."
+      },
+      "explanationAssessment": {
+        "status": "not_assessed",
+        "meaning": "La explicación personal se corrobora si la solicita el docente; no es una firma ni una prueba automática añadida al contrato."
+      },
+      "sourceReferences": [
+        {
+          "commitSha": "7200a380cbca3113f619920a53fd81a355e29cbf",
+          "file": "tests/week8-idempotency.test.ts",
+          "kind": "assistant_authored_tests_at_user_request",
+          "executionLog": "reports/week-08/logs/current-tests.txt"
+        }
+      ],
+      "executionAttribution": "Integración y ejecución nuevas realizadas por Codex a solicitud de Oscar. La autoría Git es Oscar Flores Cerqueda; no se afirma ejecución manual."
     },
     {
       "studentId": "3523110055",
@@ -57,11 +77,58 @@
       "reviews": [
         "Aporte verificable de almacenamiento, migración y dependencia expo-sqlite. La integración posterior reemplazó el puerto mínimo por el canónico, conservando el historial original."
       ],
-      "prediction": "Expectativa documentada en sus pruebas versionadas: recuperar el mismo operationId tras cerrar/reabrir SQLite y mantener schema_version=1 ante rollback. No se encontró una declaración personal separada y previa; esta expectativa se cita desde las aserciones de 366cd15, no se presenta como un testimonio nuevo de Jarumi.",
-      "command": "node --experimental-strip-types lab/week8-real-db.mjs (reproducción actual; el log histórico contiene la invocación original y EXIT_CODE=0)",
+      "prediction": "Expectativa comprobable en las aserciones versionadas de 366cd15: conservar el mismo operationId y estado pendiente al reabrir SQLite, y conservar schema_version=1 si falla la migración. Se registra como expectativa del test, no como una declaración personal retrospectiva.",
+      "command": "node --experimental-strip-types lab/week8-real-db.mjs",
       "observedResult": "El log histórico de Jarumi registra M01/M02 correctos, conservación de dos IDs, esquema anterior intacto tras la falla, recuperación y EXIT_CODE=0. Corresponde al esquema 2 de su rama; el esquema integrado ahora es 3 y sus resultados nuevos están separados en current-migration-states.txt.",
       "explanation": "Sus commits aportan SQLite y la transacción de migración. No se atribuye a la rama inicial la resolución completa del contrato, el aislamiento ni la prueba nativa. La revisión posterior conserva intenciones antiguas incompletas para revisión en vez de reenviarlas con una base inventada.",
-      "requiresMemberReview": true
+      "repositoryVerification": {
+        "status": "verified",
+        "auditedCommitSha": "3117c057b7b18310fd687ef00d3b030e22b3a911",
+        "report": "reports/week-08/individual-audit.json",
+        "gitAuthor": "Jarumi",
+        "identitySource": "evidence/week-06/individual.json",
+        "scope": "Autoría registrada en Git, pertenencia al historial, archivos técnicos y fuentes de resultados. No certifica quién ejecutó manualmente un comando ni comprensión personal."
+      },
+      "explanationAssessment": {
+        "status": "not_assessed",
+        "meaning": "La explicación personal se corrobora si la solicita el docente; no es una firma ni una prueba automática añadida al contrato."
+      },
+      "commandProvenance": "Comando reproducible de la versión integrada. La cabecera del log histórico truncó la invocación original de npx; no se reconstruye como si se hubiera capturado completa.",
+      "sourceReferences": [
+        {
+          "studentId": "3523110055",
+          "commitSha": "366cd15a18c05162a39965923045a7f63deb1526",
+          "file": "tests/week8-persistence.test.ts",
+          "lines": [
+            {
+              "line": 66,
+              "text": "expect(pending.length).toBe(1);"
+            },
+            {
+              "line": 67,
+              "text": "expect(pending[0]?.operation.operationId).toBe(opId);"
+            },
+            {
+              "line": 68,
+              "text": "expect(pending[0]?.status).toBe('pendiente');"
+            }
+          ],
+          "kind": "expectations_in_versioned_assertions"
+        },
+        {
+          "studentId": "3523110055",
+          "commitSha": "366cd15a18c05162a39965923045a7f63deb1526",
+          "file": "tests/week8-migrations.test.ts",
+          "lines": [
+            {
+              "line": 67,
+              "text": "expect(meta.value).toBe('1');"
+            }
+          ],
+          "kind": "expectations_in_versioned_assertions"
+        }
+      ],
+      "executionAttribution": "Resultados procedentes de archivos versionados en la aportación de este integrante. La auditoría constata su contenido y procedencia Git, no la identidad física de quien ejecutó el terminal. Las reproducciones nuevas las realizó Codex y se mantienen separadas."
     },
     {
       "studentId": "3523110496",
@@ -88,11 +155,82 @@
       "reviews": [
         "Aporte verificable del contrato canónico, comparación por contenido JSON, deduplicación y validación del sobre de acciones. Se conservan también sus logs de falla; no se reporta como correcto lo que falló en su rama."
       ],
-      "prediction": "En b5e5a6d:tests/week8-sync.test.ts escribió antes de las pruebas que cambios independientes combinan, la reasignación frente a inicio produce conflict en [work], los campos incompatibles salen ordenados y la deduplicación conserva la primera operación sin mutación.",
-      "command": "npm test -- tests/week8-sync.test.ts; npm test -- tests/week8-action-client.test.ts (logs históricos)",
+      "prediction": "b5e5a6d:tests/week8-sync.test.ts contiene comentarios explícitos de predicción: cambios independientes combinan; reasignación frente a inicio produce conflict en [work]; los campos incompatibles salen ordenados; la deduplicación conserva la primera operación sin mutación. La auditoría verifica esos comentarios versionados, no reconstruye su cronología fuera de Git.",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-sync.test.ts tests/week8-action-client.test.ts",
       "observedResult": "Los logs originales registran 12/12 pruebas de comparación/deduplicación y 9/9 del cliente. Su regresión histórica registra 69 aprobadas y 2 fallidas, EXIT_CODE=1. Esos resultados describen su versión, no sustituyen los resultados de la integración actual.",
       "explanation": "La comparación usa base/local/remoto y mantiene work como campo compuesto. La integración corrigió imports de dominio, deduplicación del lote y confirmaciones del servicio, y añadió backend/SQLite reales; no se atribuyen esas correcciones posteriores a los commits iniciales de Fernanda.",
-      "requiresMemberReview": true
+      "repositoryVerification": {
+        "status": "verified",
+        "auditedCommitSha": "3117c057b7b18310fd687ef00d3b030e22b3a911",
+        "report": "reports/week-08/individual-audit.json",
+        "gitAuthor": "FerSalazar726",
+        "identitySource": "evidence/week-06/individual.json",
+        "scope": "Autoría registrada en Git, pertenencia al historial, archivos técnicos y fuentes de resultados. No certifica quién ejecutó manualmente un comando ni comprensión personal."
+      },
+      "explanationAssessment": {
+        "status": "not_assessed",
+        "meaning": "La explicación personal se corrobora si la solicita el docente; no es una firma ni una prueba automática añadida al contrato."
+      },
+      "sourceReferences": [
+        {
+          "studentId": "3523110496",
+          "commitSha": "b5e5a6d85379b53724c688d483f3a75351e76d48",
+          "file": "tests/week8-sync.test.ts",
+          "lines": [
+            {
+              "line": 18,
+              "text": "// Predicción: merged con los mismos campos, aunque la versión remota sea otra."
+            },
+            {
+              "line": 25,
+              "text": "// Predicción: gana el lado que sí cambió en cada campo."
+            },
+            {
+              "line": 34,
+              "text": "// Predicción: título viene del lado local y prioridad del remoto."
+            },
+            {
+              "line": 41,
+              "text": "// Predicción: igualdad por contenido, así que merged y no conflict."
+            },
+            {
+              "line": 49,
+              "text": "// Predicción: arrays con distinto orden se consideran distintos (conflicto);"
+            },
+            {
+              "line": 59,
+              "text": "// Predicción: quitar un campo localmente lo elimina del resultado;"
+            },
+            {
+              "line": 68,
+              "text": "// Predicción: ['a', 'b']; el campo c solo cambió en el remoto y no es conflicto."
+            },
+            {
+              "line": 75,
+              "text": "// Predicción: conflict en ['work'], sin mezclar \"técnico 2\" con \"en proceso\"."
+            },
+            {
+              "line": 85,
+              "text": "// Predicción: vacía devuelve vacía; distintos conserva el orden."
+            },
+            {
+              "line": 92,
+              "text": "// Predicción: [a1, b, a2] devuelve [a1, b]."
+            },
+            {
+              "line": 102,
+              "text": "// Predicción: se queda value 1 y se ignora value 99."
+            },
+            {
+              "line": 111,
+              "text": "// Predicción: la entrada congelada queda igual y el resultado no es el mismo arreglo."
+            }
+          ],
+          "kind": "explicit_prediction_comments"
+        }
+      ],
+      "commandProvenance": "Comando agrupado reproducible; los logs originales registran por separado npm test -- tests/week8-sync.test.ts y npm test -- tests/week8-action-client.test.ts.",
+      "executionAttribution": "Resultados procedentes de archivos versionados en la aportación de este integrante. La auditoría constata su contenido y procedencia Git, no la identidad física de quien ejecutó el terminal. Las reproducciones nuevas las realizó Codex y se mantienen separadas."
     }
   ]
 }
