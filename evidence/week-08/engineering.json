@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
+  "commitSha": "72c7a12a71f9b6f3433acb1965474353e7aadd69",
   "decision": "Persistir cada intención con su base, proyección, dependencias e identidad estable en SQLite. Preparar la petición una sola vez y conservarla en reintentos. Comparar base/local/remoto por contenido JSON y mantener work como unidad: una reasignación concurrente no se combina automáticamente con un inicio local. La resolución explícita conserva el estado del servidor y guarda las intenciones dependientes como historial local, sin borrar trabajo ni inventar confirmaciones.",
   "alternatives": [
     "Última escritura gana: simplifica el envío, pero podría restaurar una asignación antigua y perder una decisión de coordinación; se descarta.",
@@ -51,5 +51,11 @@
     "La auditoría individual es documental; la explicación personal de cada integrante la verifica el docente cuando corresponda."
   ],
   "aiAssistance": "Codex ayudó a revisar, integrar, escribir código/pruebas, ejecutar comprobaciones y estructurar evidencias por solicitud de Oscar. Los logs históricos de otros integrantes se conservan separados. Los integrantes deben comprobar y explicar lo que entregan.",
-  "ciRouting": "Las regresiones actuales se ejecutan una vez en cada PR y en pushes a main. Las evaluaciones históricas de semanas 1 a 5 se conservan con checkout de sus tags, disparadas por el tag o manualmente. Semana 6 ya tenía evaluación final separada. El control final de semana 8 no se omite y sigue requiriendo week-08-final."
+  "ciRouting": "Las regresiones actuales se ejecutan una vez en cada PR y en pushes a main. Las evaluaciones históricas de semanas 1 a 5 se conservan con checkout de sus tags, disparadas por el tag o manualmente. Semana 6 ya tenía evaluación final separada. El control final de semana 8 no se omite y sigue requiriendo week-08-final.",
+  "revalidation": {
+    "previousSourceCommit": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
+    "sourceCommit": "72c7a12a71f9b6f3433acb1965474353e7aadd69",
+    "checkedAt": "2026-10-27T03:11:34.626385+00:00",
+    "scope": "Comprobaciones automáticas repetidas sobre el main integrado. El diff respecto del SHA fuente anterior sólo contiene reports/ y evidence/; código, configuración, evaluador y pruebas sin cambios. La ejecución Android histórica conserva su SHA original y sus límites en native-validation.json."
+  }
 }
