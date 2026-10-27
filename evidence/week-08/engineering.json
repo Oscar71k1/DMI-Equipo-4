@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "3117c057b7b18310fd687ef00d3b030e22b3a911",
+  "commitSha": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
   "decision": "Persistir cada intención con su base, proyección, dependencias e identidad estable en SQLite. Preparar la petición una sola vez y conservarla en reintentos. Comparar base/local/remoto por contenido JSON y mantener work como unidad: una reasignación concurrente no se combina automáticamente con un inicio local. La resolución explícita conserva el estado del servidor y guarda las intenciones dependientes como historial local, sin borrar trabajo ni inventar confirmaciones.",
   "alternatives": [
     "Última escritura gana: simplifica el envío, pero podría restaurar una asignación antigua y perder una decisión de coordinación; se descarta.",
@@ -19,7 +19,7 @@
   "verification": [
     {
       "command": "python -B tools/generate_week08_reports.py",
-      "result": "PASS de comprobaciones automáticas: 27 suites, 156 pruebas; types, lint, backend, auditoría con umbral crítico y bundle Android. La validación nativa sigue pendiente.",
+      "result": "PASS automático: 27 suites, 156 pruebas; typecheck, lint, backend, migraciones, auditoría con umbral crítico y bundle Android. La ejecución nativa se documenta por separado.",
       "evidence": "reports/week-08/migration-tests.json y reports/week-08/logs/current-*.txt. Los logs contienen el SHA, comando y código de salida real."
     },
     {
@@ -33,9 +33,9 @@
       "evidence": "reports/week-08/logs/current-tests.txt y checks individuales en migration-tests.json; backend vivo y SQLite real de Node."
     },
     {
-      "command": "adb devices",
-      "result": "PENDIENTE nativo: no se detectó dispositivo ni AVD configurado; el usuario pidió dejar esta prueba pendiente.",
-      "evidence": "migration-tests.json: android-app-force-stop-reopen=fail. El procedimiento manual está en docs/sync-policy.md. No se presenta el bundle como APK instalado."
+      "command": "Compilar e instalar APK; retirar adb reverse; guardar inicio/nota; force-stop; reapertura; reasignar; sincronizar; aceptar servidor; sincronizar otra vez.",
+      "result": "PASS del flujo central nativo: mismos IDs y nota tras reapertura offline; reasignación respetada; aceptación explícita conserva historial y no reenvía. Dos APKs con el mismo núcleo de persistencia/sincronización; el segundo cierre posterior a resolver fue bloqueado y no se afirma ejecutado.",
+      "evidence": "reports/week-08/native-validation.json y sus capturas, eventos y respuestas de backend."
     },
     {
       "command": "git show -s --format=\"%H %an %aI %s\" <SHA>; git merge-base --is-ancestor <SHA> HEAD; git diff-tree --no-commit-id --name-only -r <SHA>",
@@ -44,10 +44,11 @@
     }
   ],
   "limitations": [
-    "No hay evidencia de force-stop/reapertura en Android.",
-    "audit:ci pasa su umbral crítico pero reporta cinco vulnerabilidades altas en dependencias de Expo.",
-    "No se considera esta revisión una entrega final completa mientras falte la validación nativa.",
-    "La autoría registrada, pertenencia de commits, archivos y logs individuales fueron contrastados documentalmente en individual-audit.json. La comprensión personal sólo puede comprobarse con cada integrante si lo solicita el docente; no se añade una firma obligatoria al contrato."
+    "La revisión automática de permisos rechazó el segundo cierre/relanzamiento con blocked by policy. No se reintentó ese cierre ni se marcó aprobado. La persistencia de resolución tras reabrir está cubierta automáticamente con SQLite real, no se afirma esta repetición en teléfono.",
+    "La sesión didáctica vence en 60 segundos; recuperar con sesión vencida puede requerir conexión y autenticación, sin borrar la cola.",
+    "Migración fallida/rollback e idempotencia tras timeout se verificaron con SQLite real en Node; no se inyectó esa falla en el teléfono.",
+    "audit:ci pasa el umbral crítico y todavía informa cinco vulnerabilidades altas de dependencias.",
+    "La auditoría individual es documental; la explicación personal de cada integrante la verifica el docente cuando corresponda."
   ],
   "aiAssistance": "Codex ayudó a revisar, integrar, escribir código/pruebas, ejecutar comprobaciones y estructurar evidencias por solicitud de Oscar. Los logs históricos de otros integrantes se conservan separados. Los integrantes deben comprobar y explicar lo que entregan.",
   "ciRouting": "Las regresiones actuales se ejecutan una vez en cada PR y en pushes a main. Las evaluaciones históricas de semanas 1 a 5 se conservan con checkout de sus tags, disparadas por el tag o manualmente. Semana 6 ya tenía evaluación final separada. El control final de semana 8 no se omite y sigue requiriendo week-08-final."

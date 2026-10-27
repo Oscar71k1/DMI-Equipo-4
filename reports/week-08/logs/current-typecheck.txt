@@ -1,4 +1,4 @@
-COMMIT=3117c057b7b18310fd687ef00d3b030e22b3a911
+COMMIT=11ff96ab729ae1047e263e81822e88e6e6aaf977
 COMMAND="C:\Program Files\nodejs\npm.CMD" run typecheck
 
 > dmi-react-native-starter@1.0.0 typecheck

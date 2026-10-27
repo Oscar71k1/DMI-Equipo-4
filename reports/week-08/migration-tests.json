@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "3117c057b7b18310fd687ef00d3b030e22b3a911",
-  "generatedAt": "2026-10-27T01:56:46.240026+00:00",
+  "commitSha": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
+  "generatedAt": "2026-10-27T02:47:01.081518+00:00",
   "automaticChecksPassed": true,
-  "nativeValidationPending": true,
+  "nativeValidationPending": false,
   "testSummary": {
     "numTotalTests": 156,
     "numPassedTests": 156,
@@ -126,27 +126,6 @@
       "evidence": "Jest passed: Week 8: real backend + durable queue synchronization logout during preparation prevents sending, and concurrent sync is single-flight; reports/week-08/logs/current-tests.txt"
     },
     {
-      "id": "course-tests/public/week-08.test.ts: CampusOps detects offline start versus remote reassignment without mutating either record",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
-      "evidence": "Jest passed: CampusOps detects offline start versus remote reassignment without mutating either record; reports/week-08/logs/current-tests.txt"
-    },
-    {
-      "id": "course-tests/public/week-08.test.ts: merges independent field changes and reports same-field conflict",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
-      "evidence": "Jest passed: merges independent field changes and reports same-field conflict; reports/week-08/logs/current-tests.txt"
-    },
-    {
-      "id": "course-tests/public/week-08.test.ts: deduplicates a replayed operation by stable identity",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
-      "evidence": "Jest passed: deduplicates a replayed operation by stable identity; reports/week-08/logs/current-tests.txt"
-    },
-    {
       "id": "tests/week8-migrations.test.ts: Week 8: populated migration and rollback on real SQLite preserves incident snapshot, ID and note; absent original base is quarantined, not fabricated for sending",
       "status": "pass",
       "scenarioType": "failure",
@@ -238,6 +217,27 @@
       "evidence": "Jest passed: Week 8: SQLite port, actual close/reopen and atomic confirmation rejects wrong acknowledgement and unconfirmed dependency, serializes concurrent writes; reports/week-08/logs/current-tests.txt"
     },
     {
+      "id": "tests/week8-offline-actions.test.ts: application queues ordered offline work and isolates cached data by actor",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: application queues ordered offline work and isolates cached data by actor; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: logout during cache download never persists the previous session response",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: logout during cache download never persists the previous session response; reports/week-08/logs/current-tests.txt"
+    },
+    {
+      "id": "tests/week8-offline-actions.test.ts: accepting a readable remote conflict permits a new independent proposal without changing the old one",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
+      "evidence": "Jest passed: accepting a readable remote conflict permits a new independent proposal without changing the old one; reports/week-08/logs/current-tests.txt"
+    },
+    {
       "id": "tests/week8-action-client.test.ts: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-01 nominal: acepta el sobre y conserva versión, identidad de la operación y duplicate:false",
       "status": "pass",
       "scenarioType": "boundary",
@@ -301,25 +301,25 @@
       "evidence": "Jest passed: performIncidentAction — confirmación con sobre { incident, operationId, duplicate } ACT-07 failure: HTTP 500 se distingue como \"server\" y conserva el status; reports/week-08/logs/current-tests.txt"
     },
     {
-      "id": "tests/week8-offline-actions.test.ts: application queues ordered offline work and isolates cached data by actor",
+      "id": "course-tests/public/week-08.test.ts: CampusOps detects offline start versus remote reassignment without mutating either record",
       "status": "pass",
       "scenarioType": "boundary",
-      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
-      "evidence": "Jest passed: application queues ordered offline work and isolates cached data by actor; reports/week-08/logs/current-tests.txt"
+      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
+      "evidence": "Jest passed: CampusOps detects offline start versus remote reassignment without mutating either record; reports/week-08/logs/current-tests.txt"
     },
     {
-      "id": "tests/week8-offline-actions.test.ts: logout during cache download never persists the previous session response",
+      "id": "course-tests/public/week-08.test.ts: merges independent field changes and reports same-field conflict",
       "status": "pass",
       "scenarioType": "failure",
-      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
-      "evidence": "Jest passed: logout during cache download never persists the previous session response; reports/week-08/logs/current-tests.txt"
+      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
+      "evidence": "Jest passed: merges independent field changes and reports same-field conflict; reports/week-08/logs/current-tests.txt"
     },
     {
-      "id": "tests/week8-offline-actions.test.ts: accepting a readable remote conflict permits a new independent proposal without changing the old one",
+      "id": "course-tests/public/week-08.test.ts: deduplicates a replayed operation by stable identity",
       "status": "pass",
-      "scenarioType": "failure",
-      "command": "npm test -- --runInBand --runTestsByPath tests/week8-offline-actions.test.ts",
-      "evidence": "Jest passed: accepting a readable remote conflict permits a new independent proposal without changing the old one; reports/week-08/logs/current-tests.txt"
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand --runTestsByPath course-tests/public/week-08.test.ts",
+      "evidence": "Jest passed: deduplicates a replayed operation by stable identity; reports/week-08/logs/current-tests.txt"
     },
     {
       "id": "tests/week8-sync.test.ts: Week 8 - Sincronización y Deduplicación Pura deepEqual compara objetos como iguales ignorando el orden de las propiedades",
@@ -386,10 +386,15 @@
     },
     {
       "id": "android-app-force-stop-reopen",
-      "status": "fail",
+      "status": "pass",
       "scenarioType": "boundary",
-      "command": "adb devices; ejecutar el procedimiento de docs/sync-policy.md en Android",
-      "evidence": "Pendiente: adb no mostró dispositivos; no hay AVD configurado. El usuario pidió continuar dejando esta prueba pendiente. SQLite en Node y un bundle no prueban el reinicio de la app nativa."
+      "command": "APK release; adb reverse --remove tcp:4310; guardar inicio/nota; adb shell am force-stop mx.edu.dmi.engineeringapp; am start; comparar IDs y texto; reasignar; sincronizar y resolver explícitamente.",
+      "evidence": "reports/week-08/native-validation.json: reinicio offline real y resolución sin pérdida; mismos IDs y texto; backend versión 2/technician-2. Se usaron dos APKs con el mismo núcleo. El segundo cierre posterior a resolver fue bloqueado por revisión automática y no se afirma ejecutado."
     }
-  ]
+  ],
+  "additionalNativeCheck": {
+    "id": "post-resolution-second-force-stop-reopen",
+    "status": "not_executed",
+    "reason": "La revisión automática de permisos rechazó el segundo cierre/relanzamiento con blocked by policy. No se reintentó ese cierre ni se marcó aprobado. La persistencia de resolución tras reabrir está cubierta automáticamente con SQLite real, no se afirma esta repetición en teléfono."
+  }
 }

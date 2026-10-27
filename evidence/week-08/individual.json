@@ -27,11 +27,12 @@
       ],
       "reviews": [
         "Integración de los puertos de Jarumi y Fernanda; corrección de capas, versiones, respuestas e idempotencia. Commits locales de integración realizados con asistencia de Codex a solicitud de Oscar.",
-        "Ajuste de CI asistido: conservó los jobs históricos, retiró su ejecución fuera de la entrega correspondiente y evitó duplicar push/PR. No se borraron pruebas ni se desactivó la validación final de semana 8."
+        "Ajuste de CI asistido: conservó los jobs históricos, retiró su ejecución fuera de la entrega correspondiente y evitó duplicar push/PR. No se borraron pruebas ni se desactivó la validación final de semana 8.",
+        "Continuación asistida por Codex en el Android conectado por Oscar: prueba nativa, diagnóstico del entorno, conexión local y accesibilidad del panel. Resultados y límites en native-validation.json; no se atribuye a Oscar una ejecución manual de los comandos de Codex."
       ],
       "prediction": "Objetivo explicitado antes de añadir las pruebas: aceptar el estado del servidor debe conservar inicio y notas, evitar reenvíos y no sobrescribir la reasignación. Un timeout o acuse inválido debe impedir cerrar una operación cuyo efecto todavía es incierto.",
       "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts tests/week8-offline-actions.test.ts tests/week8-offline-ui.test.tsx tests/architecture.test.ts",
-      "observedResult": "Ejecución asistida de la continuación: 4 suites, 19 pruebas aprobadas. La ejecución completa del mismo código y sus logs quedan indexados en reports/week-08/migration-tests.json; no se ejecutó la prueba en Android.",
+      "observedResult": "Ejecución asistida de la continuación: 4 suites, 19 pruebas aprobadas. La ejecución completa del mismo código y sus logs quedan indexados en reports/week-08/migration-tests.json; esta observación histórica precede a la validación Android posterior, registrada en reports/week-08/native-validation.json.",
       "explanation": "Codex editó y ejecutó las comprobaciones por solicitud de Oscar. La corrección mantiene las nueve firmas canónicas, añade una decisión explícita persistente y comprueba atomicidad y restricciones de actor. Este registro no equivale a una defensa personal ni a una ejecución manual de Oscar.",
       "repositoryVerification": {
         "status": "verified",
