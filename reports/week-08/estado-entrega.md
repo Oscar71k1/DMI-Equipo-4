@@ -1,7 +1,7 @@
 # Estado de la entrega de semana 8
 
-Fuente verificada: `11ff96ab729ae1047e263e81822e88e6e6aaf977`.
-Rama: `codex/revision-semana-08`. No se modificó ni se fusionó `main`.
+Fuente de la revalidación automática: `72c7a12a71f9b6f3433acb1965474353e7aadd69`. La ejecución Android histórica mantiene su procedencia original en `native-validation.json`.
+Rama de corrección: `codex/corregir-evidencias-semana-08`, basada en el main que integró el PR #17. Esta corrección se entrega mediante otro PR; no se escribe directamente a main.
 
 ## Resultados
 
@@ -20,4 +20,4 @@ La sesión didáctica dura 60 segundos. Se observó una reautenticación y la co
 
 La evidencia nativa es `native-validation.json`; sus artefactos están en `native/`. El generador automático deja el caso Android pendiente por defecto: su resultado se incorporó después de contrastar capturas, IDs, eventos y respuestas reales del backend. No se cambió el evaluador, las pruebas públicas ni se forzó su resultado.
 
-El PR #17 permanece en borrador y sin fusionar. La calificación corresponde al docente; las comprobaciones aprobadas no son una garantía de 8/8.
+El PR #17 ya fue integrado por el usuario. Su merge cambió el SHA y dejó las referencias de los reportes fuera del padre inmediato admitido. La presente corrección vuelve a comprobar ese main y sólo cambia evidencias. La calificación corresponde al docente; las comprobaciones aprobadas no son una garantía de 8/8.
