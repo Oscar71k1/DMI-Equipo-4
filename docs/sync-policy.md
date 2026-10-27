@@ -57,13 +57,17 @@ La suite de idempotencia inicia un backend real en puerto efímero y usa archivo
 También verifica reasignación/403 con intención intacta, modificación remota independiente, 500, confirmación incorrecta, conflicto de notes, logout, single-flight, aceptación explícita del estado remoto con conservación de intención, rollback de resolución y rechazo de confirmaciones inciertas.
 Los tests de UI usan dobles de aplicación; no sustituyen la ejecución en Android. Consultar el informe de revisión para los resultados observados.
 
-## Prueba nativa pendiente (no ejecutada)
+## Prueba nativa en Android
 
-1. Usar una instalación Android que incluya expo-sqlite (`npm run android`) y el backend didáctico. Configurar EXPO_PUBLIC_COURSE_BACKEND_URL con una dirección accesible desde el dispositivo; no usar localhost del teléfono para referirse al equipo.
+Ejecutada en un Samsung SM-G981V con Android 13. El reinicio sin conexión conservó los dos IDs y la nota; la reasignación produjo un bloqueo y la resolución preservó ambas intenciones como historial. La evidencia y sus límites están en `reports/week-08/native-validation.json`. El segundo cierre posterior a resolver no se ejecutó porque la revisión automática de permisos lo bloqueó.
+
+El procedimiento reproducible de instalación está en `docs/android-local-validation.md`; los siguientes pasos describen el caso y no sustituyen los resultados observados.
+
+1. Usar una instalación Android que incluya expo-sqlite (`npm run android`) y el backend didáctico. Configurar EXPO_PUBLIC_COURSE_BACKEND_URL con una dirección accesible desde el dispositivo; con USB, `adb reverse tcp:4310 tcp:4310` permite usar `http://127.0.0.1:4310`.
 2. Iniciar sesión con technician-1 y abrir campus-inc-001 mientras todavía está asignada a ese actor. Pulsar Guardar copia local. Cortar la conexión al backend y guardar inicio y nota; anotar los dos IDs que muestra el panel y el texto.
 3. Ejecutar `adb shell am force-stop mx.edu.dmi.engineeringapp` y reabrir la app desde su icono, todavía sin conexión. Registrar los mismos IDs, base/estado local y texto. Un relanzamiento que requiera Metro o reautenticación no demuestra por sí solo este caso: registrar el resultado real y el límite observado.
 4. En otra sesión autorizada como coordinator-1, reasignar esa misma incidencia a technician-2. Volver al técnico original, restablecer conexión y pulsar Sincronizar pendientes. Esperar bloqueo/conflicto y conservación de inicio/nota, sin alterar la reasignación.
 5. Revisar el caso con coordinación. Pulsar Revisar conflicto, leer el alcance y confirmar Aceptar estado del servidor. Verificar que ambas intenciones quedan como historial, con sus mismos IDs y contenido. Cerrar y reabrir otra vez; Sincronizar pendientes no debe aplicar el inicio ni la nota retenidos.
 6. Guardar pasos, hora, build/SHA, actor ficticio, IDs, resultados y logs sin tokens. Sustituir el check pendiente en migration-tests.json sólo después de observar estos resultados. La carga de fotos no es necesaria para este caso porque se usa una nota.
 
-Para reproducir los reportes automáticos: Node 22.22.0 en PATH y `python -B tools/generate_week08_reports.py`. El script conserva la prueba nativa como pendiente; no la infiere de los tests de Node.
+Para reproducir los reportes automáticos: Node 22.22.0 en PATH y `python -B tools/generate_week08_reports.py`. El script por sí solo conserva la prueba nativa como pendiente; no la infiere de los tests de Node. Después de ejecutarlo, incorporar el resultado observado y sus limitaciones desde `reports/week-08/native-validation.json`; no convertirlo en aprobado sin comprobar esa evidencia.

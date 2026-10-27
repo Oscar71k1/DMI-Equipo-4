@@ -43,7 +43,7 @@ export function CampusOpsScreen({ actions }: Props) {
       <View accessibilityRole="summary" style={styles.card}>
         <Text style={styles.title}>CampusOps</Text>
         <Text>Incidencias del campus · entorno académico ficticio</Text>
-        <Text testID="backend-status">Backend: {backendStatus}</Text>
+        <Text testID="backend-status">Backend al abrir: {backendStatus}</Text>
         {actions.auth ? <SessionPanel auth={actions.auth} /> : actions.session && <SessionStoragePanel session={actions.session} />}
       </View>
       {actions.offline && sessionSnapshot?.status === 'authenticated' &&
@@ -77,7 +77,7 @@ export function CampusOpsScreen({ actions }: Props) {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, padding: 24, gap: 16 },
+  screen: { flex: 1, padding: 24, gap: 16, backgroundColor: '#ffffff' },
   card: { gap: 12 },
   title: { fontSize: 24, fontWeight: '700' },
   content: { flex: 1, gap: 12 },

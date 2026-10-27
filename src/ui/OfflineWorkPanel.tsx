@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import type { OfflineActions } from '../application/createOfflineIncidentActions';
 import type { IncidentQueueRecord, QueueSyncRecord } from '../domain/IncidentQueueRecord';
 
@@ -34,7 +34,10 @@ export function OfflineWorkPanel({ actions, incidentId }: {
       if (live.current) setMessage('No se pudo completar la acción. Tu trabajo guardado se conserva; revisa sesión, permisos y copia local.');
     } finally { if (live.current) setBusy(false); }
   }
-  return <View testID="offline-work-panel" style={{ gap: 8 }}>
+  return <ScrollView testID="offline-work-panel"
+    style={{ flexGrow: 0, flexShrink: 1, maxHeight: '55%' }}
+    contentContainerStyle={{ gap: 8, paddingBottom: 8 }}
+    keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
     <Text>Trabajo sin conexión</Text>
     {!incidentId && cached.map(snapshot => <Pressable key={snapshot.id} accessibilityRole="button"
       onPress={() => setCachedSelection(snapshot.id)}>
@@ -51,7 +54,9 @@ export function OfflineWorkPanel({ actions, incidentId }: {
         () => actions.queueAction(selected, 'start', {}), 'Inicio guardado en este dispositivo; pendiente de sincronizar.')}>
         <Text>Iniciar atención sin conexión</Text>
       </Pressable>
-      <TextInput accessibilityLabel="Nota pendiente" value={text} onChangeText={setText} />
+      <TextInput accessibilityLabel="Nota pendiente" value={text} onChangeText={setText}
+        placeholder="Escribe una nota pendiente" placeholderTextColor="#555555"
+        style={{ minHeight: 44, padding: 8, borderWidth: 1, borderColor: '#888888', color: '#000000' }} />
       <Pressable disabled={busy || !text.trim()} accessibilityRole="button" onPress={() => void run(
         () => actions.queueAction(selected, 'comment', { text }), 'Nota guardada en este dispositivo; pendiente de sincronizar.')}>
         <Text>Guardar nota pendiente</Text>
@@ -91,5 +96,5 @@ export function OfflineWorkPanel({ actions, incidentId }: {
         </>}
       </>}
     </View>)}
-  </View>;
+  </ScrollView>;
 }
