@@ -9,7 +9,7 @@ export default function App() {
   return (
     <>
       <CampusOpsScreen actions={campusOpsActions} />
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
     </>
   );
 }

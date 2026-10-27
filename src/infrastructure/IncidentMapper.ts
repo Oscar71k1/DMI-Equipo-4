@@ -1,4 +1,5 @@
 import type { Incident } from '../domain/Incident';
+import type { QueueSyncRecord } from '../domain/IncidentQueueRecord';
 import type { ParseResult } from '../course-evaluation/contracts';
 import { parseRemoteResource } from '../course-evaluation';
 import { mapRemoteIncidentToDomain } from '../domain/IncidentRemoteMapper';
@@ -49,4 +50,22 @@ export function parseIncidentCreate(input: unknown): Readonly<{ incident: Incide
     !('duplicate' in input) || typeof input.duplicate !== 'boolean'
   ) throw new Error('Remote incident creation contract invalid');
   return { incident: mapRemoteIncident(input.incident), operationId: input.operationId, duplicate: input.duplicate };
+}
+
+/** Keep synchronization metadata before the display-domain mapper discards it. */
+export function mapQueueSnapshot(input: unknown): QueueSyncRecord {
+  const mapped = mapRemoteIncident(input);
+  const parsed = parseRemoteResource(input);
+  if (mapped.kind !== 'mapped' || !parsed.ok || !parsed.value.payload) throw new IncidentMappingError('contract');
+  const payload = parsed.value.payload;
+  if (!Array.isArray(payload.notes) || !Array.isArray(payload.evidence) ||
+      !payload.notes.every(n => n && typeof n === 'object' && typeof n.actorId === 'string' && typeof n.text === 'string') ||
+      !payload.evidence.every(e => e && typeof e === 'object' && typeof e.actorId === 'string' && typeof e.evidenceId === 'string')) {
+    throw new IncidentMappingError('contract');
+  }
+  const { history: _history, assignedTechnicianId: _assigned, work: _work, ...fields } = payload;
+  return JSON.parse(JSON.stringify({
+    id: parsed.value.id, version: parsed.value.version,
+    fields: { ...fields, work: mapped.incident.work },
+  })) as QueueSyncRecord;
 }

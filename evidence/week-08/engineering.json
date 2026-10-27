@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
+  "decision": "Persistir cada intención con su base, proyección, dependencias e identidad estable en SQLite. Preparar la petición una sola vez y conservarla en reintentos. Comparar base/local/remoto por contenido JSON y mantener work como unidad: una reasignación concurrente no se combina automáticamente con un inicio local. La resolución explícita conserva el estado del servidor y guarda las intenciones dependientes como historial local, sin borrar trabajo ni inventar confirmaciones.",
+  "alternatives": [
+    "Última escritura gana: simplifica el envío, pero podría restaurar una asignación antigua y perder una decisión de coordinación; se descarta.",
+    "Reintentar cada intención reconstruyendo baseVersion y cuerpo con el snapshot más reciente: parece evitar 409, pero puede cambiar la identidad semántica y repetir efectos después de una respuesta perdida; se descarta.",
+    "Cola persistente con petición inmutable, recibos individuales y combinación de tres versiones: conserva causalidad y permite recuperar el mismo reintento; elegida, con resolución explícita de incompatibilidades."
+  ],
+  "tradeoff": "Beneficio: no se pierde la intención ni se duplica su efecto, y la asignación remota se respeta. Costo: más metadatos, transacciones y comprobaciones de sesión; las intenciones heredadas sin base fiable y los errores de contrato necesitan revisión. Aceptar el remoto retiene notas como historial local, no las transfiere automáticamente a otro actor. Un resultado de envío incierto requiere reconciliar la petición original antes de permitir su cierre.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04",
+    "AC-05"
+  ],
+  "verification": [
+    {
+      "command": "python -B tools/generate_week08_reports.py",
+      "result": "PASS automático: 27 suites, 156 pruebas; typecheck, lint, backend, migraciones, auditoría con umbral crítico y bundle Android. La ejecución nativa se documenta por separado.",
+      "evidence": "reports/week-08/migration-tests.json y reports/week-08/logs/current-*.txt. Los logs contienen el SHA, comando y código de salida real."
+    },
+    {
+      "command": "node --experimental-strip-types lab/week8-real-db.mjs",
+      "result": "PASS: migración 1→3; falla tras copiar filas revierte DDL y datos; cierre/reapertura conserva esquema 1; recuperación posterior termina en 3 con las mismas dos operaciones.",
+      "evidence": "reports/week-08/logs/current-migration-states.txt; tests/week8-migrations.test.ts amplía a tres puntos de falla y conserva snapshots poblados."
+    },
+    {
+      "command": "npm test -- --runInBand --runTestsByPath tests/week8-idempotency.test.ts",
+      "result": "PASS en la suite completa: timeout posterior al commit, repetición con cuerpo idéntico, un efecto y nota dependiente; reasignación mantiene técnico remoto; resolución explícita conserva IDs/contenido tras reabrir; fallo al resolver revierte toda la cadena.",
+      "evidence": "reports/week-08/logs/current-tests.txt y checks individuales en migration-tests.json; backend vivo y SQLite real de Node."
+    },
+    {
+      "command": "Compilar e instalar APK; retirar adb reverse; guardar inicio/nota; force-stop; reapertura; reasignar; sincronizar; aceptar servidor; sincronizar otra vez.",
+      "result": "PASS del flujo central nativo: mismos IDs y nota tras reapertura offline; reasignación respetada; aceptación explícita conserva historial y no reenvía. Dos APKs con el mismo núcleo de persistencia/sincronización; el segundo cierre posterior a resolver fue bloqueado y no se afirma ejecutado.",
+      "evidence": "reports/week-08/native-validation.json y sus capturas, eventos y respuestas de backend."
+    },
+    {
+      "command": "git show -s --format=\"%H %an %aI %s\" <SHA>; git merge-base --is-ancestor <SHA> HEAD; git diff-tree --no-commit-id --name-only -r <SHA>",
+      "result": "PASS documental: tres integrantes, doce commits, todos los archivos declarados vinculados a sus commits; cinco logs originales y tres fuentes de predicción/aserción inspeccionadas.",
+      "evidence": "reports/week-08/individual-audit.json incluye los SHAs concretos, autores, archivos, líneas de predicción, hash SHA256 y resultados textuales de logs."
+    }
+  ],
+  "limitations": [
+    "La revisión automática de permisos rechazó el segundo cierre/relanzamiento con blocked by policy. No se reintentó ese cierre ni se marcó aprobado. La persistencia de resolución tras reabrir está cubierta automáticamente con SQLite real, no se afirma esta repetición en teléfono.",
+    "La sesión didáctica vence en 60 segundos; recuperar con sesión vencida puede requerir conexión y autenticación, sin borrar la cola.",
+    "Migración fallida/rollback e idempotencia tras timeout se verificaron con SQLite real en Node; no se inyectó esa falla en el teléfono.",
+    "audit:ci pasa el umbral crítico y todavía informa cinco vulnerabilidades altas de dependencias.",
+    "La auditoría individual es documental; la explicación personal de cada integrante la verifica el docente cuando corresponda."
+  ],
+  "aiAssistance": "Codex ayudó a revisar, integrar, escribir código/pruebas, ejecutar comprobaciones y estructurar evidencias por solicitud de Oscar. Los logs históricos de otros integrantes se conservan separados. Los integrantes deben comprobar y explicar lo que entregan.",
+  "ciRouting": "Las regresiones actuales se ejecutan una vez en cada PR y en pushes a main. Las evaluaciones históricas de semanas 1 a 5 se conservan con checkout de sus tags, disparadas por el tag o manualmente. Semana 6 ya tenía evaluación final separada. El control final de semana 8 no se omite y sigue requiriendo week-08-final."
+}

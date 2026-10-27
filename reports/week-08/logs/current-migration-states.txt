@@ -1,0 +1,155 @@
+COMMIT=11ff96ab729ae1047e263e81822e88e6e6aaf977
+COMMAND=C:/Users/oscar/AppData/Local/Temp/campusops-node-22.22.0/node-v22.22.0-win-x64\node.EXE --experimental-strip-types lab/week8-real-db.mjs
+
+--- M01 antes (esquema 1) ---
+{
+  "schemaVersion": "1",
+  "tables": [
+    "operations",
+    "schema_meta"
+  ],
+  "legacy": [
+    {
+      "operation_id": "op-start-0001",
+      "payload": "{}"
+    },
+    {
+      "operation_id": "op-note-0002",
+      "payload": "{\"text\":\"Nota ficticia\"}"
+    }
+  ],
+  "queue": null
+}
+
+M01 migracion: {"from":1,"to":3}
+
+--- M01 despues de cerrar y reabrir ---
+{
+  "schemaVersion": "3",
+  "tables": [
+    "incident_snapshots",
+    "queue_operations",
+    "schema_meta"
+  ],
+  "legacy": null,
+  "queue": [
+    {
+      "operation_id": "op-start-0001",
+      "sequence": 1,
+      "status": "conflicto"
+    },
+    {
+      "operation_id": "op-note-0002",
+      "sequence": 2,
+      "status": "conflicto"
+    }
+  ]
+}
+
+M01 segunda migracion: {"from":3,"to":3}
+CHECK OK    M01 version nueva y tabla antigua retirada
+CHECK OK    M01 conserva IDs y orden de las operaciones
+CHECK OK    M01 segunda migracion no repite ni duplica
+
+--- M02 antes (esquema 1) ---
+{
+  "schemaVersion": "1",
+  "tables": [
+    "operations",
+    "schema_meta"
+  ],
+  "legacy": [
+    {
+      "operation_id": "op-start-0001",
+      "payload": "{}"
+    },
+    {
+      "operation_id": "op-note-0002",
+      "payload": "{\"text\":\"Nota ficticia\"}"
+    }
+  ],
+  "queue": null
+}
+
+M02 error capturado: falla inyectada despues de copiar filas
+
+--- M02 tras la falla (misma conexion) ---
+{
+  "schemaVersion": "1",
+  "tables": [
+    "operations",
+    "schema_meta"
+  ],
+  "legacy": [
+    {
+      "operation_id": "op-start-0001",
+      "payload": "{}"
+    },
+    {
+      "operation_id": "op-note-0002",
+      "payload": "{\"text\":\"Nota ficticia\"}"
+    }
+  ],
+  "queue": null
+}
+
+--- M02 cerrado y reabierto ---
+{
+  "schemaVersion": "1",
+  "tables": [
+    "operations",
+    "schema_meta"
+  ],
+  "legacy": [
+    {
+      "operation_id": "op-start-0001",
+      "payload": "{}"
+    },
+    {
+      "operation_id": "op-note-0002",
+      "payload": "{\"text\":\"Nota ficticia\"}"
+    }
+  ],
+  "queue": null
+}
+
+M02 migracion sin falla: {"from":1,"to":3}
+
+--- M02 recuperado ---
+{
+  "schemaVersion": "3",
+  "tables": [
+    "incident_snapshots",
+    "queue_operations",
+    "schema_meta"
+  ],
+  "legacy": null,
+  "queue": [
+    {
+      "operation_id": "op-start-0001",
+      "sequence": 1,
+      "status": "conflicto"
+    },
+    {
+      "operation_id": "op-note-0002",
+      "sequence": 2,
+      "status": "conflicto"
+    }
+  ]
+}
+CHECK OK    M02 la falla ocurrio despues de copiar filas
+CHECK OK    M02 tras la falla la version sigue en 1
+CHECK OK    M02 tras la falla no quedo esquema nuevo (DDL revertido)
+CHECK OK    M02 tras la falla los datos viejos estan intactos
+CHECK OK    M02 reabierto sigue igual que antes
+CHECK OK    M02 sin la falla la migracion termina con las mismas operaciones
+
+RESULTADO: todas las comprobaciones OK
+
+(node:18184) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node.EXE --trace-warnings ...` to show where the warning was created)
+(node:18184) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/oscar/.codex/worktrees/revision-semana-08/DMI-Equipo-4/src/infrastructure/incidentMigrations.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\oscar\.codex\worktrees\revision-semana-08\DMI-Equipo-4\package.json.
+
+EXIT_CODE=0

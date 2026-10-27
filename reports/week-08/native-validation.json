@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
+  "generatedAt": "2026-10-27T02:48:35.805313+00:00",
+  "status": "pass",
+  "scope": "Flujo central nativo observado; no es una calificación docente ni afirma ejecutar el segundo reinicio posterior a resolver.",
+  "device": {
+    "model": "Samsung SM-G981V",
+    "android": "13",
+    "abi": "arm64-v8a"
+  },
+  "applicationId": "mx.edu.dmi.engineeringapp",
+  "operationIds": [
+    "campus-mvq2tbng-gyowdicg5a8",
+    "campus-mvq2tgae-0ftlbe2kp2f"
+  ],
+  "note": "Semana8_USB_nota_20261026",
+  "build": {
+    "node": "22.22.0",
+    "java": "Temurin 17.0.20+8",
+    "command": "./android/gradlew.bat -p android assembleRelease -PreactNativeArchitectures=arm64-v8a --max-workers=2 --console=plain",
+    "apkSha256": "67bcd0bd0f0e3b304a24eb838110df11f2a84ab2b0e1d99effdb1f0c4aafa4e8",
+    "signing": "Clave de desarrollo de la plantilla; no firma de tienda."
+  },
+  "executionProvenance": {
+    "initialApkSha256": "aee8b53f14bc992d756f2ec210de7e1fb42c221ac4571ebadecfa8d8af1e043b",
+    "initialBaseCommit": "d0b9df705a1a3eef6af1afce3a604be5a17efb1c",
+    "initialChanges": [
+      "app.json",
+      "plugins/withLocalBackend.js"
+    ],
+    "finalSourceCommit": "11ff96ab729ae1047e263e81822e88e6e6aaf977",
+    "explanation": "El primer APK ejecutó guardado/reinicio offline/reasignación. El segundo APK incorporó ajustes visuales, recuperó la misma cola tras actualizarse y ejecutó resolución/reintento. No hubo cambios en application/domain/infrastructure/api/composition entre ambos. No se presenta como una ejecución completa desde cero en un único APK."
+  },
+  "checks": [
+    {
+      "id": "apk-installed",
+      "status": "pass",
+      "observed": "Release arm64 instalado en Samsung SM-G981V, Android 13; lanzamiento COLD y backend available; sin Metro en ejecución."
+    },
+    {
+      "id": "offline-force-stop-reopen",
+      "status": "pass",
+      "observed": "Inicio y nota guardados con reenvío USB retirado; PID 16040 desapareció (pidof exit 1); reapertura COLD offline conservó ambos IDs y texto. Sesión vigente; sin cambiar reloj ni TTL.",
+      "evidence": [
+        "native/initial-restart-events.json",
+        "native/03-offline-before-stop.json",
+        "native/04-offline-reopened.json"
+      ]
+    },
+    {
+      "id": "reassignment",
+      "status": "pass",
+      "observed": "Servidor pasó de versión 1/technician-1 a versión 2/technician-2. El técnico original recibió bloqueo; inicio y nota intactos.",
+      "evidence": [
+        "native/server-reassignment.json",
+        "native/05-after-reassignment.json"
+      ]
+    },
+    {
+      "id": "updated-apk-recovery",
+      "status": "pass",
+      "observed": "adb install -r reemplazó el APK y detuvo su proceso. El lanzamiento COLD del APK final recuperó los mismos dos registros; no se borraron datos.",
+      "evidence": [
+        "native/07-updated-app.json"
+      ]
+    },
+    {
+      "id": "session-expiry",
+      "status": "pass",
+      "observed": "El vencimiento requirió volver a entrar como técnico. La cola conservó IDs y nota tras la autenticación.",
+      "evidence": [
+        "native/10-resolution-result.json",
+        "native/11-relogin-keeps-queue.json"
+      ]
+    },
+    {
+      "id": "explicit-resolution-and-no-resend",
+      "status": "pass",
+      "observed": "Revisar conflicto y Aceptar estado del servidor conservaron las dos intenciones como historial. Otro intento de sincronización mantuvo versión 2, asignación remota, cero notas y un único evento de reasignación.",
+      "evidence": [
+        "native/12-history-preserved.json",
+        "native/13-history-after-sync.json",
+        "native/server-after-final-sync.json"
+      ]
+    },
+    {
+      "id": "readable-scrollable-panel",
+      "status": "pass",
+      "observed": "Fondo claro, barra legible y panel desplazable verificados en teléfono; el desplazamiento permitió leer el texto y controles de resolución.",
+      "evidence": [
+        "native/07-updated-app.png",
+        "native/09-scrolled-review.png"
+      ]
+    }
+  ],
+  "additionalCheck": {
+    "id": "post-resolution-second-force-stop-reopen",
+    "status": "not_executed",
+    "reason": "La revisión automática de permisos rechazó el segundo cierre/relanzamiento con blocked by policy. No se reintentó ese cierre ni se marcó aprobado. La persistencia de resolución tras reabrir está cubierta automáticamente con SQLite real, no se afirma esta repetición en teléfono."
+  },
+  "limitations": [
+    "La sesión didáctica vence en 60 segundos; recuperar con sesión vencida puede requerir conexión y autenticación, sin borrar la cola.",
+    "Migración fallida/rollback e idempotencia tras timeout se verificaron con SQLite real en Node; no se inyectó esa falla en el teléfono."
+  ],
+  "artifacts": [
+    {
+      "path": "reports/week-08/native/00-startup.json",
+      "sha256": "3a0c4e927b1452596ee1b917e0214967cbc7ef3abcaafce6b712b3983625618c"
+    },
+    {
+      "path": "reports/week-08/native/00-startup.png",
+      "sha256": "33b120109de037a346e43a948dae2259afa213011625fa1adf75989b1c84e9ac"
+    },
+    {
+      "path": "reports/week-08/native/01-technician.json",
+      "sha256": "af3503a7b136bead94e04bdaf9fe3f21dd9fd11fa111aefe81dc5ac3c1daa9f4"
+    },
+    {
+      "path": "reports/week-08/native/01-technician.png",
+      "sha256": "4c51b9aaa4850c0d5a795da36914e60f23003d25e880d36269556b1951472e5e"
+    },
+    {
+      "path": "reports/week-08/native/02-cache-inspection.json",
+      "sha256": "43e2c32ed6678a1c6910d3740c7626ff0b5b96ef449b9ebab48ae6e71f50bbb1"
+    },
+    {
+      "path": "reports/week-08/native/02-cache-inspection.png",
+      "sha256": "04d8aa5bcaa58b6b831beed47a3385d5a65d9f1442189718d90224eb09f40f4f"
+    },
+    {
+      "path": "reports/week-08/native/03-offline-before-stop.json",
+      "sha256": "b890e368b821ddba5eee68e46aec2f4ba377c82d63833b8ba66ba5487a391a21"
+    },
+    {
+      "path": "reports/week-08/native/03-offline-before-stop.png",
+      "sha256": "1d66e80fb40c65015031504706d753e91eb5a9565c6561cd13d446524742ead1"
+    },
+    {
+      "path": "reports/week-08/native/04-offline-reopened.json",
+      "sha256": "702be263da3b8af862f7c394c7e7054a49db3451ffde00c723bfa7bf375d261c"
+    },
+    {
+      "path": "reports/week-08/native/04-offline-reopened.png",
+      "sha256": "77b5e6645472171ea0a7a6f6f82ff7d718ad4d8ef74a3624d383f578de98fa3a"
+    },
+    {
+      "path": "reports/week-08/native/05-after-reassignment.json",
+      "sha256": "b149527410ebe437dad62737e8ea76cffd2d739171ed7986fab208aea7a8b12f"
+    },
+    {
+      "path": "reports/week-08/native/05-after-reassignment.png",
+      "sha256": "e3042060827c3e3e9234c88d5e5668eeea4041dbee494d7cd12ab4c16791c7ee"
+    },
+    {
+      "path": "reports/week-08/native/06-review-before-fix.json",
+      "sha256": "00db236110f56da88bb0b922c7f76693b0801c41bf5103ca8727cf085ddaa6aa"
+    },
+    {
+      "path": "reports/week-08/native/06-review-before-fix.png",
+      "sha256": "4cf07b7582bc98e999d55be8c8f5c27619f1176a8562610eb3de14bee57961a7"
+    },
+    {
+      "path": "reports/week-08/native/07-updated-app.json",
+      "sha256": "55d3325e5e8953a49392e5f2426195ebc639ec77d3b166ffa8de816338cf1267"
+    },
+    {
+      "path": "reports/week-08/native/07-updated-app.png",
+      "sha256": "207e7664c2af63151b87bb8b45b524a5a0a8b01f1da9628a55a7b33292208ef5"
+    },
+    {
+      "path": "reports/week-08/native/08-review-updated.json",
+      "sha256": "54d517006fa9b25b1e7ce3d83e6288f50fe60afeecf2724afd2aedbac1b88e4d"
+    },
+    {
+      "path": "reports/week-08/native/08-review-updated.png",
+      "sha256": "70aaaac64bc0081f4dbe0de0fccdc215b5b9a3b0919fb8a680c1b3184077b5db"
+    },
+    {
+      "path": "reports/week-08/native/09-scrolled-review.json",
+      "sha256": "6a5baf25c0a265c123c0bee5778af582776a1110ab3d2e63401513636bd44dd2"
+    },
+    {
+      "path": "reports/week-08/native/09-scrolled-review.png",
+      "sha256": "90f1482bf3abd22c9fae1c195f6a04a5448697b18c0d1e2899a427f6edc0c16d"
+    },
+    {
+      "path": "reports/week-08/native/10-resolution-result.json",
+      "sha256": "bfeefb76fe727ce279c593a55bde4178217663774539fd5cdae096d1a9bc2e61"
+    },
+    {
+      "path": "reports/week-08/native/10-resolution-result.png",
+      "sha256": "0164ac0f16b622245a22ddedb0ddc6d97e5719d46c6ba848a14123da2283514f"
+    },
+    {
+      "path": "reports/week-08/native/11-relogin-keeps-queue.json",
+      "sha256": "f3c1900050af2150167968f784d7bf676bb54b1ef695ff379d894b09c78cb318"
+    },
+    {
+      "path": "reports/week-08/native/11-relogin-keeps-queue.png",
+      "sha256": "195ae0f82a1d15e5bd5b6390546d7b73f9b8c56362e57126a18628fd1b651e89"
+    },
+    {
+      "path": "reports/week-08/native/12-history-preserved.json",
+      "sha256": "ebd3e6d32d4f21619f6e07142443c3e2215d66a09038685441d8b54ab185f82e"
+    },
+    {
+      "path": "reports/week-08/native/12-history-preserved.png",
+      "sha256": "1a611d1b6ccf8f9d12c76f5373ff3dce623ffafc113b82980d10fbe4b392e8a1"
+    },
+    {
+      "path": "reports/week-08/native/13-history-after-sync.json",
+      "sha256": "6fb8675fc8372843275644202756800b09e9e25ad93a0f91c1afa8f9e08af979"
+    },
+    {
+      "path": "reports/week-08/native/13-history-after-sync.png",
+      "sha256": "df4a0b8058c0e43d8d808b0d35f76ed64c11bcbf1a53bb549e4ae02d26477f2b"
+    },
+    {
+      "path": "reports/week-08/native/initial-restart-events.json",
+      "sha256": "168e1b5611a1880d4bf14728c64a505de16db81a3292849d34a6807a4f5c9759"
+    },
+    {
+      "path": "reports/week-08/native/server-after-final-sync.json",
+      "sha256": "df7df70883b9875465335c688df54a830d7866fd588a054140a0dab50fd513ad"
+    },
+    {
+      "path": "reports/week-08/native/server-after-resolution.json",
+      "sha256": "0196bef4d45e8210211889b598ef2357af612f72f2a5a44e324ff451a6dffe2e"
+    },
+    {
+      "path": "reports/week-08/native/server-reassignment.json",
+      "sha256": "bd2c8815ea94c0056b4c9f6b0f372ed36de8f869133fa649f4d6cb468d26146c"
+    }
+  ]
+}

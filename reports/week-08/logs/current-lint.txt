@@ -1,0 +1,9 @@
+COMMIT=11ff96ab729ae1047e263e81822e88e6e6aaf977
+COMMAND="C:\Program Files\nodejs\npm.CMD" run lint
+
+> dmi-react-native-starter@1.0.0 lint
+> eslint .
+
+
+
+EXIT_CODE=0

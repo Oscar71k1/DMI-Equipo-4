@@ -1,0 +1,19 @@
+PASS tests/incidents.test.tsx
+  esqueleto de lista/detalle de incidencias
+    √ lista, selecciona una incidencia, muestra su detalle y permite regresar (2607 ms)
+    √ seleccionar una incidencia distinta muestra datos distintos, no siempre el primero (12 ms)
+    √ lista vacía muestra el mensaje acordado, sin cerrarse (3 ms)
+    √ un identificador inexistente devuelve null y la UI muestra "no encontrada" (3 ms)
+    √ sustituir el repositorio cambia los datos observados sin tocar UI ni application (9 ms)
+    √ un proveedor que rechaza la consulta muestra un mensaje de error controlado (3 ms)
+    √ un error del detalle conserva la opcion de regresar a la lista (11 ms)
+    √ la lista ficticia funciona cuando el puerto de salud falla (7 ms)
+    √ al cambiar de identificador se oculta el detalle anterior mientras llega el nuevo (5 ms)
+    √ al sustituir la consulta de lista se ocultan los datos del proveedor anterior (4 ms)
+    √ el fake conserva sus datos aunque se modifiquen los datos iniciales o una respuesta (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        5.695 s, estimated 15 s
+Ran all test suites within paths "tests/incidents.test.tsx".

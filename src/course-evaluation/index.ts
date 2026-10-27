@@ -1,3 +1,5 @@
+import { resolveSync as resolveSyncRecords } from '../domain/incidentSync';
+import { deduplicateOperations as dedupeOperationsById } from '../domain/deduplicateOperations';
 import type {
   AuthEvent,
   JsonObject,
@@ -59,17 +61,17 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
 }
 
 export function resolveSync(
-  _base: SyncRecord,
-  _local: SyncRecord,
-  _remote: SyncRecord,
+  base: SyncRecord,
+  local: SyncRecord,
+  remote: SyncRecord,
 ): Readonly<{ kind: 'merged'; fields: JsonObject } | { kind: 'conflict'; fields: readonly string[] }> {
-  return pending('resolveSync');
+  return resolveSyncRecords(base, local, remote);
 }
 
 export function deduplicateOperations<T extends Readonly<{ operationId: string }>>(
-  _operations: readonly T[],
+  operations: readonly T[],
 ): readonly T[] {
-  return pending('deduplicateOperations');
+  return dedupeOperationsById(operations);
 }
 
 export function planRetry(_input: Readonly<{

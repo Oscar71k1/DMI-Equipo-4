@@ -1,0 +1,26 @@
+{
+  "observedAt": "2026-10-27T02:48:35.762765+00:00",
+  "incident": {
+    "id": "campus-inc-001",
+    "version": 2,
+    "status": "assigned",
+    "payload": {
+      "category": "connectivity",
+      "description": "Sin conexión en laboratorio ficticio",
+      "location": "Edificio de prueba A",
+      "reporterId": "reporter-1",
+      "assignedTechnicianId": "technician-2",
+      "priority": "medium",
+      "notes": [],
+      "evidence": [],
+      "history": [
+        {
+          "operationId": "native-week08-reassign-20261026",
+          "actorId": "coordinator-1",
+          "action": "assign",
+          "version": 2
+        }
+      ]
+    }
+  }
+}

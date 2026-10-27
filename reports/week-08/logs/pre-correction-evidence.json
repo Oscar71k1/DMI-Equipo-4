@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "mode": "evidence",
+  "commitSha": "be1c7aaa26d1ad85695263267177c3ad65e3c589",
+  "evaluatedAt": "2026-10-26T23:26:49.659106+00:00",
+  "status": "fail",
+  "checks": [
+    {
+      "id": "base_files",
+      "status": "pass",
+      "detail": "missing=[]"
+    },
+    {
+      "id": "react_native_profile",
+      "status": "pass",
+      "detail": "missing packages=[]"
+    },
+    {
+      "id": "toolchain_scripts",
+      "status": "pass",
+      "detail": "missing scripts=[]"
+    },
+    {
+      "id": "workflow_integrity",
+      "status": "pass",
+      "detail": "bypass markers=[]"
+    },
+    {
+      "id": "secret_scan",
+      "status": "pass",
+      "detail": "hits=[]"
+    },
+    {
+      "id": "required_evidence",
+      "status": "fail",
+      "detail": "missing/empty=['reports/week-08/migration-tests.json', 'evidence/week-08/engineering.json', 'evidence/week-08/individual.json']"
+    },
+    {
+      "id": "frozen_sha",
+      "status": "fail",
+      "detail": "tag=week-08-final tagSha=fatal: ambiguous argument 'week-08-final': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]' head=be1c7aaa26d1ad85695263267177c3ad65e3c589"
+    }
+  ]
+}

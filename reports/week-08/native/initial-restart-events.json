@@ -1,0 +1,104 @@
+[
+  {
+    "at": "2026-10-27T02:38:04Z",
+    "action": "fresh-login",
+    "observed": "technician-1"
+  },
+  {
+    "at": "2026-10-27T02:38:04Z",
+    "action": "disconnect-backend",
+    "observed": ""
+  },
+  {
+    "at": "2026-10-27T02:38:15Z",
+    "action": "ui-before-force-stop",
+    "observed": [
+      "CampusOps",
+      "Incidencias del campus · entorno académico ficticio",
+      "Backend: available",
+      "Sesión activa · technician",
+      "technician-1",
+      "Cerrar sesión",
+      "Trabajo sin conexión",
+      "Incidencia local: campus-inc-001",
+      "Guardar copia local",
+      "Iniciar atención sin conexión",
+      "Semana8_USB_nota_20261026",
+      "Guardar nota pendiente",
+      "Sincronizar pendientes",
+      "Nota guardada en este dispositivo; pendiente de sincronizar.",
+      "campus-inc-001: start — pendiente",
+      "Operación: campus-mvq2tbng-gyowdicg5a8",
+      "campus-inc-001: comment — pendiente",
+      "Semana8_USB_nota_20261026",
+      "Operación: campus-mvq2tgae-0ftlbe2kp2f",
+      "← Volver a la lista",
+      "Conectividad",
+      "Sin conexión en laboratorio ficticio",
+      "Edificio de prueba A",
+      "Estado: Asignada"
+    ]
+  },
+  {
+    "at": "2026-10-27T02:38:15Z",
+    "action": "pid-before-stop",
+    "observed": "16040"
+  },
+  {
+    "at": "2026-10-27T02:38:16Z",
+    "action": "pid-after-stop",
+    "observed": {
+      "stdout": "",
+      "exit": 1
+    }
+  },
+  {
+    "at": "2026-10-27T02:38:16Z",
+    "action": "relaunch-offline",
+    "observed": "Starting: Intent { cmp=mx.edu.dmi.engineeringapp/.MainActivity }\r\nStatus: ok\r\nLaunchState: COLD\r\nActivity: mx.edu.dmi.engineeringapp/.MainActivity\r\nTotalTime: 236\r\nWaitTime: 241\r\nComplete\r\n"
+  },
+  {
+    "at": "2026-10-27T02:38:20Z",
+    "action": "ui-after-reopen",
+    "observed": [
+      "CampusOps",
+      "Incidencias del campus · entorno académico ficticio",
+      "Backend: offline",
+      "Sesión activa · technician",
+      "technician-1",
+      "Cerrar sesión",
+      "Trabajo sin conexión",
+      "Copia local: campus-inc-001",
+      "Sin conexión en laboratorio ficticio",
+      "Sincronizar pendientes",
+      "campus-inc-001: start — pendiente",
+      "Operación: campus-mvq2tbng-gyowdicg5a8",
+      "campus-inc-001: comment — pendiente",
+      "Semana8_USB_nota_20261026",
+      "Operación: campus-mvq2tgae-0ftlbe2kp2f",
+      "Nueva incidencia",
+      "Ocurrió un problema al cargar la información. Intenta de nuevo."
+    ]
+  },
+  {
+    "at": "2026-10-27T02:38:20Z",
+    "action": "comparison",
+    "observed": {
+      "beforeIds": [
+        "Operación: campus-mvq2tbng-gyowdicg5a8",
+        "Operación: campus-mvq2tgae-0ftlbe2kp2f"
+      ],
+      "afterIds": [
+        "Operación: campus-mvq2tbng-gyowdicg5a8",
+        "Operación: campus-mvq2tgae-0ftlbe2kp2f"
+      ],
+      "noteBefore": true,
+      "noteAfter": true
+    }
+  },
+  {
+    "at": "2026-10-27T02:38:20Z",
+    "action": "result",
+    "observed": "passed"
+  }
+]

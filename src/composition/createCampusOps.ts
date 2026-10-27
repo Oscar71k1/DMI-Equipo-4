@@ -11,7 +11,11 @@ import { createCourseBackendHealthAdapter } from '../infrastructure/CourseBacken
 import { createRemoteIncidentRepository } from '../infrastructure/RemoteIncidentRepository';
 import { createInMemorySecurityLogger } from '../infrastructure/InMemorySecurityLogger';
 import { createCourseSessionAdapter } from '../infrastructure/CourseSessionAdapter';
-import { IncidentClientError } from '../api/incidentClient';
+import { IncidentClientError, createIncidentClient } from '../api/incidentClient';
+import { createOfflineIncidentActions, type OfflineActions } from '../application/createOfflineIncidentActions';
+import { SQLiteIncidentStore } from '../infrastructure/SQLiteIncidentStore';
+import { createExpoSqliteAdapter } from '../infrastructure/ExpoSqliteAdapter';
+import { migrateIncidentStore } from '../infrastructure/incidentMigrations';
 
 export function createCampusOps(): CampusOpsActions {
   const logger = createInMemorySecurityLogger();
@@ -45,8 +49,50 @@ export function createCampusOps(): CampusOpsActions {
     return { id: identity.actorId, role: identity.role };
   };
   const healthQuery = createHealthQuery(healthPort);
+  let offlinePromise: Promise<OfflineActions> | null = null;
+  const offline = (): Promise<OfflineActions> => {
+    if (!offlinePromise) {
+      offlinePromise = (async () => {
+        const { openDatabaseAsync } = await import('expo-sqlite');
+        const db = createExpoSqliteAdapter(await openDatabaseAsync('campusops.sqlite'));
+        await migrateIncidentStore(db);
+        const store = new SQLiteIncidentStore(db);
+        await store.recoverInterrupted();
+        const client = createIncidentClient({ session: auth });
+        return createOfflineIncidentActions({
+          store, getActor: currentActor, getSessionKey: () => auth.snapshot().generation,
+          newId: () => `campus-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
+          client: {
+            getIncidentSnapshot: client.getIncidentSnapshot,
+            async performIncidentAction(id, body, key) {
+              const result = await client.performIncidentAction(id, body, key);
+              if (!result.snapshot) throw new IncidentClientError('unavailable');
+              return { operationId: result.operationId, duplicate: result.duplicate, incident: result.snapshot };
+            },
+          },
+        });
+      })().catch(error => { offlinePromise = null; throw error; });
+    }
+    return offlinePromise;
+  };
+
+  async function withOffline<T>(run: (actions: OfflineActions) => Promise<T>): Promise<T> {
+    const actor = currentActor().id;
+    const generation = auth.snapshot().generation;
+    const actions = await offline();
+    if (currentActor().id !== actor || auth.snapshot().generation !== generation) throw new IncidentClientError('http', 401);
+    return run(actions);
+  }
 
   return {
+    offline: {
+      cacheIncident: id => withOffline(actions => actions.cacheIncident(id)),
+      queueAction: (id, action, payload) => withOffline(actions => actions.queueAction(id, action, payload)),
+      listPending: () => withOffline(actions => actions.listPending()),
+      listCached: () => withOffline(actions => actions.listCached()),
+      syncPending: () => withOffline(actions => actions.syncPending()),
+      acceptRemote: id => withOffline(actions => actions.acceptRemote(id)),
+    },
     session,
     auth,
     listIncidents: () => incidentQueries.listIncidents(currentActor()),

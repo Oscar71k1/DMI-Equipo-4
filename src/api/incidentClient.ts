@@ -1,4 +1,4 @@
-import { parseIncidentCreate, parseIncidentList, mapRemoteIncident, IncidentMappingError } from '../infrastructure/IncidentMapper';
+import { parseIncidentCreate, parseIncidentList, mapRemoteIncident, mapQueueSnapshot, IncidentMappingError } from '../infrastructure/IncidentMapper';
 import type { IncidentMapping } from '../infrastructure/IncidentMapper';
 import type { HttpTransport } from '../domain/HttpTransport';
 import type { AuthenticatedRequestPort, AuthenticatedHttpOutcome } from '../domain/AuthenticatedRequestPort';
@@ -123,6 +123,11 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
   }
 
   return {
+    async getIncidentSnapshot(id: string) {
+      const snapshot = mapQueueSnapshot(await request(`/v1/incidents/${encodeURIComponent(id)}`));
+      if (snapshot.id !== id) throw new IncidentClientError('contract');
+      return snapshot;
+    },
     async listIncidents(): Promise<IncidentListResult> {
       try { return parseIncidentList(await request('/v1/incidents')); }
       catch (error) {
@@ -173,7 +178,17 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
           headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
           body: JSON.stringify(input),
         });
-        return mapRemoteIncident(value);
+        const confirmation = parseIncidentCreate(value);
+        const confirmedId =
+          confirmation.incident.kind === 'unavailable'
+            ? confirmation.incident.id
+            : confirmation.incident.incident.id;
+        // Solo es la confirmación de ESTA operación y de ESTA incidencia.
+        if (confirmation.operationId !== idempotencyKey || confirmedId !== id) {
+          throw new IncidentClientError('contract');
+        }
+        return { ...confirmation, snapshot: confirmation.incident.kind === 'mapped'
+          ? mapQueueSnapshot((value as { incident: unknown }).incident) : null };
       } catch (error) {
         if (error instanceof IncidentClientError) throw error;
         if (error instanceof IncidentMappingError) throw new IncidentClientError(error.kind);
