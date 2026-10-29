@@ -1,0 +1,24 @@
+{
+  "studentId": "3523110496",
+  "commitShas": ["235b05d613a1c0ab52dc621ec1bc637a968c2bc8"],
+  "files": [
+    "src/application/retryPolicy.ts",
+    "src/application/retryExecutor.ts",
+    "src/course-evaluation/index.ts",
+    "tests/week9-retry.test.ts",
+    "tests/week9-lost-response.test.ts",
+    "docs/resilience-policy.md"
+  ],
+  "tests": [
+    "course-tests/public/week-09.test.ts",
+    "tests/week9-retry.test.ts",
+    "tests/week9-lost-response.test.ts"
+  ],
+  "reviews": [
+    "Revisión de no mutación en replay de acciones con duplicate: true y respeto estricto de Retry-After en 429."
+  ],
+  "prediction": "10 de 10 pruebas pasando en la suite de reintentos; bloqueo inmediato de POST sin clave estable, backoff acotado a 3 intentos y recuperación con duplicate: true en respuesta perdida tras guardar.",
+  "command": "npm test -- --runInBand tests/week9-retry.test.ts tests/week9-lost-response.test.ts",
+  "observedResult": "10 passed, 10 total; 0 errores de compilación tsc y 0 problemas de linter.",
+  "explanation": "Se implementó la función pura planRetry para gobernar reintentos seguros con delimitación estricta de 4 intentos y respeto de Retry-After, junto con el ejecutor createRetryExecutor que garantiza la preservación de la identidad Idempotency-Key para recuperar confirmaciones de mutaciones aplicadas tras pérdidas de respuesta."
+}
