@@ -1,0 +1,8 @@
+Node:
+v22.22.0
+npm:
+11.19.0
+Python:
+Python 3.14.7
+GNU Make:
+GNU Make 4.4.1

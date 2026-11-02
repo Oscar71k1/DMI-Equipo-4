@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "teamId": "4",
+  "members": [
+    {
+      "studentId": "3523110017",
+      "commitShas": [
+        "d30886c17557379f6587a08673c1d5096a2ba122"
+      ],
+      "files": [
+        "src/composition/createCampusOps.ts",
+        "src/api/incidentClient.ts",
+        "src/infrastructure/GeocodingAdapter.ts",
+        "tests/week9-integration.test.ts"
+      ],
+      "tests": [
+        "tests/week9-integration.test.ts",
+        "tests/week9-geocoding-http.test.ts",
+        "tests/week9-location-ui.test.tsx"
+      ],
+      "reviews": [
+        "Integración selectiva de los commits de Fernanda sobre main; preservación de SQLite y resolución/cierre durable."
+      ],
+      "prediction": "Predicción de las aserciones: un timeout posterior al commit mantiene intención, permite replay con identidad original y no duplica historia ni evidencia.",
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx tests/remote-incident-repository.test.ts tests/remote-resource.test.ts tests/secure-storage.test.ts tests/security-audit.test.ts tests/security.test.ts tests/session-integration.test.tsx tests/session-refresh.test.ts tests/telemetry.test.ts tests/week8-action-client.test.ts tests/week8-idempotency.test.ts tests/week8-migrations.test.ts tests/week8-offline-actions.test.ts tests/week8-offline-ui.test.tsx tests/week8-persistence.test.ts tests/week8-sync.test.ts tests/week9-geocoding-http.test.ts tests/week9-integration.test.ts tests/week9-location-ui.test.tsx tests/week9-location.test.ts tests/week9-lost-response.test.ts tests/week9-retry.test.ts course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts course-tests/public/week-05.test.ts course-tests/public/week-06.test.ts course-tests/public/week-08.test.ts course-tests/public/week-09.test.ts",
+      "observedResult": "187 tests passed in 34 suites; zero failures.",
+      "explanation": "Trabajo ejecutado por Codex a solicitud de Oscar, incluida la implementación asignada inicialmente a Jarumi. No se afirma que Oscar ejecutó los comandos manualmente."
+    },
+    {
+      "studentId": "3523110055",
+      "commitShas": [
+        "366cd15a18c05162a39965923045a7f63deb1526"
+      ],
+      "files": [
+        "src/infrastructure/SQLiteIncidentStore.ts",
+        "tests/week8-persistence.test.ts"
+      ],
+      "tests": [],
+      "reviews": [
+        "Revisión comunicada por Oscar el 2 de noviembre: Jarumi identificó main 9a351f2, documentos semana 9 ausentes y la rama de Fernanda basada en semana 8; recomendó actualizar la base antes de integrar."
+      ],
+      "prediction": "Riesgo señalado en su revisión: integrar el árbol antiguo de Fernanda puede perder SQLiteIncidentStore y OfflineWorkPanel. No se presenta como predicción de una ejecución personal.",
+      "command": "git diff --stat origin/main...origin/codex/fernanda-semana-09",
+      "observedResult": "Codex corroboró base remota 9a351f2 y separó los tres commits nuevos de Fernanda. El diff de tres puntos mostró ocho archivos nuevos/modificados de semana 9; el código de main se conservó.",
+      "explanation": "El SHA es una aportación histórica propia de persistencia, reutilizada en la solución actual, no un commit nuevo de geocodificación. La señal de esta semana es la revisión comunicada. No se recibió implementación ni ejecución nueva de Jarumi; ubicación/caché/manual se completó con Codex a solicitud de Oscar.",
+      "scope": "Historical authored code + current communicated review; no invented week-09 authorship."
+    },
+    {
+      "studentId": "3523110496",
+      "commitShas": [
+        "c7e9f372ea3e9c25936a69f11d5050733a2dbc6c",
+        "651c046ca6bec5c5382b256aabc271f807365633"
+      ],
+      "files": [
+        "src/application/retryPolicy.ts",
+        "src/application/retryExecutor.ts",
+        "src/course-evaluation/index.ts",
+        "tests/week9-retry.test.ts",
+        "tests/week9-lost-response.test.ts",
+        "docs/resilience-policy.md"
+      ],
+      "tests": [
+        "course-tests/public/week-09.test.ts",
+        "tests/week9-retry.test.ts",
+        "tests/week9-lost-response.test.ts"
+      ],
+      "reviews": [
+        "Revisión de no mutación en replay de acciones con duplicate: true y respeto estricto de Retry-After en 429."
+      ],
+      "prediction": "10 de 10 pruebas pasando en la suite de reintentos; bloqueo inmediato de POST sin clave estable, backoff acotado a 3 intentos y recuperación con duplicate: true en respuesta perdida tras guardar.",
+      "command": "npm test -- --runInBand tests/week9-retry.test.ts tests/week9-lost-response.test.ts",
+      "observedResult": "Registro original de Fernanda conservado en fernanda-original.json. Reproducción nueva por Codex: 187 tests passed in 34 suites; zero failures.",
+      "explanation": "Se implementó la función pura planRetry para gobernar reintentos seguros con delimitación estricta de 4 intentos y respeto de Retry-After, junto con el ejecutor createRetryExecutor que garantiza la preservación de la identidad Idempotency-Key para recuperar confirmaciones de mutaciones aplicadas tras pérdidas de respuesta. La integración posterior corrigió configuración, clasificación de errores, deadline y conexión real; esas correcciones son de la integración asistida, no de sus commits originales.",
+      "sourceCommits": [
+        "235b05d613a1c0ab52dc621ec1bc637a968c2bc8"
+      ]
+    }
+  ],
+  "notes": "Se separan autoría Git, revisión comunicada y ejecuciones asistidas. El cumplimiento estructural no certifica comprensión individual ni garantiza AC-05."
+}

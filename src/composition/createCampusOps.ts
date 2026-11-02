@@ -1,3 +1,5 @@
+import { createLocationService } from '../application/createLocationService';
+import { createGeocodingAdapter } from '../infrastructure/GeocodingAdapter';
 import type { CampusOpsActions } from '../application/CampusOpsActions';
 import { createAuthorizedIncidentQueries } from '../application/createAuthorizedIncidentQueries';
 import { createHealthQuery } from '../application/createHealthQuery';
@@ -36,7 +38,7 @@ export function createCampusOps(): CampusOpsActions {
       granted: false,
     }),
   });
-  const incidentRepository = createRemoteIncidentRepository({ session: auth });
+  const incidentRepository = createRemoteIncidentRepository({ session: auth, retry: {} });
   const healthPort = createCourseBackendHealthAdapter();
 
   const incidentQueries = createAuthorizedIncidentQueries(
@@ -58,7 +60,7 @@ export function createCampusOps(): CampusOpsActions {
         await migrateIncidentStore(db);
         const store = new SQLiteIncidentStore(db);
         await store.recoverInterrupted();
-        const client = createIncidentClient({ session: auth });
+        const client = createIncidentClient({ session: auth, retry: {} });
         return createOfflineIncidentActions({
           store, getActor: currentActor, getSessionKey: () => auth.snapshot().generation,
           newId: () => `campus-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
@@ -85,6 +87,7 @@ export function createCampusOps(): CampusOpsActions {
   }
 
   return {
+    searchLocation: createLocationService(createGeocodingAdapter()).search,
     offline: {
       cacheIncident: id => withOffline(actions => actions.cacheIncident(id)),
       queueAction: (id, action, payload) => withOffline(actions => actions.queueAction(id, action, payload)),

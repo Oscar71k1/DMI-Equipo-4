@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-11-02T21:17:25.290Z",
+  "provider": "Open-Meteo / GeoNames",
+  "scenario": "Synthetic incident using a public locality as approximate reference; no personal data",
+  "command": "node lab/week9-external.cjs",
+  "source": "provider",
+  "coordinateValuesOmitted": true,
+  "cacheHit": true,
+  "httpCalls": 1,
+  "durationMs": 1404,
+  "metrics": [
+    [
+      {
+        "attempt": 1,
+        "status": 200,
+        "plannedDelayMs": 0,
+        "actualDelayMs": 0,
+        "durationMs": 1402,
+        "stopReason": "success"
+      }
+    ]
+  ]
+}

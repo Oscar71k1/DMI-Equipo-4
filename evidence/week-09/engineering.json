@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "d30886c17557379f6587a08673c1d5096a2ba122",
+  "generatedAt": "2026-11-02T21:17:41.637909+00:00",
+  "decision": "Usar geocodificación aproximada con caché acotada y captura manual siempre disponible. Reintentar timeout/429/5xx sólo dentro del presupuesto y con clave estable en POST; conservar resolución/cierre en SQLite hasta acuse válido.",
+  "alternatives": [
+    "Bloquear el reporte si falla el proveedor: impide continuar aunque el usuario conozca edificio/zona.",
+    "Reenviar escrituras con nueva clave: puede duplicar efectos si el servidor ya guardó.",
+    "Reintentar sin límite: aumenta carga y no resuelve errores de contrato o autorización."
+  ],
+  "tradeoff": "La alternativa manual mantiene utilidad y el replay evita duplicados; se acepta geocodificación de localidad, caché efímera y revisión explícita de conflictos. La creación no tiene recuperación durable; resolve/close sí.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04",
+    "AC-05"
+  ],
+  "verification": [
+    {
+      "command": "npm test -- --ci --runInBand --runTestsByPath tests/architecture.test.ts tests/incident-client.test.ts tests/incident-cloud-flow.test.tsx tests/incidents.test.tsx tests/remote-incident-repository.test.ts tests/remote-resource.test.ts tests/secure-storage.test.ts tests/security-audit.test.ts tests/security.test.ts tests/session-integration.test.tsx tests/session-refresh.test.ts tests/telemetry.test.ts tests/week8-action-client.test.ts tests/week8-idempotency.test.ts tests/week8-migrations.test.ts tests/week8-offline-actions.test.ts tests/week8-offline-ui.test.tsx tests/week8-persistence.test.ts tests/week8-sync.test.ts tests/week9-geocoding-http.test.ts tests/week9-integration.test.ts tests/week9-location-ui.test.tsx tests/week9-location.test.ts tests/week9-lost-response.test.ts tests/week9-retry.test.ts course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts course-tests/public/week-05.test.ts course-tests/public/week-06.test.ts course-tests/public/week-08.test.ts course-tests/public/week-09.test.ts",
+      "result": "187 tests passed in 34 suites; zero failures.",
+      "evidence": "logs/current-tests.txt y logs/jest-results.json; caso lost-response-durable conserva solicitud tras reabrir SQLite."
+    },
+    {
+      "command": "node lab/week9-external.cjs",
+      "result": "Provider + cache hit, one HTTP call",
+      "evidence": "reports/week-09/logs/external.json"
+    }
+  ],
+  "assistance": "Implementación y reproducciones nuevas realizadas por Codex a solicitud de Oscar; no se atribuyen a ejecuciones personales de Jarumi o Fernanda."
+}

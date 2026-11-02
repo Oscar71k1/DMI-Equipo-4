@@ -1,3 +1,4 @@
+import type { LocationSearch } from './createLocationService';
 import type { Incident } from '../domain/Incident';
 import type { OfflineActions } from './createOfflineIncidentActions';
 import type { BackendHealthStatus } from './createHealthQuery';
@@ -6,6 +7,7 @@ import type { SessionCoordinator } from './createSessionCoordinator';
 import type { IncidentActionRequest, AuthorizedActionResult } from './createAuthorizedIncidentAction';
 
 export type CampusOpsActions = Readonly<{
+  searchLocation?: LocationSearch;
   offline?: OfflineActions;
   session?: SessionStore;
   auth?: SessionCoordinator;

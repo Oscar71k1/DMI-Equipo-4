@@ -10,6 +10,8 @@ export type QueueStatus =
   | 'bloqueada';
 
 export type PreparedActionBody =
+  | Readonly<{ action: 'resolve'; baseVersion: number; diagnosis: string }>
+  | Readonly<{ action: 'close'; baseVersion: number }>
   | Readonly<{ action: 'start'; baseVersion: number }>
   | Readonly<{ action: 'comment'; baseVersion: number; text: string }>
   | Readonly<{ action: 'add_evidence'; baseVersion: number; evidenceId: string }>;
@@ -105,6 +107,13 @@ export function projectOperation(
       ...currentWork,
       status: 'in_progress',
     };
+  } else if (operation.action === 'resolve' || operation.action === 'close') {
+    const work = fields.work as Record<string, unknown>;
+    if (!work || (operation.action === 'resolve'
+      ? work.status !== 'in_progress' || work.assignedTechnicianId !== operation.actorId
+      : work.status !== 'resolved')) throw new Error('Invalid resolution transition');
+    fields.work = { ...work, status: operation.action === 'resolve' ? 'resolved' : 'closed' };
+    if (operation.action === 'resolve') fields.diagnosis = operation.payload.diagnosis;
   } else if (operation.action === 'comment') {
     const text = operation.payload.text;
     if (typeof text !== 'string' || !text.trim() || !Array.isArray(fields.notes)) throw new Error('Invalid note');
@@ -134,9 +143,13 @@ export function assertSnapshot(value: unknown): asserts value is QueueSyncRecord
 }
 
 export function makeActionBody(operation: PendingIncidentOperation, version: number): PreparedActionBody {
-  const allowed = operation.action === 'start' ? [] : operation.action === 'comment' ? ['text'] : ['evidenceId'];
+  const allowed = ['start', 'close'].includes(operation.action) ? [] : operation.action === 'resolve' ? ['diagnosis'] : operation.action === 'comment' ? ['text'] : ['evidenceId'];
   if (!operation.payload || typeof operation.payload !== 'object' || Array.isArray(operation.payload) ||
       Object.keys(operation.payload).some(key => !allowed.includes(key))) throw new Error('Unexpected action payload');
+  if (operation.action === 'close') return { action: 'close', baseVersion: version };
+  if (operation.action === 'resolve' && typeof operation.payload.diagnosis === 'string' && operation.payload.diagnosis.trim()) {
+    return { action: 'resolve', baseVersion: version, diagnosis: operation.payload.diagnosis };
+  }
   if (operation.action === 'start') return { action: 'start', baseVersion: version };
   if (operation.action === 'comment' && typeof operation.payload.text === 'string' && operation.payload.text.trim()) {
     return { action: 'comment', baseVersion: version, text: operation.payload.text };
