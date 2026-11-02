@@ -53,7 +53,7 @@ export function transport(scenario?: (method: string) => string | undefined): Ht
       let body = '';
       response.setEncoding('utf8');
       response.on('data', chunk => { body += chunk; });
-      response.on('end', () => resolve({ status: response.statusCode ?? 0, json: async () => JSON.parse(body) }));
+      response.on('end', () => resolve({ status: response.statusCode ?? 0, headers: Object.fromEntries(Object.entries(response.headers).filter((entry): entry is [string, string] => typeof entry[1] === 'string')), json: async () => JSON.parse(body) }));
     });
     const abort = () => req.destroy(new Error('Aborted'));
     input.signal?.addEventListener('abort', abort, { once: true });

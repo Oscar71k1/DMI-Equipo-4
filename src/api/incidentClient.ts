@@ -1,3 +1,5 @@
+import { createRetryExecutor, type RetryExecutorOptions, type RetryExecutionMetric } from '../application/retryExecutor';
+import { parseRetryAfter } from '../application/retryPolicy';
 import { parseIncidentCreate, parseIncidentList, mapRemoteIncident, mapQueueSnapshot, IncidentMappingError } from '../infrastructure/IncidentMapper';
 import type { IncidentMapping } from '../infrastructure/IncidentMapper';
 import type { HttpTransport } from '../domain/HttpTransport';
@@ -8,15 +10,19 @@ export type IncidentClientErrorKind = 'timeout' | 'network' | 'server' | 'http' 
 export class IncidentClientError extends Error {
   readonly kind: IncidentClientErrorKind;
   readonly status?: number;
-  constructor(kind: IncidentClientErrorKind, status?: number) {
+  readonly retryAfterMs?: number;
+  constructor(kind: IncidentClientErrorKind, status?: number, retryAfterMs?: number) {
     super(kind === 'http' && status ? `Incident request rejected (${status})` : `Incident request ${kind}`);
     this.name = 'IncidentClientError';
     this.kind = kind;
+    if (retryAfterMs !== undefined) this.retryAfterMs = retryAfterMs;
     if (status !== undefined) this.status = status;
   }
 }
 
 export type IncidentClientConfig = Readonly<{
+  retry?: RetryExecutorOptions;
+  onRetryMetrics?: (metrics: readonly RetryExecutionMetric[]) => void;
   baseUrl?: string;
   actorId?: string;
   token?: string;
@@ -51,13 +57,16 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
   const token = config.token ?? 'course-valid-token';
   let requestSequence = 0;
 
-  async function send(path: string, init: RequestInit, accessToken: string): Promise<AuthenticatedHttpOutcome> {
+  async function send(path: string, init: RequestInit, accessToken: string, signal?: AbortSignal): Promise<AuthenticatedHttpOutcome> {
     const controller = new AbortController();
+    const cancel = () => controller.abort();
+    signal?.addEventListener('abort', cancel, { once: true });
+    if (signal?.aborted) cancel();
     let timedOut = false;
     const timeoutSignal = () => { timedOut = true; controller.abort(); };
     const timeoutHandle = setTimeout(timeoutSignal, timeoutMs);
     try {
-      let response: Readonly<{ ok: boolean; status: number; json: () => Promise<unknown> }>;
+      let response: Readonly<{ ok: boolean; status: number; headers?: { get(name: string): string | null }; json: () => Promise<unknown> }>;
       try {
         const headers: Record<string, string> = {
           Authorization: `Bearer ${accessToken}`,
@@ -81,7 +90,7 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
             ...(body === undefined ? {} : { body }),
             signal: controller.signal,
           });
-          response = { ok: result.status >= 200 && result.status < 300, status: result.status, json: result.json };
+          response = { ok: result.status >= 200 && result.status < 300, status: result.status, ...(result.headers ? { headers: { get: (name: string) => result.headers?.[name] ?? null } } : {}), json: result.json };
         } else {
           response = await fetcher(`${baseUrl}${path}`, {
             ...init,
@@ -94,7 +103,10 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
         if (controller.signal.aborted) throw new IncidentClientError(timedOut ? 'timeout' : 'network');
         throw new IncidentClientError(timedOut ? 'timeout' : 'network');
       }
-      if (!response.ok) return { status: response.status };
+      if (!response.ok) {
+        const retryAfterMs = parseRetryAfter(response.headers?.get('retry-after') ?? null);
+        return { status: response.status, ...(retryAfterMs === undefined ? {} : { retryAfterMs }) };
+      }
       try {
         return { status: response.status, body: await response.json() };
       } catch {
@@ -102,24 +114,41 @@ export function createIncidentClient(config: IncidentClientConfig = {}) {
       }
     } finally {
       clearTimeout(timeoutHandle);
+      signal?.removeEventListener('abort', cancel);
     }
   }
 
-  async function request(path: string, init: RequestInit = {}): Promise<unknown> {
+  async function requestOnce(path: string, init: RequestInit = {}, signal?: AbortSignal): Promise<unknown> {
     const requestId = `${init.method ?? 'GET'}:${path}:${++requestSequence}`;
     let outcome: AuthenticatedHttpOutcome;
     if (config.session) {
-      const result = await config.session.run(requestId, (accessToken) => send(path, init, accessToken));
+      const result = await config.session.run(requestId, (accessToken) => send(path, init, accessToken, signal));
       if (result.kind !== 'ok') throw new IncidentClientError('http', 401);
       outcome = result.outcome;
     } else {
-      outcome = await send(path, init, token);
+      outcome = await send(path, init, token, signal);
     }
     if (outcome.status < 200 || outcome.status >= 300) {
-      if (outcome.status >= 500) throw new IncidentClientError('server', outcome.status);
-      throw new IncidentClientError('http', outcome.status);
+      if (outcome.status >= 500) throw new IncidentClientError('server', outcome.status, outcome.retryAfterMs);
+      throw new IncidentClientError('http', outcome.status, outcome.retryAfterMs);
     }
     return outcome.body;
+  }
+
+  async function request(path: string, init: RequestInit = {}): Promise<unknown> {
+    if (!config.retry) return requestOnce(path, init);
+    const identity = config.session?.getActorId();
+    const executor = createRetryExecutor({ maxTimeoutMs: timeoutMs, ...config.retry });
+    // Body is serialized once by the caller and stays immutable through all attempts.
+    const key = new Headers(init.headers).get('Idempotency-Key');
+    const execution = await executor.execute({ method: init.method === 'POST' ? 'POST' : 'GET',
+      ...(key === null ? {} : { idempotencyKey: key }), operation: signal => {
+        if (config.session?.getActorId() !== identity) throw new IncidentClientError('http', 401);
+        return requestOnce(path, init, signal);
+      } });
+    config.onRetryMetrics?.(execution.metrics);
+    if ('error' in execution) throw execution.error;
+    return execution.result;
   }
 
   return {

@@ -62,6 +62,17 @@ export function OfflineWorkPanel({ actions, incidentId }: {
         <Text>Guardar nota pendiente</Text>
       </Pressable>
     </>}
+    {selected && <View>
+      <Text>Para resolver, escribe el diagnóstico en el campo de nota. Las acciones se guardan antes de enviarse.</Text>
+      <Pressable accessibilityRole="button" testID="offline-resolve" disabled={busy || !text.trim()} onPress={() => void run(
+        () => actions.queueAction(selected, 'resolve', { diagnosis: text }), 'Resolución guardada; pendiente de confirmación.')}>
+        <Text>Resolver incidencia</Text>
+      </Pressable>
+      <Pressable accessibilityRole="button" testID="offline-close" disabled={busy} onPress={() => void run(
+        () => actions.queueAction(selected, 'close', {}), 'Cierre guardado; pendiente de confirmación.')}>
+        <Text>Cerrar incidencia (coordinación)</Text>
+      </Pressable>
+    </View>}
     <Pressable disabled={busy} accessibilityRole="button" onPress={() => void run(
       () => actions.syncPending(), 'Intento de sincronización terminado. Revisa los pendientes y conflictos.')}>
       <Text>Sincronizar pendientes</Text>

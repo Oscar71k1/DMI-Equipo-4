@@ -1,80 +1,38 @@
 export type HttpMethod = 'GET' | 'POST';
-
 export type RetryInput = Readonly<{
-  method: HttpMethod;
-  status: number | 'timeout';
-  attempt: number;
-  retryAfterMs?: number;
-  idempotencyKey?: string;
+  method: HttpMethod; status: number | 'timeout'; attempt: number;
+  retryAfterMs?: number; idempotencyKey?: string;
 }>;
-
-export type RetryPlan = Readonly<{
-  retry: boolean;
-  delayMs: number;
-  requiresStableIdempotencyKey: boolean;
-}>;
-
-const DEFAULT_DELAYS_MS: readonly number[] = [250, 500, 1000];
-const MAX_ATTEMPTS = 4;
-
-function isTransientStatus(status: number | 'timeout'): boolean {
-  if (status === 'timeout') return true;
-  if (!Number.isFinite(status)) return false;
-  if (status === 429) return true;
-  return status >= 500 && status <= 599;
-}
-
-function isValidIdempotencyKey(key?: string): boolean {
-  return typeof key === 'string' && key.trim().length > 0;
-}
-
-export function planRetry(input: RetryInput): RetryPlan {
-  const { method, status, attempt, retryAfterMs, idempotencyKey } = input;
-
-  // 1. Validar intento: a partir del intento 4 no se permiten más reintentos
-  if (!Number.isFinite(attempt) || attempt < 1 || attempt >= MAX_ATTEMPTS) {
-    return {
-      retry: false,
-      delayMs: 0,
-      requiresStableIdempotencyKey: false,
-    };
+export type RetryPlan = Readonly<{ retry: boolean; delayMs: number; requiresStableIdempotencyKey: boolean }>;
+export type RetryConfig = Readonly<{ maxAttempts: number; baseDelayMs: number; maxDelayMs: number }>;
+export const DEFAULT_RETRY_CONFIG: RetryConfig = Object.freeze({ maxAttempts: 4, baseDelayMs: 250, maxDelayMs: 10000 });
+export function createRetryPolicy(overrides: Partial<RetryConfig> = {}) {
+  const config = { ...DEFAULT_RETRY_CONFIG, ...overrides };
+  if (!Number.isInteger(config.maxAttempts) || config.maxAttempts < 1 || config.maxAttempts > 4 ||
+      !Number.isFinite(config.baseDelayMs) || config.baseDelayMs <= 0 ||
+      !Number.isFinite(config.maxDelayMs) || config.maxDelayMs < config.baseDelayMs || config.maxDelayMs > 60000) {
+    throw new Error('Invalid retry configuration');
   }
-
-  // 2. Regla de seguridad para POST: requiere clave de idempotencia estable
-  const hasStableKey = isValidIdempotencyKey(idempotencyKey);
-  if (method === 'POST' && !hasStableKey) {
-    return {
-      retry: false,
-      delayMs: 0,
-      requiresStableIdempotencyKey: true,
-    };
-  }
-
-  // 3. Evaluar si el fallo es transitorio
-  if (!isTransientStatus(status)) {
-    return {
-      retry: false,
-      delayMs: 0,
-      requiresStableIdempotencyKey: false,
-    };
-  }
-
-  // 4. Tratamiento de Retry-After explícito (ej. 429)
-  if (typeof retryAfterMs === 'number' && Number.isFinite(retryAfterMs) && retryAfterMs >= 0) {
-    return {
-      retry: true,
-      delayMs: Math.floor(retryAfterMs),
-      requiresStableIdempotencyKey: false,
-    };
-  }
-
-  // 5. Backoff exponencial progresivo por defecto (250ms, 500ms, 1000ms)
-  const delayIndex = Math.min(Math.floor(attempt) - 1, DEFAULT_DELAYS_MS.length - 1);
-  const delayMs = DEFAULT_DELAYS_MS[delayIndex] ?? 1000;
-
-  return {
-    retry: true,
-    delayMs,
-    requiresStableIdempotencyKey: false,
+  return (input: RetryInput): RetryPlan => {
+    const missing = input.method === 'POST' && !input.idempotencyKey?.trim();
+    const stop = { retry: false, delayMs: 0, requiresStableIdempotencyKey: Boolean(missing) };
+    if (missing || !Number.isInteger(input.attempt) || input.attempt < 1 || input.attempt >= config.maxAttempts) return stop;
+    if (!(input.status === 'timeout' || input.status === 429 ||
+        (Number.isInteger(input.status) && Number(input.status) >= 500 && Number(input.status) <= 599))) return stop;
+    let delayMs = Math.min(config.maxDelayMs, config.baseDelayMs * 2 ** (input.attempt - 1));
+    if (input.retryAfterMs !== undefined && Number.isFinite(input.retryAfterMs) && input.retryAfterMs >= 0) {
+      // Never shorten Retry-After. A delay outside our budget stops automatic retries.
+      if (input.retryAfterMs > config.maxDelayMs) return stop;
+      delayMs = Math.ceil(input.retryAfterMs);
+    }
+    return { retry: true, delayMs, requiresStableIdempotencyKey: false };
   };
+}
+export const planRetry = createRetryPolicy();
+export function parseRetryAfter(value: string | null, nowMs = Date.now()): number | undefined {
+  if (!value?.trim()) return undefined;
+  const text = value.trim();
+  const delay = /^\d+(\.\d+)?$/.test(text) ? Number(text) * 1000 :
+    /^[A-Za-z]{3},/.test(text) ? Date.parse(text) - nowMs : NaN;
+  return Number.isFinite(delay) && delay >= 0 ? delay : undefined;
 }

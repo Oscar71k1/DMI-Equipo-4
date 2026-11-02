@@ -13,7 +13,7 @@ export interface LocalIncidentPort extends IncidentQueuePort {
 }
 export type OfflineActions = Readonly<{
   cacheIncident(id: string): Promise<void>;
-  queueAction(id: string, action: 'start' | 'comment' | 'add_evidence', payload: Record<string, unknown>): Promise<string>;
+  queueAction(id: string, action: 'start' | 'comment' | 'add_evidence' | 'resolve' | 'close', payload: Record<string, unknown>): Promise<string>;
   listPending(): Promise<readonly IncidentQueueRecord[]>;
   listCached(): Promise<readonly QueueSyncRecord[]>;
   syncPending(): Promise<{ processed: number; issues: number }>;

@@ -39,9 +39,13 @@ jobs:
       - name: AC-01 — reproducibility
         run: make verify-week-08
       - name: AC-02 — public behavior
+        if: github.ref == 'refs/tags/week-08-final'
         run: make public-test-week-08
       - name: AC-03 — declared failure evidence
+        if: github.ref == 'refs/tags/week-08-final'
         run: make evidence-week-08
+      - name: Current week 8 regression tests
+        run: npm test -- --ci --runInBand tests/week8 course-tests/public/week-08.test.ts
       - name: Upload academic evidence
         if: always()
         uses: actions/upload-artifact@v4

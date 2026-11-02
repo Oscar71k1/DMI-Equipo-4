@@ -60,7 +60,7 @@ export function CampusOpsScreen({ actions }: Props) {
           <Pressable accessibilityRole="button" testID="incident-create-back" onPress={() => setCreating(false)}>
             <Text>← Volver a la lista</Text>
           </Pressable>
-          <IncidentCreateForm key={sessionSnapshot?.generation} createIncident={actions.createIncident} />
+          <IncidentCreateForm key={sessionSnapshot?.generation} createIncident={actions.createIncident} {...(actions.searchLocation ? { searchLocation: actions.searchLocation } : {})} />
         </View>
       ) : (
         <View style={styles.content}>

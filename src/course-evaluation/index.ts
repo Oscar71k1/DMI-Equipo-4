@@ -1,3 +1,4 @@
+import { selectIncidentLocation as selectLocation } from '../domain/IncidentLocation';
 import { planRetry as planRetryPolicy } from '../application/retryPolicy';
 import { resolveSync as resolveSyncRecords } from '../domain/incidentSync';
 import { deduplicateOperations as dedupeOperationsById } from '../domain/deduplicateOperations';
@@ -100,5 +101,5 @@ export function reducePermissionLifecycle(
 
 /** Week 09: see docs/CAMPUSOPS_API.md; this is not a completed solution. */
 export function selectIncidentLocation(_provider: unknown, _manualLabel: string): IncidentLocation {
-  return pending('selectIncidentLocation');
+  return selectLocation(_provider, _manualLabel);
 }

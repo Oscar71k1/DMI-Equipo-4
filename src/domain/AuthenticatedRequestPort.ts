@@ -1,4 +1,4 @@
-export type AuthenticatedHttpOutcome = Readonly<{ status: number; body?: unknown }>;
+export type AuthenticatedHttpOutcome = Readonly<{ status: number; retryAfterMs?: number; body?: unknown }>;
 
 export type AuthenticatedRequestResult =
   | Readonly<{ kind: 'ok'; outcome: AuthenticatedHttpOutcome }>

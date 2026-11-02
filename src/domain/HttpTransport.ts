@@ -1,5 +1,6 @@
 export type HttpResponse = Readonly<{
   status: number;
+  headers?: Readonly<Record<string, string>>;
   json: () => Promise<unknown>;
 }>;
 
