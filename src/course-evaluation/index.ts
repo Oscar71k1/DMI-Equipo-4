@@ -9,6 +9,7 @@ import type {
   SyncRecord,
 } from './contracts';
 import type { IncidentLocation } from '../campusops/contracts';
+import { selectIncidentLocation as selectLocation } from '../domain/selectIncidentLocation';
 import { initialSessionState, reduceSession } from '../domain/sessionRefresh';
 
 function pending(name: string): never {
@@ -98,6 +99,6 @@ export function reducePermissionLifecycle(
 }
 
 /** Week 09: see docs/CAMPUSOPS_API.md; this is not a completed solution. */
-export function selectIncidentLocation(_provider: unknown, _manualLabel: string): IncidentLocation {
-  return pending('selectIncidentLocation');
+export function selectIncidentLocation(provider: unknown, manualLabel: string): IncidentLocation {
+  return selectLocation(provider, manualLabel);
 }

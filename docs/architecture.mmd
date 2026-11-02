@@ -40,6 +40,7 @@ flowchart TD
     F_src_domain_SessionRefreshPort_ts["src/domain/SessionRefreshPort.ts"]
     F_src_domain_deduplicateOperations_ts["src/domain/deduplicateOperations.ts"]
     F_src_domain_incidentAuthorization_ts["src/domain/incidentAuthorization.ts"]
+    F_src_domain_selectIncidentLocation_ts["src/domain/selectIncidentLocation.ts"]
     F_src_domain_incidentSync_ts["src/domain/incidentSync.ts"]
     F_src_domain_redactForTelemetry_ts["src/domain/redactForTelemetry.ts"]
     F_src_domain_sessionRefresh_ts["src/domain/sessionRefresh.ts"]
@@ -142,6 +143,7 @@ flowchart TD
   F_src_domain_IncidentRepository_ts --> F_src_domain_incidentAuthorization_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Actor_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Incident_ts
+  F_src_domain_selectIncidentLocation_ts --> F_src_campusops_contracts_ts
   F_src_domain_incidentSync_ts --> F_src_domain_IncidentQueueRecord_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_api_courseBackend_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_domain_BackendHealthPort_ts
