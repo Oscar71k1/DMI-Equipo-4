@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "d30886c17557379f6587a08673c1d5096a2ba122",
+  "generatedAt": "2026-11-02T21:17:41.637909+00:00",
+  "checks": [
+    {
+      "id": "lost-response-durable",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "lost-response-durable",
+        "attempts": 3,
+        "stableKey": true,
+        "payloadUnchanged": true,
+        "reopenedSqlite": true,
+        "duplicate": true,
+        "version": 4,
+        "resolutionEvents": 1,
+        "evidenceBefore": 1,
+        "evidenceAfter": 1,
+        "notifications": {
+          "implemented": false,
+          "explanation": "No notification dispatch exists in this app; no emission is claimed."
+        },
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 2,
+              "stopReason": "success"
+            }
+          ],
+          [
+            {
+              "attempt": 1,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 2,
+              "stopReason": "success"
+            }
+          ],
+          [
+            {
+              "attempt": 1,
+              "status": "timeout",
+              "plannedDelayMs": 10,
+              "actualDelayMs": 14,
+              "durationMs": 101
+            },
+            {
+              "attempt": 2,
+              "status": 0,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 4,
+              "stopReason": "max_attempts"
+            }
+          ],
+          [
+            {
+              "attempt": 1,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 1,
+              "stopReason": "success"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "real-http-429",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "real-http-429",
+        "calls": 2,
+        "intervalMs": 1007,
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 429,
+              "plannedDelayMs": 1000,
+              "actualDelayMs": 1000,
+              "durationMs": 7
+            },
+            {
+              "attempt": 2,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 2,
+              "stopReason": "success"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "course-geocoding-http",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "course-geocoding-http",
+        "observed": [
+          {
+            "scenario": "success",
+            "source": "provider"
+          },
+          {
+            "scenario": "incomplete",
+            "source": "manual"
+          },
+          {
+            "scenario": "invalid_coordinates",
+            "source": "manual"
+          },
+          {
+            "scenario": "malformed",
+            "source": "manual"
+          },
+          {
+            "scenario": "slow",
+            "source": "manual"
+          },
+          {
+            "scenario": "rate_limited",
+            "source": "manual"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cache",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "cache",
+        "calls": 7,
+        "initialConcurrentCalls": 1,
+        "ttlMs": 10,
+        "capacity": 2
+      }
+    },
+    {
+      "id": "incomplete",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "incomplete",
+        "calls": 1,
+        "source": "manual",
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 0,
+              "stopReason": "success"
+            }
+          ]
+        ],
+        "clock": "real timeout; injected sleep"
+      }
+    },
+    {
+      "id": "invalid",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "invalid",
+        "calls": 1,
+        "source": "manual",
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 0,
+              "stopReason": "success"
+            }
+          ]
+        ],
+        "clock": "real timeout; injected sleep"
+      }
+    },
+    {
+      "id": "disconnect",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "disconnect",
+        "calls": 1,
+        "source": "manual",
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 0,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 0,
+              "stopReason": "non_transient"
+            }
+          ]
+        ],
+        "clock": "real timeout; injected sleep"
+      }
+    },
+    {
+      "id": "malformed",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "malformed",
+        "calls": 1,
+        "source": "manual",
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 0,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 0,
+              "stopReason": "non_transient"
+            }
+          ]
+        ],
+        "clock": "real timeout; injected sleep"
+      }
+    },
+    {
+      "id": "timeout",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "timeout",
+        "calls": 2,
+        "source": "manual",
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": "timeout",
+              "plannedDelayMs": 250,
+              "actualDelayMs": 1,
+              "durationMs": 17
+            },
+            {
+              "attempt": 2,
+              "status": "timeout",
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 14,
+              "stopReason": "max_attempts"
+            }
+          ]
+        ],
+        "clock": "real timeout; injected sleep"
+      }
+    },
+    {
+      "id": "429",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "429",
+        "calls": 2,
+        "source": "manual",
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 429,
+              "plannedDelayMs": 1000,
+              "actualDelayMs": 0,
+              "durationMs": 1
+            },
+            {
+              "attempt": 2,
+              "status": 429,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 0,
+              "stopReason": "max_attempts"
+            }
+          ]
+        ],
+        "clock": "real timeout; injected sleep"
+      }
+    },
+    {
+      "id": "bounded-retries",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand tests/week9 course-tests/public/week-09.test.ts",
+      "evidence": "Observed in reports/week-09/logs/current-tests.txt; Jest assertions passed.",
+      "observation": {
+        "id": "bounded-retries",
+        "metrics": [
+          {
+            "attempt": 1,
+            "status": "timeout",
+            "plannedDelayMs": 250,
+            "actualDelayMs": 0,
+            "durationMs": 14
+          },
+          {
+            "attempt": 2,
+            "status": "timeout",
+            "plannedDelayMs": 500,
+            "actualDelayMs": 0,
+            "durationMs": 15
+          },
+          {
+            "attempt": 3,
+            "status": "timeout",
+            "plannedDelayMs": 1000,
+            "actualDelayMs": 0,
+            "durationMs": 16
+          },
+          {
+            "attempt": 4,
+            "status": "timeout",
+            "plannedDelayMs": 0,
+            "actualDelayMs": 0,
+            "durationMs": 17,
+            "stopReason": "max_attempts"
+          }
+        ],
+        "calls": 4
+      }
+    },
+    {
+      "id": "external-provider",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "node lab/week9-external.cjs",
+      "evidence": "Provider result, one HTTP request and second lookup from cache. See logs/external.json.",
+      "observation": {
+        "generatedAt": "2026-11-02T21:17:25.290Z",
+        "provider": "Open-Meteo / GeoNames",
+        "scenario": "Synthetic incident using a public locality as approximate reference; no personal data",
+        "command": "node lab/week9-external.cjs",
+        "source": "provider",
+        "coordinateValuesOmitted": true,
+        "cacheHit": true,
+        "httpCalls": 1,
+        "durationMs": 1404,
+        "metrics": [
+          [
+            {
+              "attempt": 1,
+              "status": 200,
+              "plannedDelayMs": 0,
+              "actualDelayMs": 0,
+              "durationMs": 1402,
+              "stopReason": "success"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "manual-interface",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand tests/week9-location-ui.test.tsx",
+      "evidence": "Jest assertions verify manual input, late result ignored, no empty submission and same key/body on uncertain replay."
+    }
+  ],
+  "limits": [
+    "No notification dispatcher implemented; no sends claimed.",
+    "Jest UI is not a native installation demonstration."
+  ]
+}

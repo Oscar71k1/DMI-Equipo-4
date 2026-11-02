@@ -1,0 +1,108 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\architecture.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\incident-client.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\incident-cloud-flow.test.tsx C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\incidents.test.tsx C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\remote-incident-repository.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\remote-resource.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\secure-storage.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\security-audit.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\security.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\session-integration.test.tsx C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\session-refresh.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\telemetry.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-action-client.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-idempotency.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-migrations.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-offline-actions.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-offline-ui.test.tsx C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-persistence.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-sync.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-geocoding-http.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-integration.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-location-ui.test.tsx C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-location.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-lost-response.test.ts C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-retry.test.ts course-tests/smoke.test.tsx course-tests/public/week-01.test.ts course-tests/public/week-02.test.ts course-tests/public/week-03.test.ts course-tests/public/week-04.test.ts course-tests/public/week-05.test.ts course-tests/public/week-06.test.ts course-tests/public/week-08.test.ts course-tests/public/week-09.test.ts --json --outputFile reports/week-09/logs/jest-results.json
+
+(node:4104) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/week8-idempotency.test.ts
+PASS tests/week9-integration.test.ts
+  ● Console
+
+    console.info
+      WEEK09_OBSERVATION {"id":"lost-response-durable","attempts":3,"stableKey":true,"payloadUnchanged":true,"reopenedSqlite":true,"duplicate":true,"version":4,"resolutionEvents":1,"evidenceBefore":1,"evidenceAfter":1,"notifications":{"implemented":false,"explanation":"No notification dispatch exists in this app; no emission is claimed."},"metrics":[[{"attempt":1,"status":200,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":2,"stopReason":"success"}],[{"attempt":1,"status":200,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":2,"stopReason":"success"}],[{"attempt":1,"status":"timeout","plannedDelayMs":10,"actualDelayMs":14,"durationMs":101},{"attempt":2,"status":0,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":4,"stopReason":"max_attempts"}],[{"attempt":1,"status":200,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":1,"stopReason":"success"}]]}
+
+      at Object.info (tests/week9-integration.test.ts:85:13)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"real-http-429","calls":2,"intervalMs":1007,"metrics":[[{"attempt":1,"status":429,"plannedDelayMs":1000,"actualDelayMs":1000,"durationMs":7},{"attempt":2,"status":200,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":2,"stopReason":"success"}]]}
+
+      at Object.info (tests/week9-integration.test.ts:107:13)
+
+PASS tests/architecture.test.ts
+PASS tests/incident-cloud-flow.test.tsx
+PASS tests/week9-location-ui.test.tsx
+PASS tests/security-audit.test.ts
+PASS tests/week9-geocoding-http.test.ts
+  ● Console
+
+    console.info
+      WEEK09_OBSERVATION {"id":"course-geocoding-http","observed":[{"scenario":"success","source":"provider"},{"scenario":"incomplete","source":"manual"},{"scenario":"invalid_coordinates","source":"manual"},{"scenario":"malformed","source":"manual"},{"scenario":"slow","source":"manual"},{"scenario":"rate_limited","source":"manual"}]}
+
+      at Object.info (tests/week9-geocoding-http.test.ts:23:13)
+
+PASS tests/week8-migrations.test.ts
+PASS tests/incidents.test.tsx
+PASS tests/week8-offline-ui.test.tsx
+PASS tests/session-integration.test.tsx
+PASS course-tests/smoke.test.tsx
+PASS tests/week8-persistence.test.ts
+PASS tests/incident-client.test.ts
+PASS tests/week9-location.test.ts
+  ● Console
+
+    console.info
+      WEEK09_OBSERVATION {"id":"cache","calls":7,"initialConcurrentCalls":1,"ttlMs":10,"capacity":2}
+
+      at Object.info (tests/week9-location.test.ts:32:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"incomplete","calls":1,"source":"manual","metrics":[[{"attempt":1,"status":200,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":0,"stopReason":"success"}]],"clock":"real timeout; injected sleep"}
+
+      at info (tests/week9-location.test.ts:51:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"invalid","calls":1,"source":"manual","metrics":[[{"attempt":1,"status":200,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":0,"stopReason":"success"}]],"clock":"real timeout; injected sleep"}
+
+      at info (tests/week9-location.test.ts:51:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"disconnect","calls":1,"source":"manual","metrics":[[{"attempt":1,"status":0,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":0,"stopReason":"non_transient"}]],"clock":"real timeout; injected sleep"}
+
+      at info (tests/week9-location.test.ts:51:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"malformed","calls":1,"source":"manual","metrics":[[{"attempt":1,"status":0,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":0,"stopReason":"non_transient"}]],"clock":"real timeout; injected sleep"}
+
+      at info (tests/week9-location.test.ts:51:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"timeout","calls":2,"source":"manual","metrics":[[{"attempt":1,"status":"timeout","plannedDelayMs":250,"actualDelayMs":1,"durationMs":17},{"attempt":2,"status":"timeout","plannedDelayMs":0,"actualDelayMs":0,"durationMs":14,"stopReason":"max_attempts"}]],"clock":"real timeout; injected sleep"}
+
+      at info (tests/week9-location.test.ts:51:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"429","calls":2,"source":"manual","metrics":[[{"attempt":1,"status":429,"plannedDelayMs":1000,"actualDelayMs":0,"durationMs":1},{"attempt":2,"status":429,"plannedDelayMs":0,"actualDelayMs":0,"durationMs":0,"stopReason":"max_attempts"}]],"clock":"real timeout; injected sleep"}
+
+      at info (tests/week9-location.test.ts:51:11)
+
+    console.info
+      WEEK09_OBSERVATION {"id":"bounded-retries","metrics":[{"attempt":1,"status":"timeout","plannedDelayMs":250,"actualDelayMs":0,"durationMs":14},{"attempt":2,"status":"timeout","plannedDelayMs":500,"actualDelayMs":0,"durationMs":15},{"attempt":3,"status":"timeout","plannedDelayMs":1000,"actualDelayMs":0,"durationMs":16},{"attempt":4,"status":"timeout","plannedDelayMs":0,"actualDelayMs":0,"durationMs":17,"stopReason":"max_attempts"}],"calls":4}
+
+      at Object.info (tests/week9-location.test.ts:77:11)
+
+PASS tests/week9-lost-response.test.ts
+PASS tests/week8-action-client.test.ts
+PASS tests/remote-incident-repository.test.ts
+PASS tests/telemetry.test.ts
+PASS tests/session-refresh.test.ts
+PASS tests/security.test.ts
+PASS course-tests/public/week-06.test.ts
+PASS tests/week8-offline-actions.test.ts
+PASS tests/remote-resource.test.ts
+PASS course-tests/public/week-04.test.ts
+PASS tests/week9-retry.test.ts
+PASS course-tests/public/week-02.test.ts
+PASS course-tests/public/week-01.test.ts
+PASS course-tests/public/week-09.test.ts
+PASS tests/week8-sync.test.ts
+PASS tests/secure-storage.test.ts
+PASS course-tests/public/week-08.test.ts
+PASS course-tests/public/week-03.test.ts
+PASS course-tests/public/week-05.test.ts
+
+Test Suites: 34 passed, 34 total
+Tests:       187 passed, 187 total
+Snapshots:   0 total
+Time:        14.39 s, estimated 15 s
+Ran all test suites within paths "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\architecture.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\incident-client.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\incident-cloud-flow.test.tsx", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\incidents.test.tsx", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\remote-incident-repository.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\remote-resource.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\secure-storage.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\security-audit.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\security.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\session-integration.test.tsx", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\session-refresh.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\telemetry.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-action-client.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-idempotency.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-migrations.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-offline-actions.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-offline-ui.test.tsx", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-persistence.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week8-sync.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-geocoding-http.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-integration.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-location-ui.test.tsx", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-location.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-lost-response.test.ts", "C:\Users\oscar\.codex\worktrees\semana-09-integracion\DMI-Equipo-4\tests\week9-retry.test.ts", "course-tests/smoke.test.tsx", "course-tests/public/week-01.test.ts", "course-tests/public/week-02.test.ts", "course-tests/public/week-03.test.ts", "course-tests/public/week-04.test.ts", "course-tests/public/week-05.test.ts", "course-tests/public/week-06.test.ts", "course-tests/public/week-08.test.ts", "course-tests/public/week-09.test.ts".
+Test results written to: reports\week-09\logs\jest-results.json
