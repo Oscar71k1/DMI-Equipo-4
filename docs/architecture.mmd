@@ -41,6 +41,7 @@ flowchart TD
     F_src_domain_deduplicateOperations_ts["src/domain/deduplicateOperations.ts"]
     F_src_domain_incidentAuthorization_ts["src/domain/incidentAuthorization.ts"]
     F_src_domain_selectIncidentLocation_ts["src/domain/selectIncidentLocation.ts"]
+    F_src_domain_LocationProvider_ts["src/domain/LocationProvider.ts"]
     F_src_domain_incidentSync_ts["src/domain/incidentSync.ts"]
     F_src_domain_redactForTelemetry_ts["src/domain/redactForTelemetry.ts"]
     F_src_domain_sessionRefresh_ts["src/domain/sessionRefresh.ts"]
@@ -49,6 +50,7 @@ flowchart TD
     F_src_api_courseBackend_ts["src/api/courseBackend.ts"]
     F_src_api_incidentClient_ts["src/api/incidentClient.ts"]
     F_src_infrastructure_CourseBackendHealthAdapter_ts["src/infrastructure/CourseBackendHealthAdapter.ts"]
+    F_src_infrastructure_GeocodingAdapter_ts["src/infrastructure/GeocodingAdapter.ts"]
     F_src_infrastructure_CourseSessionAdapter_ts["src/infrastructure/CourseSessionAdapter.ts"]
     F_src_infrastructure_ExpoSecureTokenStorage_ts["src/infrastructure/ExpoSecureTokenStorage.ts"]
     F_src_infrastructure_ExpoSqliteAdapter_ts["src/infrastructure/ExpoSqliteAdapter.ts"]
@@ -144,6 +146,7 @@ flowchart TD
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Actor_ts
   F_src_domain_incidentAuthorization_ts --> F_src_domain_Incident_ts
   F_src_domain_selectIncidentLocation_ts --> F_src_campusops_contracts_ts
+  F_src_infrastructure_GeocodingAdapter_ts --> F_src_domain_LocationProvider_ts
   F_src_domain_incidentSync_ts --> F_src_domain_IncidentQueueRecord_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_api_courseBackend_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_domain_BackendHealthPort_ts
