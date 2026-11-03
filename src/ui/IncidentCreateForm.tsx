@@ -130,12 +130,18 @@ export function IncidentCreateForm({ createIncident, locationProvider }: Props) 
         onChangeText={handleLocationChange}
       />
 
-      {locationProvider && (
+            {locationProvider && (
         <Button
           testID="incident-form-location-search"
           title="Buscar ubicacion"
           onPress={handleSearch}
         />
+      )}
+
+      {locationProvider && (
+        <Text testID="incident-form-location-attribution">
+          Busqueda de ubicacion: datos © OpenStreetMap contributors (ODbL). No escribas datos personales.
+        </Text>
       )}
 
       {lookup.kind === 'searching' && (
