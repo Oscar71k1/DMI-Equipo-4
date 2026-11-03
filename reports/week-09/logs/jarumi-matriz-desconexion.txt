@@ -1,0 +1,11 @@
+{
+  "scenario": "desconexion",
+  "command": "npx --yes tsx tools/week9-matrix.ts",
+  "timeoutMs": "default (5000)",
+  "result": {
+    "kind": "unavailable",
+    "reason": "network"
+  },
+  "durationMs": 0,
+  "generatedAt": "2026-11-03T02:55:48.846Z"
+}

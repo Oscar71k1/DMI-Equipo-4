@@ -1,0 +1,11 @@
+{
+  "scenario": "slow",
+  "command": "npx --yes tsx tools/week9-matrix.ts",
+  "timeoutMs": 200,
+  "result": {
+    "kind": "unavailable",
+    "reason": "timeout"
+  },
+  "durationMs": 220,
+  "generatedAt": "2026-11-03T02:55:48.840Z"
+}

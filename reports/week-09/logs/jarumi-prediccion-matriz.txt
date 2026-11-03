@@ -1,0 +1,10 @@
+﻿Prediccion antes de ejecutar la matriz de fallos (Jarumi).
+success: found, candidato con etiqueta y coordenadas validas.
+incomplete: found con candidato incompleto, o no_results.
+nullable: found con candidato incompleto, o no_results.
+invalid_coordinates: found, pero con coordenadas fuera de rango (el adaptador no las valida; las rechaza el selector).
+malformed: unavailable con reason invalid_json.
+slow con timeout de 200 ms: unavailable con reason timeout.
+rate_limited: unavailable con reason rate_limited y retryAfterMs de 1000.
+desconexion (fetch que rechaza): unavailable con reason network.
+Fecha de guardado: 2026-11-02T20:50:05.5448393-06:00

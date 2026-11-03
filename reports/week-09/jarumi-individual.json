@@ -1,0 +1,29 @@
+{
+  "studentId": "3523110055",
+  "commitShas": [
+    "496a7ecc8e588294e1e6a9087deb60fae37fb097"
+  ],
+  "files": [
+    "src/domain/selectIncidentLocation.ts",
+    "src/infrastructure/GeocodingAdapter.ts",
+    "src/infrastructure/GeocodingCache.ts",
+    "src/infrastructure/CachedLocationProvider.ts",
+    "src/ui/IncidentCreateForm.tsx",
+    "tests/week9-location.test.ts",
+    "tests/week9-location-casos-faltantes.test.ts"
+  ],
+  "tests": [
+    "tests/week9-location.test.ts",
+    "tests/week9-location-casos-faltantes.test.ts",
+    "tests/week9-geocoding-adapter.test.ts",
+    "tests/week9-geocoding-cache.test.ts",
+    "course-tests/public/week-09.test.ts"
+  ],
+  "reviews": [
+    "Revisión de integración de adaptador y fallback manual en IncidentCreateForm.tsx"
+  ],
+  "prediction": "sin predicción previa",
+  "command": "npm test -- --runInBand tests/week9-location-casos-faltantes.test.ts",
+  "observedResult": "Pass: 7 tests passed, 7 total. Respeto de espacios en etiquetas, limites numericos e inmutabilidad verificados.",
+  "explanation": "Se implemento la validacion estricta de runtime para ubicacion en selectIncidentLocation y el adaptador de geocodificacion con cache y cancelacion por AbortController. Se verifico con herramientas de IA para generacion inicial de pruebas unitarias, validando cada resultado mediante la ejecucion directa de npm test y typecheck."
+}

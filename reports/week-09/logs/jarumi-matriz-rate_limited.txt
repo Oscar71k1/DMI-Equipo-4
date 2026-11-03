@@ -1,0 +1,12 @@
+{
+  "scenario": "rate_limited",
+  "command": "npx --yes tsx tools/week9-matrix.ts",
+  "timeoutMs": "default (5000)",
+  "result": {
+    "kind": "unavailable",
+    "reason": "rate_limited",
+    "retryAfterMs": 1000
+  },
+  "durationMs": 3,
+  "generatedAt": "2026-11-03T02:55:48.845Z"
+}

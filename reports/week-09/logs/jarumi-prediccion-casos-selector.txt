@@ -1,0 +1,10 @@
+﻿Prediccion antes de ejecutar (Jarumi), basada en leer src/domain/selectIncidentLocation.ts.
+Pruebas unitarias nuevas: las 4 pasan.
+ - null devuelve captura manual sin latitude ni longitude.
+ - etiqueta del proveedor solo con espacios cae a captura manual.
+ - etiqueta del proveedor con espacios alrededor se conserva sin recortar.
+ - etiqueta manual se devuelve tal como se recibio.
+Matriz por el selector:
+ - success: source=provider con coordenadas.
+ - incomplete, nullable, invalid_coordinates: source=manual, sin coordenadas, etiqueta manual conservada.
+Fecha de guardado: 2026-11-02T20:57:48.8806752-06:00

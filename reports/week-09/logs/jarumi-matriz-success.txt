@@ -1,0 +1,18 @@
+{
+  "scenario": "success",
+  "command": "npx --yes tsx tools/week9-matrix.ts",
+  "timeoutMs": "default (5000)",
+  "result": {
+    "kind": "found",
+    "candidate": {
+      "isObject": true,
+      "labelNonEmptyText": true,
+      "latitudeFiniteNumber": true,
+      "longitudeFiniteNumber": true,
+      "latitudeInRange": true,
+      "longitudeInRange": true
+    }
+  },
+  "durationMs": 47,
+  "generatedAt": "2026-11-03T02:55:48.604Z"
+}

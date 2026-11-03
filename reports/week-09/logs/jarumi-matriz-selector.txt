@@ -1,0 +1,6 @@
+command: npx --yes tsx tools/week9-matrix-selector.ts
+generatedAt: 2026-11-03T03:00:29.243Z
+success: lookup=found source=provider tieneCoordenadas=true manualConservada=false
+incomplete: lookup=found source=manual tieneCoordenadas=false manualConservada=true
+nullable: lookup=found source=manual tieneCoordenadas=false manualConservada=true
+invalid_coordinates: lookup=found source=manual tieneCoordenadas=false manualConservada=true
