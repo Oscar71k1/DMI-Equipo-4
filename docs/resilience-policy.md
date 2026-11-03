@@ -41,3 +41,7 @@ La creación conserva clave/cuerpo en el formulario durante un reintento inciert
 Los logs incluyen sólo estado técnico, intentos, demora planificada/observada, duración, conteos y comprobaciones de igualdad. No incluyen tokens, cuerpos, coordenadas ni texto de incidencias. Los tiempos virtuales se distinguen de HTTP/timeout real. Cada reporte identifica comando, SHA y resultados observados. Se prefiere caché acotada y captura manual a bloquear todo el reporte; se acepta precisión de localidad y almacenamiento efímero. Se prefiere replay idempotente a generar otra operación; se acepta conservar una intención incierta y requerir revisión ante conflicto.
 
 La revisión comunicada por Jarumi identificó la base atrasada de Fernanda y documentos docentes faltantes. Sus aportes previos de SQLite se conservan y se referencian como históricos; la implementación nueva asistida no se presenta como ejecución personal de Jarumi. Los registros individuales diferencian esas fuentes.
+
+## Aportación publicada por Jarumi
+
+Jarumi publicó su propia implementación de geocodificación con Nominatim, caché y captura manual. Sus commits y resultados corresponden a [su revisión de semana 9](https://github.com/Oscar71k1/DMI-Equipo-4/tree/bc6cb5f881288d705260709fb330b899081a6053). La versión integrada del equipo usa Open-Meteo. El [registro documental](jarumi-semana-09.json) distingue las pruebas de ambas versiones.
