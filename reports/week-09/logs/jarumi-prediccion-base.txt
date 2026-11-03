@@ -1,0 +1,5 @@
+﻿Prediccion antes de ejecutar la linea base de semana 9 (Jarumi)
+Escrita ANTES de ejecutar.
+Espero que typecheck y lint pasen, y que las pruebas publicas de semana 9 fallen porque selectIncidentLocation y planRetry siguen pendientes en main.
+(La idea la propuso la IA y estoy de acuerdo.)
+Fecha de guardado: 2026-10-31T12:19:55.7342252-06:00

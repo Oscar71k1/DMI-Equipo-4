@@ -1,0 +1,8 @@
+﻿Prediccion antes de crear src/domain/IncidentQueueRecord.ts (semana 8, Jarumi)
+Escrita ANTES de ejecutar el comando que crea el archivo.
+
+Espero que: typecheck y lint pasen, y que architecture.test.ts falle en la prueba de las flechas del diagrama, porque el archivo nuevo importa campusops/contracts.ts y docs/architecture.mmd todavia no tiene esa flecha.
+(La idea la propuso la IA y estoy de acuerdo con ella. Si no estuviera de acuerdo, aqui escribiria la mia.)
+Fecha de guardado: 2026-10-24T01:08:26.2630875-06:00
+
+Comparacion (escrita despues de ejecutar): typecheck y lint pasaron (EXIT 0). architecture.test.ts fallo 1 de 4 con exactamente la flecha predicha: src/domain/IncidentQueueRecord.ts -> src/campusops/contracts.ts. Tras agregar el nodo y la flecha en docs/architecture.mmd, la prueba paso (DESPUES_EXIT=0).

@@ -1,0 +1,7 @@
+﻿Prediccion antes de implementar selectIncidentLocation (semana 9, Jarumi)
+Escrita ANTES de ejecutar.
+Espero que typecheck y lint pasen, que mis pruebas nuevas pasen, y que de las 4 pruebas publicas pase 1 (la de geocodificacion). Las 3 de planRetry siguen fallando porque son de Fernanda y no estan en main. La prueba de arquitectura va a fallar hasta actualizar el diagrama, por el archivo nuevo en domain.
+(La idea la propuso la IA y estoy de acuerdo.)
+Fecha de guardado: 2026-10-31T12:26:45.1468445-06:00
+
+Comparacion (escrita despues de ejecutar): typecheck y lint pasaron (EXIT 0). Mis pruebas pasaron (EXIT 0). De las 4 publicas de semana 9 paso 1 y fallaron 3 (las de planRetry, que es de Fernanda), como predije. La prueba de arquitectura fallo por una sola flecha que faltaba en el diagrama (selectIncidentLocation.ts -> campusops/contracts.ts), como predije; tras agregarla paso (4 de 4, EXIT 0).

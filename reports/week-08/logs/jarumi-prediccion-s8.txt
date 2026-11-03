@@ -1,0 +1,8 @@
+﻿Predicciones semana 8 (Jarumi)
+Escritas ANTES de ejecutar los casos de reinicio y de migracion con falla.
+
+1) Reinicio: con el backend sin conexion, guardo un inicio de atencion y una nota, cierro la app por completo y la abro de nuevo. Espero encontrar de vuelta lo que deje guardado en la cola (el inicio y la nota).
+   Nota: en mi primera respuesta escribi "mi inicio de sesion"; lo aclare antes de ejecutar nada: me referia a lo guardado en la cola.
+
+2) Migracion con falla: si la migracion falla a la mitad, espero que la base quede como estaba antes de migrar, con los datos viejos intactos.
+Fecha de guardado: 2026-10-24T01:04:34.7450518-06:00

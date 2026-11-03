@@ -1,0 +1,19 @@
+{
+  "provider": "nominatim (https://nominatim.openstreetmap.org)",
+  "generatedAt": "2026-11-03T02:07:38.193Z",
+  "command": "npx tsx tools/week9-real-geocoding.ts",
+  "query": "Zocalo, Ciudad de Mexico",
+  "httpStatusOfNetworkCall": 200,
+  "networkCallsAfterFirstLookup": 1,
+  "networkCallsAfterSecondLookup": 1,
+  "secondLookupServedFromCache": true,
+  "firstResult": {
+    "kind": "found",
+    "validForCampusOps": true
+  },
+  "secondResult": {
+    "kind": "found",
+    "validForCampusOps": true
+  },
+  "note": "Resultado sanitizado: sin coordenadas ni etiqueta. Si no hubo coincidencias, se registra tal cual."
+}

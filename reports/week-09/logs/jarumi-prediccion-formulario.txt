@@ -1,0 +1,3 @@
+Prediccion (escrita antes de ejecutar): espero 6 pruebas en verde en week9-location-form.test.tsx. Puede fallar el typecheck por los tipos de los mocks.
+
+Comparacion (escrita despues de ejecutar): las 6 pruebas de week9-location-form.test.tsx pasaron; typecheck y lint salieron limpios. Acerte en las pruebas; no aparecio el error de tipos que consideraba posible.

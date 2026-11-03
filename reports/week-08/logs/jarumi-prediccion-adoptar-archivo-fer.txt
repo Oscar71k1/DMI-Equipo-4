@@ -1,0 +1,7 @@
+﻿Prediccion antes de probar el archivo de Fer en mi rama (semana 8, Jarumi)
+Escrita ANTES de ejecutar.
+
+Creo que el typecheck pasa, y que la prueba de arquitectura falla, porque el archivo de Fer importa de course-evaluation y el diagrama no tiene esa flecha.
+Fecha de guardado: 2026-10-26T00:31:28.2714683-06:00
+
+Comparacion (escrita despues de ejecutar): typecheck paso (TYPECHECK_EXIT=0), como predije. La prueba de arquitectura fallo, como predije, pero fallaron 2 de 4: (1) una violacion real de capas, domain importa src/course-evaluation/contracts.ts, y (2) la flecha que falta en el diagrama. Mi prediccion solo cubria la segunda; no anticipe que tambien fuera una violacion de la regla de capas.
