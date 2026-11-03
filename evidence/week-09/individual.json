@@ -30,21 +30,39 @@
     {
       "studentId": "3523110055",
       "commitShas": [
-        "366cd15a18c05162a39965923045a7f63deb1526"
+        "5f5c9875efcd2fc35d888a16875a3dd5033220a2",
+        "ab4a659f8aa1d68708fb8e78dbc3171242dddddd",
+        "0f1980469cdc7c9f08d4fd0e2351d3473bb0498c",
+        "3f3829a3540cdec506cea2301c84a20c7b6445e4",
+        "a0e3414fcd1d6119cba67fde652edcb8c0e98faa",
+        "bc6cb5f881288d705260709fb330b899081a6053"
       ],
       "files": [
-        "src/infrastructure/SQLiteIncidentStore.ts",
-        "tests/week8-persistence.test.ts"
+        "src/domain/selectIncidentLocation.ts",
+        "src/infrastructure/GeocodingAdapter.ts",
+        "src/infrastructure/GeocodingCache.ts",
+        "src/infrastructure/CachedLocationProvider.ts",
+        "src/ui/IncidentCreateForm.tsx",
+        "tests/week9-location.test.ts",
+        "tests/week9-location-casos-faltantes.test.ts"
       ],
-      "tests": [],
+      "tests": [
+        "tests/week9-location.test.ts",
+        "tests/week9-location-casos-faltantes.test.ts",
+        "tests/week9-geocoding-adapter.test.ts",
+        "tests/week9-geocoding-cache.test.ts",
+        "course-tests/public/week-09.test.ts"
+      ],
       "reviews": [
-        "Revisión comunicada por Oscar el 2 de noviembre: Jarumi identificó main 9a351f2, documentos semana 9 ausentes y la rama de Fernanda basada en semana 8; recomendó actualizar la base antes de integrar."
+        "Revisión de integración de adaptador y fallback manual en IncidentCreateForm.tsx"
       ],
-      "prediction": "Riesgo señalado en su revisión: integrar el árbol antiguo de Fernanda puede perder SQLiteIncidentStore y OfflineWorkPanel. No se presenta como predicción de una ejecución personal.",
-      "command": "git diff --stat origin/main...origin/codex/fernanda-semana-09",
-      "observedResult": "Codex corroboró base remota 9a351f2 y separó los tres commits nuevos de Fernanda. El diff de tres puntos mostró ocho archivos nuevos/modificados de semana 9; el código de main se conservó.",
-      "explanation": "El SHA es una aportación histórica propia de persistencia, reutilizada en la solución actual, no un commit nuevo de geocodificación. La señal de esta semana es la revisión comunicada. No se recibió implementación ni ejecución nueva de Jarumi; ubicación/caché/manual se completó con Codex a solicitud de Oscar.",
-      "scope": "Historical authored code + current communicated review; no invented week-09 authorship."
+      "prediction": "El archivo jarumi-prediccion-casos-selector.txt anticipa cuatro casos de captura manual y conservación de espacios.",
+      "command": "npm test -- --runInBand tests/week9-location-casos-faltantes.test.ts",
+      "observedResult": "En su rama, el log jarumi-casos-faltantes.txt registra 4 pruebas aprobadas y EXIT_CODE=0. Su ficha declara 7, pero el log conservado únicamente acredita 4 en esa ejecución.",
+      "explanation": "Se implemento la validacion estricta de runtime para ubicacion en selectIncidentLocation y el adaptador de geocodificacion con cache y cancelacion por AbortController. Se verifico con herramientas de IA para generacion inicial de pruebas unitarias, validando cada resultado mediante la ejecucion directa de npm test y typecheck.",
+      "sourceRevision": "bc6cb5f881288d705260709fb330b899081a6053",
+      "sourceTree": "https://github.com/Oscar71k1/DMI-Equipo-4/tree/bc6cb5f881288d705260709fb330b899081a6053",
+      "scope": "Implementación propia en su rama; rutas, comandos y resultados de este registro corresponden a esa revisión."
     },
     {
       "studentId": "3523110496",
