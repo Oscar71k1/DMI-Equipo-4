@@ -1,0 +1,23 @@
+
+> dmi-react-native-starter@1.0.0 test
+> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --runTestsByPath tests/week9-location-casos-faltantes.test.ts
+
+node.exe : PASS tests/week9-location-casos-faltantes.test.ts
+En línea: 1 Carácter: 1
++ & "D:\nodejs/node.exe" "D:\nodejs/node_modules/npm/bin/npm-cli.js" te ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PASS tests/week...ltantes.test.ts:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  selectIncidentLocation: casos faltantes de la guia
+    ÔêÜ null devuelve la captura manual sin coordenadas (4 ms)
+    ÔêÜ etiqueta del proveedor solo con espacios cae a captura manual
+    ÔêÜ etiqueta del proveedor con espacios alrededor se conserva sin recortar (1 ms)
+    ÔêÜ la etiqueta manual se devuelve tal como se recibio, sin recortar
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        2.344 s
+Ran all test suites within paths "tests/week9-location-casos-faltantes.test.ts".
+EXIT_CODE=0

@@ -61,21 +61,14 @@ fer = {**original_fer, 'commitShas': [git('rev-parse','c7e9f37'), git('rev-parse
     'observedResult': 'Registro original de Fernanda conservado en fernanda-original.json. Reproducción nueva por Codex: ' + summary,
     'explanation': original_fer['explanation'] + ' La integración posterior corrigió configuración, clasificación de errores, deadline y conexión real; esas correcciones son de la integración asistida, no de sus commits originales.',
     'sourceCommits': original_fer['commitShas']}
-oscar = dict(studentId='3523110017', commitShas=[sha],
+oscar = dict(studentId='3523110017', commitShas=[git('rev-parse','d30886c')],
     files=['src/composition/createCampusOps.ts','src/api/incidentClient.ts','src/infrastructure/GeocodingAdapter.ts','tests/week9-integration.test.ts'],
     tests=['tests/week9-integration.test.ts','tests/week9-geocoding-http.test.ts','tests/week9-location-ui.test.tsx'],
     reviews=['Integración selectiva de los commits de Fernanda sobre main; preservación de SQLite y resolución/cierre durable.'],
     prediction='Predicción de las aserciones: un timeout posterior al commit mantiene intención, permite replay con identidad original y no duplica historia ni evidencia.',
     command=all_command, observedResult=summary,
     explanation='Trabajo ejecutado por Codex a solicitud de Oscar, incluida la implementación asignada inicialmente a Jarumi. No se afirma que Oscar ejecutó los comandos manualmente.')
-jarumi = dict(studentId='3523110055', commitShas=['366cd15a18c05162a39965923045a7f63deb1526'],
-    files=['src/infrastructure/SQLiteIncidentStore.ts','tests/week8-persistence.test.ts'],
-    tests=[], reviews=['Revisión comunicada por Oscar el 2 de noviembre: Jarumi identificó main 9a351f2, documentos semana 9 ausentes y la rama de Fernanda basada en semana 8; recomendó actualizar la base antes de integrar.'],
-    prediction='Riesgo señalado en su revisión: integrar el árbol antiguo de Fernanda puede perder SQLiteIncidentStore y OfflineWorkPanel. No se presenta como predicción de una ejecución personal.',
-    command='git diff --stat origin/main...origin/codex/fernanda-semana-09',
-    observedResult='Codex corroboró base remota 9a351f2 y separó los tres commits nuevos de Fernanda. El diff de tres puntos mostró ocho archivos nuevos/modificados de semana 9; el código de main se conservó.',
-    explanation='El SHA es una aportación histórica propia de persistencia, reutilizada en la solución actual, no un commit nuevo de geocodificación. La señal de esta semana es la revisión comunicada. No se recibió implementación ni ejecución nueva de Jarumi; ubicación/caché/manual se completó con Codex a solicitud de Oscar.',
-    scope='Historical authored code + current communicated review; no invented week-09 authorship.')
+jarumi = read('docs/jarumi-semana-09.json')
 save('evidence/week-09/individual.json', dict(schemaVersion=1, week=9, teamId='4', members=[oscar,jarumi,fer],
     notes='Se separan autoría Git, revisión comunicada y ejecuciones asistidas. El cumplimiento estructural no certifica comprensión individual ni garantiza AC-05.'))
 print(summary)

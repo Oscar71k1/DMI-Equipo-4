@@ -31,3 +31,7 @@ El workflow de semana 08 conserva verify y ejecuta sus pruebas en cada PR/main. 
 ## Alcance comprobado
 
 Pruebas de contrato, transporte HTTP del doble, SQLite real en disco con reapertura, interfaz React Native en Jest y exportación Android de Expo. Una ejecución de consulta externa se registra aparte. No se afirma instalación nativa nueva ni envío de notificaciones: este backend/app no incluye un despachador de notificaciones. La cola durable cubre resolución/cierre; la creación incierta sólo conserva su intención mientras permanece abierto el formulario.
+
+## Aportación publicada por Jarumi
+
+Jarumi publicó su propia implementación de geocodificación con Nominatim, caché y captura manual. Sus commits y resultados corresponden a [su revisión de semana 9](https://github.com/Oscar71k1/DMI-Equipo-4/tree/bc6cb5f881288d705260709fb330b899081a6053). La versión integrada del equipo usa Open-Meteo. El [registro documental](jarumi-semana-09.json) distingue las pruebas de ambas versiones.
