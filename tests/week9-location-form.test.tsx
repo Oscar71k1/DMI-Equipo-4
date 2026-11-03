@@ -153,4 +153,17 @@ describe('captura de ubicacion en IncidentCreateForm', () => {
       expect.any(String),
     );
   });
+
+  it('muestra atribucion y aviso de privacidad solo cuando hay proveedor', async () => {
+    const { provider } = makeProvider(FOUND);
+    const withProvider = await render(
+      <IncidentCreateForm createIncident={makeCreateIncident()} locationProvider={provider} />,
+    );
+    expect(withProvider.getByTestId('incident-form-location-attribution')).toHaveTextContent(
+      /OpenStreetMap contributors/,
+    );
+    await cleanup();
+    const without = await render(<IncidentCreateForm createIncident={makeCreateIncident()} />);
+    expect(without.queryByTestId('incident-form-location-attribution')).toBeNull();
+  });
 });
