@@ -1,3 +1,4 @@
+import type { LocationProvider } from '../domain/LocationProvider';
 import type { Incident } from '../domain/Incident';
 import type { OfflineActions } from './createOfflineIncidentActions';
 import type { BackendHealthStatus } from './createHealthQuery';
@@ -9,6 +10,7 @@ export type CampusOpsActions = Readonly<{
   offline?: OfflineActions;
   session?: SessionStore;
   auth?: SessionCoordinator;
+  locationProvider?: LocationProvider;
   listIncidents: () => Promise<readonly Incident[]>;
   getIncidentDetail: (id: string) => Promise<Incident | null>;
   createIncident?: (

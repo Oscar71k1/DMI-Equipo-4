@@ -1,3 +1,5 @@
+import { CachedLocationProvider } from '../infrastructure/CachedLocationProvider';
+import { createNominatimProvider } from '../infrastructure/GeocodingAdapter';
 import type { CampusOpsActions } from '../application/CampusOpsActions';
 import { createAuthorizedIncidentQueries } from '../application/createAuthorizedIncidentQueries';
 import { createHealthQuery } from '../application/createHealthQuery';
@@ -83,7 +85,12 @@ export function createCampusOps(): CampusOpsActions {
     if (currentActor().id !== actor || auth.snapshot().generation !== generation) throw new IncidentClientError('http', 401);
     return run(actions);
   }
-
+  const locationProvider = new CachedLocationProvider({
+    inner: createNominatimProvider({
+      userAgent: 'DMI-Equipo-4-Inspecciones/1.0 (floresjarumi312@gmail.com)',
+    }),
+    providerName: 'nominatim',
+  });
   return {
     offline: {
       cacheIncident: id => withOffline(actions => actions.cacheIncident(id)),
@@ -95,6 +102,7 @@ export function createCampusOps(): CampusOpsActions {
     },
     session,
     auth,
+        locationProvider,
     listIncidents: () => incidentQueries.listIncidents(currentActor()),
     getIncidentDetail: (id) => incidentQueries.getIncidentDetail(currentActor(), id),
     createIncident: async (input, idempotencyKey) => {

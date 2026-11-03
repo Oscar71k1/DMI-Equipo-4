@@ -153,6 +153,9 @@ flowchart TD
   F_src_infrastructure_CachedLocationProvider_ts --> F_src_infrastructure_GeocodingCache_ts
   F_src_ui_IncidentCreateForm_tsx --> F_src_domain_LocationProvider_ts
   F_src_ui_IncidentCreateForm_tsx --> F_src_domain_selectIncidentLocation_ts
+    F_src_composition_createCampusOps_ts --> F_src_infrastructure_CachedLocationProvider_ts
+  F_src_composition_createCampusOps_ts --> F_src_infrastructure_GeocodingAdapter_ts
+  F_src_application_CampusOpsActions_ts --> F_src_domain_LocationProvider_ts
   F_src_infrastructure_GeocodingAdapter_ts --> F_src_domain_LocationProvider_ts
   F_src_domain_incidentSync_ts --> F_src_domain_IncidentQueueRecord_ts
   F_src_infrastructure_CourseBackendHealthAdapter_ts --> F_src_api_courseBackend_ts
